@@ -7,8 +7,6 @@ public class PlayerController : MonoBehaviour {
 	private CharacterController controller;
 	private InputController inputController;
 
-	private Vector3 startPosition = new Vector3( 0f, 10f, 0f );
-
 	private float speed = 10f;
 
 	private float gravity = -9.8f;
@@ -17,10 +15,20 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 movementVector;
 
 	private bool isJumping;
-	private float jumpCoolDown = 0.25f;
+	private float jumpCoolDown = 0.05f;
+
+	private bool isDashing;
+	private float dashCoolDown = 0.05f;
+
+	private bool isFacingRight;
+	private bool isMobile;
 
 	private Dictionary<InputController.ButtonType, string> actions;
 	private Dictionary<InputController.ButtonType, string> repeatableActions;
+
+	private string deathTag = "Death";
+	private float deathDuration = 0.5f;
+	private float respawnDuration = 0.75f;
 
 	private List<Rect> actionRects;
 
@@ -53,6 +61,7 @@ public class PlayerController : MonoBehaviour {
 	void Start()
 	{	
 		gravityVector = transform.up * gravity;
+		isMobile = true;
 
 		respawn();
 	}
@@ -73,6 +82,13 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter( Collider collider )
 	{
+		if( collider.tag == deathTag )
+		{
+			StopAllCoroutines();
+			StartCoroutine( "DeathRoutine" );
+			return;
+		}
+
 		TeachingController teach = collider.gameObject.GetComponent<TeachingController>();
 
 		if( teach != null )
@@ -80,18 +96,25 @@ public class PlayerController : MonoBehaviour {
 			AddRoutine( teach.button, teach.functionName, teach.isRepeatableAction );
 			Destroy( teach.gameObject );
 		}
-	}
 
-	void OnTriggerStay( Collider collider )
-	{
-		if( collider.tag == "Death" )
-			respawn();
+		CheckpointController checkpoint = collider.gameObject.GetComponent<CheckpointController>();
+
+		if( checkpoint != null )
+		{
+			SpawnerAgent.SetSpawnerPosition( checkpoint.checkpointPosition );
+			Destroy( checkpoint.gameObject );
+		}
 	}
 
 	void Update()
 	{	
-		applyGravity ();
-		
+		applyGravity();
+
+		if( movementVector.x > 0f )
+			isFacingRight = true;
+		else if( movementVector.x < 0f )
+			isFacingRight = false;
+
 		controller.Move( movementVector );
 		
 		movementVector = Vector3.zero;
@@ -113,12 +136,18 @@ public class PlayerController : MonoBehaviour {
 	//event handlers
 	private void OnButtonDown( InputController.ButtonType button )
 	{	
+		if( !isMobile )
+			return;
+
 		if( actions.ContainsKey( button ) )
 			StartCoroutine( actions[ button ] );
 	}
 	
 	private void OnButtonHeld( InputController.ButtonType button )
 	{	
+		if( !isMobile )
+			return;
+
 		if( repeatableActions.ContainsKey( button ) )
 			StartCoroutine( repeatableActions[ button ] );
 	}
@@ -177,20 +206,37 @@ public class PlayerController : MonoBehaviour {
 
 		isJumping = false;
 	}
+
+	private IEnumerator Dash()
+	{
+		if( isDashing )
+			yield break;
+
+		isDashing = true;
+
+		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), 30f, 0.5f ) );
+
+		while( !controller.isGrounded )
+			yield return null;
+
+		yield return new WaitForSeconds( dashCoolDown );
+
+		isDashing = false;
+	}
 	//end routines
 
 	private void respawn()
 	{
-		StopAllCoroutines();
-
 		isJumping = false;
+		isDashing = false;
+		isFacingRight = true;
 
-		transform.position = startPosition;
+		transform.position = SpawnerAgent.GetSpawnerPosition();
 	}
 
 	private void applyGravity()
 	{		
-		if( !controller.isGrounded ) 
+		if( !controller.isGrounded && isMobile ) 
 			movementVector += gravityVector * Time.deltaTime;
 	}
 
@@ -231,5 +277,22 @@ public class PlayerController : MonoBehaviour {
 			yield return null;
 			
 		} while( currentTime < duration );	
+	}
+
+	private IEnumerator DeathRoutine()
+	{
+		isMobile = false;
+		renderer.enabled = false;
+
+		BodyAgent.SpawnBody( transform.position );
+
+		yield return new WaitForSeconds( deathDuration );
+
+		respawn();
+
+		yield return new WaitForSeconds( respawnDuration );
+
+		renderer.enabled = true;
+		isMobile = true;
 	}
 }
