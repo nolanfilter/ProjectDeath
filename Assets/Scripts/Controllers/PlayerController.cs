@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour {
 	private InputController inputController;
 
 	private float speed = 10f;
+	private float setSpeed = 10f;
+	private float conveyorSpeedWith = 15f;
+	private float conveyorSpeedAgainst = 5f;
 
 	private float gravity = -9.8f;
 	private Vector3 gravityVector;
@@ -28,7 +31,8 @@ public class PlayerController : MonoBehaviour {
 
 	private string deathTag = "Death";
 	private float deathDuration = 0.5f;
-	private float respawnDuration = 0.75f;
+	private float relocationDuration = 0.5f;
+	private float respawnDuration = 0.25f;
 
 	private List<Rect> actionRects;
 
@@ -82,6 +86,9 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter( Collider collider )
 	{
+		if( !isMobile )
+			return;
+
 		if( collider.tag == deathTag )
 		{
 			StopAllCoroutines();
@@ -104,6 +111,12 @@ public class PlayerController : MonoBehaviour {
 			SpawnerAgent.SetSpawnerPosition( checkpoint.checkpointPosition );
 			Destroy( checkpoint.gameObject );
 		}
+	}
+
+	void OnTriggerStay( Collider collider )
+	{
+		if( collider.tag == "ConveyorLeft" )
+			movementVector += Vector3.left * speed * 0.25f * Time.deltaTime;
 	}
 
 	void Update()
@@ -171,23 +184,6 @@ public class PlayerController : MonoBehaviour {
 		movementVector += Vector3.right * speed * Time.deltaTime;
 
 		yield break;
-	}
-
-	private IEnumerator Hop()
-	{
-		if( isJumping || !controller.isGrounded )
-			yield break;
-
-		isJumping = true;
-
-		yield return StartCoroutine( MovementOverTime( Vector3.up, 12.5f, 0.5f ) );
-
-		while( !controller.isGrounded )
-			yield return null;
-
-		yield return new WaitForSeconds( jumpCoolDown );
-
-		isJumping = false;
 	}
 
 	private IEnumerator Jump()
@@ -287,6 +283,24 @@ public class PlayerController : MonoBehaviour {
 		BodyAgent.SpawnBody( transform.position );
 
 		yield return new WaitForSeconds( deathDuration );
+
+		float beginTime = Time.time;
+		float currentTime;
+		float lerp;
+
+		Vector3 beginPosition = transform.position;
+		Vector3 endPosition = SpawnerAgent.GetSpawnerPosition();
+
+		do
+		{
+			currentTime = Time.time - beginTime;
+			lerp = currentTime / relocationDuration;
+
+			transform.position = Vector3.Lerp( beginPosition, endPosition, lerp );
+
+			yield return null;
+
+		} while( currentTime < relocationDuration );
 
 		respawn();
 
