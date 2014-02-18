@@ -119,9 +119,9 @@ public class InputController : MonoBehaviour {
 			codes[ (int)ButtonType.Sel ] = KeyCode.Q;
 			codes[ (int)ButtonType.Start ] = KeyCode.E;
 			codes[ (int)ButtonType.Jump ] = KeyCode.Space;
-			codes[ (int)ButtonType.Jump2 ] = KeyCode.LeftShift;
-			codes[ (int)ButtonType.Action ] = KeyCode.LeftCommand;
-			codes[ (int)ButtonType.Action2 ] = KeyCode.LeftCommand;
+			codes[ (int)ButtonType.Jump2 ] = KeyCode.Space;
+			codes[ (int)ButtonType.Action ] = KeyCode.LeftShift;
+			codes[ (int)ButtonType.Action2 ] = KeyCode.LeftShift;
 		}
 		//end hardcoded
 		
