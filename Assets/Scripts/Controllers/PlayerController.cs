@@ -15,7 +15,19 @@ public class PlayerController : MonoBehaviour {
 	private float gravity = -9.8f;
 	private Vector3 gravityVector;
 
+	private RaycastHit hit;
+	private Ray ray;
+	private Ray leftRay;
+	private Ray rightRay;
+	private float leftHeight;
+	private float rightHeight;
+	private float slopeAngle = 0.3f;
+
 	private Vector3 movementVector;
+	private float heading;
+	private float startingHeading = 90f;
+	private float deltaAngle = 1f;
+	private bool applyHeading;
 
 	private bool isJumping;
 	private float jumpCoolDown = 0.05f;
@@ -64,7 +76,6 @@ public class PlayerController : MonoBehaviour {
 
 	void Start()
 	{	
-		gravityVector = transform.up * gravity;
 		isMobile = true;
 
 		respawn();
@@ -96,12 +107,14 @@ public class PlayerController : MonoBehaviour {
 			return;
 		}
 
-		TeachingController teach = collider.gameObject.GetComponent<TeachingController>();
+		TeachingController[] teachers = collider.gameObject.GetComponents<TeachingController>();
 
-		if( teach != null )
+		if( teachers.Length > 0 )
 		{
-			AddRoutine( teach.button, teach.functionName, teach.isRepeatableAction );
-			Destroy( teach.gameObject );
+			for( int i = 0; i < teachers.Length; i++ )
+				AddRoutine( teachers[i].button, teachers[i].functionName, teachers[i].isRepeatableAction );
+
+			Destroy( collider.gameObject );
 		}
 
 		CheckpointController checkpoint = collider.gameObject.GetComponent<CheckpointController>();
@@ -128,9 +141,24 @@ public class PlayerController : MonoBehaviour {
 		else if( movementVector.x < 0f )
 			isFacingRight = false;
 
+		if( applyHeading )
+		{
+			float radian = heading * Mathf.Deg2Rad;
+
+			Vector3 headingVector = new Vector3( Mathf.Cos( radian ), Mathf.Sin( radian ), 0f );
+
+			headingVector *= speed * Time.deltaTime * 1.5f;
+
+			movementVector += headingVector;
+		}
+
 		controller.Move( movementVector );
 		
 		movementVector = Vector3.zero;
+		applyHeading = false;
+
+		if( controller.isGrounded )
+			heading = Mathf.Lerp( heading, startingHeading, 0.5f );
 	}
 
 	//for testing purposes only - incredibly inefficent
@@ -176,12 +204,16 @@ public class PlayerController : MonoBehaviour {
 	{
 		movementVector += Vector3.left * speed * Time.deltaTime;
 
+		slopeCorrection();
+
 		yield break;
 	}
 
 	private IEnumerator MoveRight()
 	{
 		movementVector += Vector3.right * speed * Time.deltaTime;
+
+		slopeCorrection();
 
 		yield break;
 	}
@@ -219,13 +251,44 @@ public class PlayerController : MonoBehaviour {
 
 		isDashing = false;
 	}
+
+	private IEnumerator GravityShift()
+	{
+		ray = new Ray( transform.position, gravityVector );
+
+		if( !Physics.Raycast( ray, transform.localScale.y * 0.75f ) )
+			yield break;
+
+		gravityVector *= -1f;	
+	}
+
+	private IEnumerator JetLeft()
+	{
+		heading -= deltaAngle;
+		applyHeading = true;
+
+		yield break;
+	}
+
+	private IEnumerator JetRight()
+	{
+		heading += deltaAngle;
+		applyHeading = true;
+
+		yield break;
+	}
 	//end routines
 
 	private void respawn()
 	{
+		gravityVector = transform.up * gravity;
+
 		isJumping = false;
 		isDashing = false;
 		isFacingRight = true;
+
+		heading = startingHeading;
+		applyHeading = false;
 
 		transform.position = SpawnerAgent.GetSpawnerPosition();
 	}
@@ -234,6 +297,27 @@ public class PlayerController : MonoBehaviour {
 	{		
 		if( !controller.isGrounded && isMobile ) 
 			movementVector += gravityVector * Time.deltaTime;
+	}
+
+	private void slopeCorrection()
+	{
+		if( !controller.isGrounded || isJumping )
+			return;
+
+		leftRay = new Ray( transform.position + Vector3.left * transform.localScale.x * 0.5f, Vector3.down );
+
+		Physics.Raycast( leftRay, out hit );
+		leftHeight = hit.distance;
+
+		rightRay = new Ray( transform.position + Vector3.right * transform.localScale.x * 0.5f, Vector3.down );
+
+		Physics.Raycast( rightRay, out hit );
+		rightHeight = hit.distance;
+
+		float heightDifference = Mathf.Abs( leftHeight - rightHeight );
+
+		if( heightDifference > 0.01f && heightDifference < slopeAngle )
+			movementVector += gravityVector * speed * Time.deltaTime;
 	}
 
 	private void AddRoutine( InputController.ButtonType button, string functionName, bool isRepeatableAction )
