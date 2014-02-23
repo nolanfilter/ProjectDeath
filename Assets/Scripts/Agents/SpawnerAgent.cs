@@ -28,7 +28,7 @@ public class SpawnerAgent : MonoBehaviour {
 
 	void Start()
 	{
-		SetSpawnerPosition( new Vector3( 0f, 10f, 0f ) );
+		SetSpawnerPosition( new Vector3( 0f, 0f, 0f ) );
 	}
 
 	public static Vector3 GetSpawnerPosition()
