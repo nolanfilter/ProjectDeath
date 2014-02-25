@@ -3,9 +3,9 @@ using System.Collections;
 
 public class CrusherController : MonoBehaviour {
 
-	private float speed = 5f;
-	private float topY = -3.5f;
-	private float bottomY = -10.5f;
+	public float speed = 5f;
+	public float topY = -3.5f;
+	public float bottomY = -10.5f;
 
 	// Use this for initialization
 	void Start () {
