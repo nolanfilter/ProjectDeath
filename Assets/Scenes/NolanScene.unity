@@ -1856,7 +1856,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toFollow: {fileID: 424615784}
   zOffset: -10
-  speed: .5
 --- !u!1 &1385720085
 GameObject:
   m_ObjectHideFlags: 0

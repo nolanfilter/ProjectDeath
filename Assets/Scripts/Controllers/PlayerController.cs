@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour {
 
 	private float gravity = -9.8f;
 	private Vector3 gravityVector;
+	private float maxVelocity = 0.25f;
 
 	private RaycastHit hit;
 	private Ray ray;
@@ -22,8 +23,14 @@ public class PlayerController : MonoBehaviour {
 	private float leftHeight;
 	private float rightHeight;
 	private float slopeAngle = 0.3f;
-
+	
 	private Vector3 movementVector;
+
+	private bool isFalling;
+	private bool wasFalling;
+	private float fallBeginTime;
+	private float maxFallDuration = 5f;
+
 	private float heading;
 	private float startingHeading = 90f;
 	private float deltaAngle = 1f;
@@ -152,13 +159,31 @@ public class PlayerController : MonoBehaviour {
 			movementVector += headingVector;
 		}
 
+		isFalling = !applyHeading && ( movementVector.y == 0f || ( ( gravityVector.y < 0f && movementVector.y < 0f ) || ( gravityVector.y > 0f && movementVector.y > 0f ) ) );
+
+		if( isFalling )
+		{
+			if( !wasFalling )
+			{
+				fallBeginTime = Time.time;
+				wasFalling = true;
+			}
+		}
+		else
+		{
+			wasFalling = false;
+		}
+
 		controller.Move( movementVector );
 		
 		movementVector = Vector3.zero;
 		applyHeading = false;
 
-		if( controller.isGrounded )
+		if( isGrounded() )
+		{
 			heading = Mathf.Lerp( heading, startingHeading, 0.5f );
+			fallBeginTime = Time.time;
+		}
 	}
 
 	//for testing purposes only - incredibly inefficent
@@ -220,14 +245,14 @@ public class PlayerController : MonoBehaviour {
 
 	private IEnumerator Jump()
 	{
-		if( isJumping || !controller.isGrounded )
+		if( isJumping || !isGrounded() )
 			yield break;
 		
 		isJumping = true;
 
 		yield return StartCoroutine( MovementOverTime( Vector3.up, 30f, 0.5f ) );
 
-		while( !controller.isGrounded )
+		while( !isGrounded() )
 			yield return null;
 
 		yield return new WaitForSeconds( jumpCoolDown );
@@ -244,7 +269,7 @@ public class PlayerController : MonoBehaviour {
 
 		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), 30f, 0.5f ) );
 
-		while( !controller.isGrounded )
+		while( !isGrounded() )
 			yield return null;
 
 		yield return new WaitForSeconds( dashCoolDown );
@@ -254,9 +279,7 @@ public class PlayerController : MonoBehaviour {
 
 	private IEnumerator GravityShift()
 	{
-		ray = new Ray( transform.position, gravityVector );
-
-		if( !Physics.Raycast( ray, transform.localScale.y * 0.75f ) )
+		if( !isGrounded() )
 			yield break;
 
 		gravityVector *= -1f;	
@@ -279,6 +302,18 @@ public class PlayerController : MonoBehaviour {
 	}
 	//end routines
 
+	private bool isGrounded()
+	{
+		ray = new Ray( transform.position, gravityVector );
+			
+		Physics.Raycast( ray, out hit );
+
+		if( hit.distance <= transform.localScale.y * 0.6f && hit.collider != null && !hit.collider.isTrigger )
+			return true;
+		else
+			return false;
+	}
+
 	private void respawn()
 	{
 		gravityVector = transform.up * gravity;
@@ -286,6 +321,8 @@ public class PlayerController : MonoBehaviour {
 		isJumping = false;
 		isDashing = false;
 		isFacingRight = true;
+		wasFalling = true;
+		fallBeginTime = Time.time;
 
 		heading = startingHeading;
 		applyHeading = false;
@@ -295,13 +332,18 @@ public class PlayerController : MonoBehaviour {
 
 	private void applyGravity()
 	{		
-		if( !controller.isGrounded && isMobile ) 
-			movementVector += gravityVector * Time.deltaTime;
+		if( !isGrounded() && isMobile )
+		{
+			if( isFalling )
+				movementVector += gravityVector * ( Time.deltaTime + Mathf.Clamp01( ( Time.time - fallBeginTime ) / maxFallDuration ) * maxVelocity );
+			else
+				movementVector += gravityVector * Time.deltaTime;
+		}
 	}
 
 	private void slopeCorrection()
 	{
-		if( !controller.isGrounded || isJumping )
+		if( !isGrounded() || isJumping )
 			return;
 
 		leftRay = new Ray( transform.position + Vector3.left * transform.localScale.x * 0.5f, Vector3.down );
