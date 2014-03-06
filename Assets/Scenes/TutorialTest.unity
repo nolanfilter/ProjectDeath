@@ -105,9 +105,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f16228d3d3acf41ce850ae0a1f9cb04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  button: 3
-  functionName: MoveRight
+  button: 2
+  functionName: MoveLeft
   isRepeatableAction: 1
+  isJumpCategory: 0
 --- !u!23 &30292984
 Renderer:
   m_ObjectHideFlags: 0
@@ -1249,6 +1250,7 @@ MonoBehaviour:
   button: 2
   functionName: MoveLeft
   isRepeatableAction: 1
+  isJumpCategory: 0
 --- !u!1001 &343671976
 Prefab:
   m_ObjectHideFlags: 0
@@ -2867,6 +2869,7 @@ MonoBehaviour:
   button: 4
   functionName: Jump
   isRepeatableAction: 1
+  isJumpCategory: 0
 --- !u!23 &1324398584
 Renderer:
   m_ObjectHideFlags: 0
@@ -3005,7 +3008,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   toFollow: {fileID: 2025995749}
   zOffset: -10
-  speed: 5
 --- !u!1 &1385720085
 GameObject:
   m_ObjectHideFlags: 0
@@ -3378,6 +3380,7 @@ MonoBehaviour:
   button: 6
   functionName: Dash
   isRepeatableAction: 1
+  isJumpCategory: 0
 --- !u!23 &1718151146
 Renderer:
   m_ObjectHideFlags: 0

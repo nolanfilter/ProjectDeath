@@ -7,4 +7,7 @@ public class TeachingController : MonoBehaviour {
 	public string functionName = "";
 
 	public bool isRepeatableAction = false;
+
+	//TO DO: Generalize
+	public bool isJumpCategory = false;
 }
