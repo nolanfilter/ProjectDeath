@@ -3,26 +3,44 @@ using System.Collections;
 
 public class CrusherController : MonoBehaviour {
 
-	public float speed = 5f;
-	public float topY = -3.5f;
-	public float bottomY = -10.5f;
+	private float rayDistance = 1f;
+	public Collider deathTrigger;
+	private bool deathActive = false;
+	//private float yMove = -1f;
 
 	// Use this for initialization
 	void Start () {
-	
+
 	}
-	
+		
 	// Update is called once per frame
 	void Update () {
-
-		transform.position += Vector3.up * speed * Time.deltaTime;
-
-		if (transform.position.y >= topY) {
-			speed = -5f;
-		}
-		if (transform.position.y <= bottomY) {
-			speed = 5f;
+		if (deathActive = true) {
+			deathTrigger.collider.enabled = true;
+		} else {
+			deathTrigger.collider.enabled = false;
 		}
 
 	}
+
+	void FixedUpdate () {
+
+		Ray ray = new Ray (transform.position, -transform.up);
+		RaycastHit rayHit;
+
+		if (Physics.Raycast(ray, out rayHit, rayDistance)) {
+			deathActive = true;
+		} else {
+			deathActive = false;
+		}
+		/*
+		if (Physics.Raycast (ray, out rayHit, 0.1f)) {
+			yMove *= -1;
+		} 
+
+		if (Physics.Raycast (ray, out rayHit, 4f)) {
+			yMove *= -1;
+		}
+		*/
+	}	
 }
