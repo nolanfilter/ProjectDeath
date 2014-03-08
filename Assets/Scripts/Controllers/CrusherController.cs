@@ -15,7 +15,7 @@ public class CrusherController : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update () {
-		if (deathActive = true) {
+		if (deathActive == true) {
 			deathTrigger.collider.enabled = true;
 		} else {
 			deathTrigger.collider.enabled = false;
