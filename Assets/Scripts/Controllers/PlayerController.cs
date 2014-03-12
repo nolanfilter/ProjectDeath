@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour {
 	private Ray rightRay;
 	private float leftHeight;
 	private float rightHeight;
-	private float slopeAngle = 0.3f;
+	private float slopeAngle = 0.5f;
 	
 	private Vector3 movementVector;
 
@@ -264,16 +264,46 @@ public class PlayerController : MonoBehaviour {
 	{
 		if( actions.ContainsKey( button ) )
 			StartCoroutine( actions[ button ] );
+
+		if( !isMobile )
+			return;
+
+		switch( button )
+		{
+			case InputController.ButtonType.Left: AnimationAgent.SetLeftBool( true ); break;
+			case InputController.ButtonType.Right: AnimationAgent.SetRightBool( true ); break;
+			case InputController.ButtonType.Jump: AnimationAgent.SetJumpBool( true ); break;
+			//case InputController.ButtonType.Sel: AnimationAgent.PrintStates(); break;
+		}
 	}
 	
 	private void OnButtonHeld( InputController.ButtonType button )
 	{	
 		if( repeatableActions.ContainsKey( button ) )
 			StartCoroutine( repeatableActions[ button ] );
+
+		if( !isMobile )
+			return;
+
+		switch( button )
+		{
+			case InputController.ButtonType.Left: AnimationAgent.SetLeftBool( true ); break;
+			case InputController.ButtonType.Right: AnimationAgent.SetRightBool( true ); break;
+			case InputController.ButtonType.Jump: AnimationAgent.SetJumpBool( true ); break;
+		}
 	}
 	
 	private void OnButtonUp( InputController.ButtonType button )
 	{
+		if( !isMobile )
+			return;
+
+		switch( button )
+		{
+			case InputController.ButtonType.Left: AnimationAgent.SetLeftBool( false ); break;
+			case InputController.ButtonType.Right: AnimationAgent.SetRightBool( false ); break;
+			case InputController.ButtonType.Jump: AnimationAgent.SetJumpBool( false ); break;
+		}
 
 	}
 	//end event handlers
@@ -393,7 +423,7 @@ public class PlayerController : MonoBehaviour {
 			
 		Physics.Raycast( ray, out hit );
 
-		if( hit.distance <= transform.localScale.y * 0.6f && hit.collider != null && !hit.collider.isTrigger )
+		if( hit.distance <= controller.height * 0.6f && hit.collider != null && !hit.collider.isTrigger )
 			return true;
 		else
 			return false;
@@ -431,12 +461,12 @@ public class PlayerController : MonoBehaviour {
 		if( !isGrounded() || isJumping )
 			return;
 
-		leftRay = new Ray( transform.position + Vector3.left * transform.localScale.x * 0.5f, Vector3.down );
+		leftRay = new Ray( transform.position + Vector3.left * transform.localScale.x * 0.5f, gravityVector );
 
 		Physics.Raycast( leftRay, out hit );
 		leftHeight = hit.distance;
 
-		rightRay = new Ray( transform.position + Vector3.right * transform.localScale.x * 0.5f, Vector3.down );
+		rightRay = new Ray( transform.position + Vector3.right * transform.localScale.x * 0.5f, gravityVector );
 
 		Physics.Raycast( rightRay, out hit );
 		rightHeight = hit.distance;
@@ -444,7 +474,7 @@ public class PlayerController : MonoBehaviour {
 		float heightDifference = Mathf.Abs( leftHeight - rightHeight );
 
 		if( heightDifference > 0.01f && heightDifference < slopeAngle )
-			movementVector += gravityVector * speed * Time.deltaTime;
+			movementVector += gravityVector * Time.deltaTime;
 	}
 
 	private void AddRoutine( InputController.ButtonType button, string functionName, bool isRepeatableAction )
@@ -489,7 +519,11 @@ public class PlayerController : MonoBehaviour {
 	private IEnumerator DeathRoutine()
 	{
 		isMobile = false;
-		renderer.enabled = false;
+		//renderer.enabled = false;
+
+		AnimationAgent.SetLeftBool( false );
+		AnimationAgent.SetRightBool( false );
+		AnimationAgent.SetJumpBool( false );
 
 		BodyAgent.SpawnBody( transform.position );
 
@@ -521,7 +555,7 @@ public class PlayerController : MonoBehaviour {
 
 		yield return new WaitForSeconds( respawnDuration );
 
-		renderer.enabled = true;
+		//renderer.enabled = true;
 		isMobile = true;
 
 		hasChosenJump = false;

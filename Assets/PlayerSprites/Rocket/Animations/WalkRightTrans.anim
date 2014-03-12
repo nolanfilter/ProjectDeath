@@ -18,13 +18,13 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: -0
-      value: {fileID: 21300000, guid: a33840e41b6e24aa4b0b6840c9451e1e, type: 3}
+      value: {fileID: 21300000, guid: 5da1fa4de83ac457bbced661adaa67eb, type: 3}
     - time: .0500000007
-      value: {fileID: 21300000, guid: 08ef7ea84cd804a278f3c1ed5bc2d2b4, type: 3}
+      value: {fileID: 21300000, guid: cbc6d142d1ee044f98229ec96f80c000, type: 3}
     - time: .100000001
-      value: {fileID: 21300000, guid: 85a0cf382600244d399cfd172cd6721c, type: 3}
+      value: {fileID: 21300000, guid: 2ccdd8f87fd204429a2f407d0eb789fa, type: 3}
     - time: .150000006
-      value: {fileID: 21300000, guid: 330cc9571d77d4cd1b434b4b4a88df18, type: 3}
+      value: {fileID: 21300000, guid: 4d80c4cd2b7b9463e8f47891289e32de, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
