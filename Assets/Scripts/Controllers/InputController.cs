@@ -155,7 +155,6 @@ public class InputController : MonoBehaviour {
 				currentButtonList[ ButtonType.Jump ] = currentButtonList[ ButtonType.Jump ] || Input.GetKey( codes[ i ] );
 			else
 				currentButtonList[ (ButtonType)i ] = Input.GetKey( codes[ i ] );
-			
 		}
 		
 		foreach( ButtonType button in buttonTypes )
