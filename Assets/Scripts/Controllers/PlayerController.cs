@@ -9,9 +9,9 @@ public class PlayerController : MonoBehaviour {
 	private InputController inputController;
 
 	private float speed = 10f;
-	private float setSpeed = 10f;
-	private float conveyorSpeedWith = 15f;
-	private float conveyorSpeedAgainst = 5f;
+	//private float setSpeed = 10f;
+	//private float conveyorSpeedWith = 15f;
+	//private float conveyorSpeedAgainst = 5f;
 
 	private float gravity = -9.8f;
 	private Vector3 gravityVector;
