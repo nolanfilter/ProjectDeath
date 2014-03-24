@@ -3,10 +3,12 @@ using System.Collections;
 
 public class CrusherController : MonoBehaviour {
 
-	private float rayDistance = 1f;
 	public Collider deathTrigger;
+
+	private float rayDistance = 1f;
 	private bool deathActive = false;
 	//private float yMove = -1f;
+	//private Vector3 moveVector = new Vector3 (0f,yMove, 0f);
 
 	// Use this for initialization
 	void Start () {
@@ -21,6 +23,7 @@ public class CrusherController : MonoBehaviour {
 			deathTrigger.collider.enabled = false;
 		}
 
+		//transform.position += moveVector;
 	}
 
 	void FixedUpdate () {
@@ -35,7 +38,7 @@ public class CrusherController : MonoBehaviour {
 		}
 		/*
 		if (Physics.Raycast (ray, out rayHit, 0.1f)) {
-			yMove *= -1;
+			yMove *= 1;
 		} 
 
 		if (Physics.Raycast (ray, out rayHit, 4f)) {
