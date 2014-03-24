@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour {
 
 	private Dictionary<InputController.ButtonType, string> actions;
 	private Dictionary<InputController.ButtonType, string> repeatableActions;
+	private List<RoutineAgent.RoutineInfo> foundRoutines;
 
 	private string deathTag = "Death";
 	private float deathDuration = 0.5f;
@@ -92,6 +93,7 @@ public class PlayerController : MonoBehaviour {
 
 		actions = new Dictionary<InputController.ButtonType, string>();
 		repeatableActions = new Dictionary<InputController.ButtonType, string>();
+		foundRoutines = new List<RoutineAgent.RoutineInfo>();
 
 		actionRects = new List<Rect>();
 
@@ -165,17 +167,17 @@ public class PlayerController : MonoBehaviour {
 				if( !hasJumpCategory )
 				{
 					for( int i = 0; i < teachers.Length; i++ )
-						AddRoutine( teachers[i].button, teachers[i].functionName, teachers[i].isRepeatableAction );
+						AddRoutine( teachers[i].GetRoutineInfo() );
 				}
 				else
 				{
-					AddRoutine( InputController.ButtonType.Action, "Activate", false );
+					AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Action, "Activate", false ) );
 				}
 			}
 			else
 			{
 				for( int i = 0; i < teachers.Length; i++ )
-					AddRoutine( teachers[i].button, teachers[i].functionName, teachers[i].isRepeatableAction );
+					AddRoutine( teachers[i].GetRoutineInfo() );
 			}
 
 			Destroy( collider.gameObject );
@@ -479,22 +481,27 @@ public class PlayerController : MonoBehaviour {
 			movementVector += gravityVector * Time.deltaTime;
 	}
 
-	private void AddRoutine( InputController.ButtonType button, string functionName, bool isRepeatableAction )
+	private void AddRoutine( RoutineAgent.RoutineInfo routineInfo )
 	{
-		if( actions.ContainsKey( button ) )
-			actions[ button ] = functionName;
+		if( foundRoutines.Contains( routineInfo ) )
+			return;
+
+		foundRoutines.Add( routineInfo );
+
+		if( actions.ContainsKey( routineInfo.button ) )
+			actions[ routineInfo.button ] = routineInfo.functionName;
 		else
 		{
-			actions.Add( button, functionName );
+			actions.Add( routineInfo.button, routineInfo.functionName );
 			actionRects.Add( new Rect( 5f, 20f * actionRects.Count, 100f, 20f ) );
 		}
 
-		if( isRepeatableAction )
+		if( routineInfo.isRepeatableAction )
 		{
-			if( repeatableActions.ContainsKey( button ) )
-				repeatableActions[ button ] = functionName;
+			if( repeatableActions.ContainsKey( routineInfo.button ) )
+				repeatableActions[ routineInfo.button ] = routineInfo.functionName;
 			else
-				repeatableActions.Add( button, functionName );
+				repeatableActions.Add( routineInfo.button, routineInfo.functionName );
 		}
 	}
 
@@ -602,18 +609,18 @@ public class PlayerController : MonoBehaviour {
 		{
 			case (int)JumpCategory.Jump:
 			{
-				AddRoutine( InputController.ButtonType.Jump, "Jump", true );
+				AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Jump, "Jump", true ) );
 			} break;
 
 			case (int)JumpCategory.Shift:
 			{
-				AddRoutine( InputController.ButtonType.Jump, "GravityShift", false );
+				AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Jump, "GravityShift", false ) );
 			} break;
 
 			case (int)JumpCategory.Jet:
 			{
-				AddRoutine( InputController.ButtonType.Sel, "JetLeft", true );
-				AddRoutine( InputController.ButtonType.Start, "JetRight", true );
+				AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Sel, "JetLeft", true ) );
+				AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Start, "JetRight", true ) );
 			} break;
 		}
 	}
