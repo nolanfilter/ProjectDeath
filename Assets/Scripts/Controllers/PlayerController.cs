@@ -8,14 +8,14 @@ public class PlayerController : MonoBehaviour {
 	private CharacterController controller;
 	private InputController inputController;
 
-	private float speed = 10f;
-	//private float setSpeed = 10f;
-	//private float conveyorSpeedWith = 15f;
-	//private float conveyorSpeedAgainst = 5f;
+	private float speed = 2.5f;
+	private float setSpeed = 2.5f;
+	private float conveyorSpeedWith = 3.75f;
+	private float conveyorSpeedAgainst = 1.25f;
 
-	private float gravity = -9.8f;
+	private float gravity = -2.45f;
 	private Vector3 gravityVector;
-	private float maxVelocity = 0.25f;
+	private float maxVelocity = 0.0625f;
 
 	private RaycastHit hit;
 	private Ray ray;
@@ -356,13 +356,15 @@ public class PlayerController : MonoBehaviour {
 	{
 		if( isJumping || !isGrounded() )
 			yield break;
-		
+
 		isJumping = true;
 
-		yield return StartCoroutine( MovementOverTime( Vector3.up, 30f, 0.5f ) );
+		yield return StartCoroutine( MovementOverTime( Vector3.up, 10f, 0.5f ) );
 
 		while( !isGrounded() )
 			yield return null;
+
+		AnimationAgent.SetJumpBool( false );
 
 		yield return new WaitForSeconds( jumpCoolDown );
 
@@ -376,10 +378,10 @@ public class PlayerController : MonoBehaviour {
 
 		isDashing = true;
 
-		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), 30f, 0.5f ) );
+		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), 10f, 0.5f ) );
 
-		while( !isGrounded() )
-			yield return null;
+//		while( !isGrounded() )
+//			yield return null;
 
 		yield return new WaitForSeconds( dashCoolDown );
 
@@ -419,11 +421,11 @@ public class PlayerController : MonoBehaviour {
 
 	private bool isGrounded()
 	{
-		ray = new Ray( transform.position, gravityVector );
+		ray = new Ray( transform.position + controller.center, gravityVector );
 			
-		Physics.Raycast( ray, out hit );
+		Physics.Raycast( ray, out hit, controller.height * 0.6f, 1 << 8 );
 
-		if( hit.distance <= controller.height * 0.6f && hit.collider != null && !hit.collider.isTrigger )
+		if( hit.collider != null && !hit.collider.isTrigger )
 			return true;
 		else
 			return false;
