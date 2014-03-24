@@ -26,7 +26,8 @@ public class InputController : MonoBehaviour {
 		Action2 = 7,
 		Start = 8,
 		Sel = 9,
-		Invalid = 10,
+		Action3 = 10,
+		Invalid = 11,
 	}
 
 	private string verticalAxisString;
@@ -122,6 +123,7 @@ public class InputController : MonoBehaviour {
 			codes[ (int)ButtonType.Jump2 ] = KeyCode.Space;
 			codes[ (int)ButtonType.Action ] = KeyCode.Return;
 			codes[ (int)ButtonType.Action2 ] = KeyCode.Return;
+			codes[ (int)ButtonType.Action3 ] = KeyCode.LeftCommand;
 		}
 		//end hardcoded
 		
