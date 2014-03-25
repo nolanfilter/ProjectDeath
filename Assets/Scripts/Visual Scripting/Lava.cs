@@ -14,6 +14,6 @@ public class Lava : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		lightSprite.color = new Color(1,1,1, (Mathf.Sin(Time.time * 1.5f) * .5f + 2.5f) / 5);
+		lightSprite.color = new Color(1,1,1, (Mathf.Sin(Time.time * 1.5f) * .5f + 3f) / 5);
 	}
 }
