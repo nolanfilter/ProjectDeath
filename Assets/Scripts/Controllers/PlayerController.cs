@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour {
 	private InputController inputController;
 
 	private float speed = 2.5f;
+	private float turningSpeedPercent = 0.4f;
 	private float setSpeed = 2.5f;
 	private float conveyorSpeedWith = 3.75f;
 	private float conveyorSpeedAgainst = 1.25f;
@@ -377,7 +378,10 @@ public class PlayerController : MonoBehaviour {
 		if( !isMobile )
 			yield break;
 
-		movementVector += Vector3.left * speed * Time.deltaTime;
+		if( !isJumping && AnimationAgent.IsAnimationPlaying( "TurnLeft" ) )
+			movementVector += Vector3.left * speed * turningSpeedPercent * Time.deltaTime;
+		else
+			movementVector += Vector3.left * speed * Time.deltaTime;
 
 		slopeCorrection();
 
@@ -389,7 +393,10 @@ public class PlayerController : MonoBehaviour {
 		if( !isMobile )
 			yield break;
 
-		movementVector += Vector3.right * speed * Time.deltaTime;
+		if( !isJumping && AnimationAgent.IsAnimationPlaying( "TurnRight" ) )
+			movementVector += Vector3.right * speed * turningSpeedPercent * Time.deltaTime;
+		else
+			movementVector += Vector3.right * speed * Time.deltaTime;
 
 		slopeCorrection();
 

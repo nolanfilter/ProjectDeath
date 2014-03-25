@@ -3,6 +3,8 @@ using System.Collections;
 
 public class SpawnerAgent : MonoBehaviour {
 
+	public Vector3 beginSpawnerPosition = Vector3.zero;
+
 	private Vector3 spawnerPosition;
 
 	private static SpawnerAgent mInstance = null;
@@ -28,7 +30,7 @@ public class SpawnerAgent : MonoBehaviour {
 
 	void Start()
 	{
-		SetSpawnerPosition( Vector3.zero );
+		SetSpawnerPosition( beginSpawnerPosition );
 	}
 
 	public static Vector3 GetSpawnerPosition()

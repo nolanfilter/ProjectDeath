@@ -114,4 +114,25 @@ public class AnimationAgent : MonoBehaviour {
 		for( int i = 0; i < count; i++ )
 			Debug.Log( animators[i].GetCurrentAnimatorStateInfo(0).nameHash );
 	}
+
+	public static bool IsAnimationPlaying( string name )
+	{
+		if( instance )
+			return instance.internalIsAnimationPlaying( name );
+
+		return false;
+	}
+
+	private bool internalIsAnimationPlaying( string name )
+	{
+		bool isPlaying = false;
+
+		int count = animators.Count;
+		
+		for( int i = 0; i < count; i++ )
+			if( animators[i].GetCurrentAnimatorStateInfo(0).IsName( name ) )
+				isPlaying = true;
+
+		return isPlaying;
+	}
 }
