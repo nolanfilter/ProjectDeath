@@ -8,9 +8,6 @@ public class TeachingController : MonoBehaviour {
 
 	public bool isRepeatableAction = false;
 
-	//TO DO: Generalize
-	public bool isJumpCategory = false;
-
 	private RoutineAgent.RoutineInfo routineInfo;
 
 	void Start()
