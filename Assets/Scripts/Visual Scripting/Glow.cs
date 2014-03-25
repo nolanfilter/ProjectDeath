@@ -14,6 +14,6 @@ public class Glow : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		lightSprite.color = new Color(1,1,1, (Mathf.Sin(Time.time * 2) * .5f + 2f) / 4);
+		lightSprite.color = new Color(1,1,1, (Mathf.Sin(Time.time * 3) * .5f + 2f) / 5);
 	}
 }
