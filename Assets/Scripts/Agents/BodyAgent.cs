@@ -43,7 +43,7 @@ public class BodyAgent : MonoBehaviour {
 		if( body == null )
 			return;
 
-		GameObject temp = Instantiate( body, position - Vector3.forward, Quaternion.identity ) as GameObject;
+		GameObject temp = Instantiate( body, position, Quaternion.identity ) as GameObject;
 
 		temp.transform.parent = transform;
 
