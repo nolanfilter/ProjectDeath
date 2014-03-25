@@ -9,7 +9,7 @@ public class CrusherController : MonoBehaviour {
 	public float speed;
 	public float pause;
 	
-	private float rayDistance = 0.1f;
+	private float rayDistance = 0.2f;
 	private bool deathActive = false;
 	//private float yMove = -1f;
 	private Vector3 origin;
@@ -24,8 +24,6 @@ public class CrusherController : MonoBehaviour {
 		newY = new Vector3 (origin.x, origin.y - moveDist, origin.z);
 		downSpeed = ((speed) * 0.6f);
 		upSpeed = ((speed) * 0.03f);
-		Debug.Log (newY);
-
 	}
 		
 	// Update is called once per frame
@@ -37,17 +35,14 @@ public class CrusherController : MonoBehaviour {
 		}
 
 		if (direct == true) {
-			Debug.Log ("down");
 			transform.position = Vector3.MoveTowards (transform.position, newY, downSpeed);
 		} else {
-			Debug.Log ("Up");
 			transform.position = Vector3.Lerp (transform.position, origin, upSpeed);
 			set = true;
 		}
 
 		if (transform.position.y <= newY.y + 0.1f) {
 			if (set == true) {
-				Debug.Log ("wait call");
 				StartCoroutine (waitPause(pause));
 			}
 		} 
@@ -58,10 +53,11 @@ public class CrusherController : MonoBehaviour {
 
 	void FixedUpdate () {
 
-		Ray ray = new Ray (transform.position, -transform.up);
+		Ray ray = new Ray (transform.position - Vector3.up * 3.5f, -transform.up);
 		RaycastHit rayHit;
 
-		if (Physics.Raycast(ray, out rayHit, rayDistance)) {
+		if (Physics.Raycast(ray, out rayHit, rayDistance)) 
+		{
 			deathActive = true;
 		} else {
 			deathActive = false;

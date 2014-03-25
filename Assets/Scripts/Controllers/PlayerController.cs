@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
 
+	private SpriteRenderer[] spriteRenderers;
+
 	private GUIStyle textStyle;
 
 	private CharacterController controller;
@@ -114,6 +116,8 @@ public class PlayerController : MonoBehaviour {
 
 		textStyle = new GUIStyle();
 		textStyle.normal.textColor = Color.magenta;
+
+		spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 
 		respawn();
 	}
@@ -606,7 +610,9 @@ public class PlayerController : MonoBehaviour {
 	private IEnumerator DeathRoutine()
 	{
 		isMobile = false;
-		//renderer.enabled = false;
+
+		for( int i = 0; i < spriteRenderers.Length; i++ )
+			spriteRenderers[ i ].enabled = false;
 
 		AnimationAgent.SetLeftBool( false );
 		AnimationAgent.SetRightBool( false );
@@ -648,7 +654,9 @@ public class PlayerController : MonoBehaviour {
 
 		yield return new WaitForSeconds( respawnDuration );
 
-		//renderer.enabled = true;
+		for( int i = 0; i < spriteRenderers.Length; i++ )
+			spriteRenderers[ i ].enabled = true;
+
 		isMobile = true;
 
 		hasChosenLoadout = false;
