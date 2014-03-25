@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
 
+	private GUIStyle textStyle;
+
 	private CharacterController controller;
 	private InputController inputController;
 
@@ -46,29 +48,28 @@ public class PlayerController : MonoBehaviour {
 	private bool isFacingRight;
 	private bool isMobile;
 
+	private int maxNumRoutines = 4;
+	private bool canChooseLoadout = false;
+	private int currentlySelectedRoutine;
+	private bool displayAllRoutines;
+	private int currentlySelectedNewRoutine;
+	private bool isSelecting = false;
+
 	private Dictionary<InputController.ButtonType, string> actions;
 	private Dictionary<InputController.ButtonType, string> repeatableActions;
+	private List<RoutineAgent.RoutineInfo> foundRoutines;
 
 	private string deathTag = "Death";
 	private float deathDuration = 0.5f;
 	private float relocationDuration = 0.5f;
 	private float respawnDuration = 0.25f;
 
-	private List<Rect> actionRects;
+	private string[] currentActions;
+	private Rect[] actionRects;
+	private List<Rect> allRoutinesRects;
 
 	//TO DO: Generalize
-	private bool hasJumpCategory = false;
-	private bool hasChosenJump = false;
-	private int currentJumpIndex = 0;
-	private float lastJumpIndexChangeTime;
-	private float jumpIndexChangeBuffer = 0.25f;
-	private enum JumpCategory
-	{
-		Jump = 0,
-		Jet = 1,
-		Shift = 2,
-	}
-	private bool[] jumpMovesActivated;
+	private bool hasChosenLoadout = false;
 
 	void Awake()
 	{
@@ -92,21 +93,26 @@ public class PlayerController : MonoBehaviour {
 
 		actions = new Dictionary<InputController.ButtonType, string>();
 		repeatableActions = new Dictionary<InputController.ButtonType, string>();
+		foundRoutines = new List<RoutineAgent.RoutineInfo>();
 
-		actionRects = new List<Rect>();
-
-		//TO DO: Generalize
-		int length = Enum.GetNames( typeof( JumpCategory ) ).Length;
-
-		jumpMovesActivated = new bool[ length ];
-
-		for( int i = 0; i < length; i++ )
-			jumpMovesActivated[ i ] = false;
+		allRoutinesRects = new List<Rect>();
 	}
 
 	void Start()
 	{	
+		currentActions = new string[ maxNumRoutines ];
+		actionRects = new Rect[ maxNumRoutines ];
+
+		for( int i = 0; i < maxNumRoutines; i++ )
+		{
+			currentActions[i] = "";
+			actionRects[i] = new Rect( 5f, 20f * (float)i, 100f, 20f );
+		}
+
 		isMobile = true;
+
+		textStyle = new GUIStyle();
+		textStyle.normal.textColor = Color.magenta;
 
 		respawn();
 	}
@@ -141,42 +147,8 @@ public class PlayerController : MonoBehaviour {
 
 		if( teachers.Length > 0 )
 		{
-			//TO DO: Generalize
-			if( teachers[0].isJumpCategory )
-			{
-				switch( teachers[0].functionName )
-				{
-					case "Jump": jumpMovesActivated[ (int)JumpCategory.Jump ] = true; break;
-					case "GravityShift": jumpMovesActivated[ (int)JumpCategory.Shift ] = true; break;
-					case "JetLeft": case "JetRight": jumpMovesActivated[ (int)JumpCategory.Jet ] = true; break;
-				}
-				
-				if( !hasJumpCategory )
-				{
-					int jumpMovesCount = 0;
-					
-					for( int i = 0; i < jumpMovesActivated.Length; i++ )
-						if( jumpMovesActivated[ i ] )
-							jumpMovesCount++;
-					
-					hasJumpCategory = jumpMovesCount > 1;
-				}
-
-				if( !hasJumpCategory )
-				{
-					for( int i = 0; i < teachers.Length; i++ )
-						AddRoutine( teachers[i].button, teachers[i].functionName, teachers[i].isRepeatableAction );
-				}
-				else
-				{
-					AddRoutine( InputController.ButtonType.Action, "Activate", false );
-				}
-			}
-			else
-			{
-				for( int i = 0; i < teachers.Length; i++ )
-					AddRoutine( teachers[i].button, teachers[i].functionName, teachers[i].isRepeatableAction );
-			}
+			for( int i = 0; i < teachers.Length; i++ )
+				AddRoutine( teachers[i].GetRoutineInfo() );
 
 			Destroy( collider.gameObject );
 		}
@@ -243,18 +215,30 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	//for testing purposes only - incredibly inefficent
 	void OnGUI()
 	{	
 		int index = 0;
 
-		foreach( KeyValuePair<InputController.ButtonType, string> kvp in actions )
+		for( int i = 0; i < maxNumRoutines; i++ )
 		{
-			if( kvp.Value != "Activate" )
-			{
-				GUI.Label( actionRects[ index ], kvp.Value );
+			string displayString = currentActions[i];
 
-				index++;
+			if( isSelecting && canChooseLoadout && currentlySelectedRoutine == i )
+				displayString = "*" + displayString;
+
+			GUI.Label( actionRects[i], displayString, textStyle );
+		}
+
+		if( displayAllRoutines )
+		{
+			for( int i = 0; i < allRoutinesRects.Count; i++ )
+			{
+				string displayString = foundRoutines[i].functionName;
+
+				if( currentlySelectedNewRoutine == i )
+					displayString = "*" + displayString;
+				
+				GUI.Label( allRoutinesRects[i], displayString, textStyle );
 			}
 		}
 	}
@@ -270,9 +254,9 @@ public class PlayerController : MonoBehaviour {
 
 		switch( button )
 		{
-			case InputController.ButtonType.Left: AnimationAgent.SetLeftBool( true ); break;
-			case InputController.ButtonType.Right: AnimationAgent.SetRightBool( true ); break;
-			case InputController.ButtonType.Jump: AnimationAgent.SetJumpBool( true ); break;
+			case InputController.ButtonType.Left: if( CurrentActionsContains( "MoveLeft" ) ) AnimationAgent.SetLeftBool( true ); break;
+			case InputController.ButtonType.Right: if( CurrentActionsContains( "MoveRight" ) ) AnimationAgent.SetRightBool( true ); break;
+			case InputController.ButtonType.Jump: if( CurrentActionsContains( "Jump" ) ) AnimationAgent.SetJumpBool( true ); break;
 			//case InputController.ButtonType.Sel: AnimationAgent.PrintStates(); break;
 		}
 	}
@@ -287,9 +271,9 @@ public class PlayerController : MonoBehaviour {
 
 		switch( button )
 		{
-			case InputController.ButtonType.Left: AnimationAgent.SetLeftBool( true ); break;
-			case InputController.ButtonType.Right: AnimationAgent.SetRightBool( true ); break;
-			case InputController.ButtonType.Jump: AnimationAgent.SetJumpBool( true ); break;
+			case InputController.ButtonType.Left: if( CurrentActionsContains( "MoveLeft" ) ) AnimationAgent.SetLeftBool( true ); break;
+			case InputController.ButtonType.Right: if( CurrentActionsContains( "MoveRight" ) ) AnimationAgent.SetRightBool( true ); break;
+			case InputController.ButtonType.Jump: if( CurrentActionsContains( "Jump" ) ) AnimationAgent.SetJumpBool( true ); break;
 		}
 	}
 	
@@ -300,9 +284,9 @@ public class PlayerController : MonoBehaviour {
 
 		switch( button )
 		{
-			case InputController.ButtonType.Left: AnimationAgent.SetLeftBool( false ); break;
-			case InputController.ButtonType.Right: AnimationAgent.SetRightBool( false ); break;
-			case InputController.ButtonType.Jump: AnimationAgent.SetJumpBool( false ); break;
+			case InputController.ButtonType.Left: if( CurrentActionsContains( "MoveLeft" ) ) AnimationAgent.SetLeftBool( false ); break;
+			case InputController.ButtonType.Right: if( CurrentActionsContains( "MoveRight" ) ) AnimationAgent.SetRightBool( false ); break;
+			case InputController.ButtonType.Jump: if( CurrentActionsContains( "Jump" ) ) AnimationAgent.SetJumpBool( false ); break;
 		}
 
 	}
@@ -311,23 +295,87 @@ public class PlayerController : MonoBehaviour {
 	//routines
 	private IEnumerator Activate()
 	{
-		if( !isMobile )
+		if( isSelecting )
 		{
-			if( hasJumpCategory )
-				hasChosenJump = true;
+			if( displayAllRoutines )
+				SetNewRoutine();
+			else
+				hasChosenLoadout = true;
 		}
 
 		yield break;
 	}
 
+	private IEnumerator SelectUp()
+	{
+		if( isSelecting )
+		{
+			if( displayAllRoutines )
+			{
+				currentlySelectedNewRoutine--;
+				if( currentlySelectedNewRoutine < 0 )
+					currentlySelectedNewRoutine = 0;
+			}
+			else
+			{
+				currentlySelectedRoutine--;
+				if( currentlySelectedRoutine < 0 )
+					currentlySelectedRoutine = 0;
+			}
+			
+			yield break;
+		}
+	}
+
+	private IEnumerator SelectDown()
+	{
+		if( isSelecting )
+		{
+			if( displayAllRoutines )
+			{
+				currentlySelectedNewRoutine++;
+				if( currentlySelectedNewRoutine >= foundRoutines.Count )
+					currentlySelectedNewRoutine = foundRoutines.Count - 1;
+			}
+			else
+			{
+				currentlySelectedRoutine++;
+				if( currentlySelectedRoutine >= maxNumRoutines )
+					currentlySelectedRoutine = maxNumRoutines - 1;
+			}
+			
+			yield break;
+		}
+	}
+
+	private IEnumerator SelectLeft()
+	{
+		if( isSelecting )
+		{
+			if( displayAllRoutines )
+				SetNewRoutine();
+			
+			yield break;
+		}
+	}
+
+	private IEnumerator SelectRight()
+	{
+		if( isSelecting )
+		{
+			if( !displayAllRoutines )
+				currentlySelectedNewRoutine = 0;
+			
+			displayAllRoutines = true;
+			
+			yield break;
+		}
+	}
+
 	private IEnumerator MoveLeft()
 	{
 		if( !isMobile )
-		{
-			ChangeJumpIndex( false );
-
 			yield break;
-		}
 
 		movementVector += Vector3.left * speed * Time.deltaTime;
 
@@ -339,11 +387,7 @@ public class PlayerController : MonoBehaviour {
 	private IEnumerator MoveRight()
 	{
 		if( !isMobile )
-		{
-			ChangeJumpIndex( true );
-			
 			yield break;
-		}
 
 		movementVector += Vector3.right * speed * Time.deltaTime;
 
@@ -479,23 +523,57 @@ public class PlayerController : MonoBehaviour {
 			movementVector += gravityVector * Time.deltaTime;
 	}
 
-	private void AddRoutine( InputController.ButtonType button, string functionName, bool isRepeatableAction )
+	private void AddRoutine( RoutineAgent.RoutineInfo routineInfo )
 	{
-		if( actions.ContainsKey( button ) )
-			actions[ button ] = functionName;
-		else
+		if( foundRoutines.Contains( routineInfo ) )
+			return;
+
+		foundRoutines.Add( routineInfo );
+
+		allRoutinesRects.Add( new Rect( 85f, 20f * (float)( foundRoutines.Count - 1 ), 100f, 20f ) );
+
+		if( foundRoutines.Count > maxNumRoutines )
 		{
-			actions.Add( button, functionName );
-			actionRects.Add( new Rect( 5f, 20f * actionRects.Count, 100f, 20f ) );
+			if( !canChooseLoadout )
+			{
+				//hardcoded
+				actions.Add( InputController.ButtonType.Action, "Activate" );
+				actions.Add( InputController.ButtonType.Up, "SelectUp" );
+				actions.Add( InputController.ButtonType.Down, "SelectDown" );
+				actions.Add( InputController.ButtonType.Left2, "SelectLeft" );
+				actions.Add( InputController.ButtonType.Right2, "SelectRight" );
+
+				canChooseLoadout = true;
+			}
+
+			return;
 		}
 
-		if( isRepeatableAction )
+		if( actions.ContainsKey( routineInfo.button ) )
+			actions[ routineInfo.button ] = routineInfo.functionName;
+		else
+			actions.Add( routineInfo.button, routineInfo.functionName );
+
+		if( routineInfo.isRepeatableAction )
 		{
-			if( repeatableActions.ContainsKey( button ) )
-				repeatableActions[ button ] = functionName;
+			if( repeatableActions.ContainsKey( routineInfo.button ) )
+				repeatableActions[ routineInfo.button ] = routineInfo.functionName;
 			else
-				repeatableActions.Add( button, functionName );
+				repeatableActions.Add( routineInfo.button, routineInfo.functionName );
 		}
+
+		currentActions[ foundRoutines.Count - 1 ] = routineInfo.functionName;
+	}
+
+	private bool CurrentActionsContains( string functionName )
+	{
+		bool contains = false;
+
+		for( int i = 0; i < maxNumRoutines; i++ )
+			if( currentActions[i] == functionName )
+				contains = true;
+
+		return contains;
 	}
 
 	private IEnumerator MovementOverTime( Vector3 directionVector, float force, float duration )	
@@ -549,9 +627,15 @@ public class PlayerController : MonoBehaviour {
 
 		} while( currentTime < relocationDuration );
 
-		if( hasJumpCategory )
-			while( !hasChosenJump )
+		isSelecting = true;
+
+		currentlySelectedRoutine = 0;
+
+		if( canChooseLoadout )
+			while( !hasChosenLoadout )
 				yield return null;
+
+		isSelecting = false;
 
 		respawn();
 
@@ -560,61 +644,61 @@ public class PlayerController : MonoBehaviour {
 		//renderer.enabled = true;
 		isMobile = true;
 
-		hasChosenJump = false;
+		hasChosenLoadout = false;
 	}
 
-	//TO DO: Generalize
-	private void ChangeJumpIndex( bool increment )
+	private void SetNewRoutine()
 	{
-		if( !hasJumpCategory || ( Time.time - lastJumpIndexChangeTime < jumpIndexChangeBuffer ) )
+		string oldFunctionName = currentActions[ currentlySelectedRoutine ];
+		string newFunctionName = foundRoutines[ currentlySelectedNewRoutine ].functionName;
+
+		if( oldFunctionName == newFunctionName )
+		{
+			displayAllRoutines = false;
 			return;
-
-		lastJumpIndexChangeTime = Time.time;
-
-		do
-		{
-			if( increment )
-				currentJumpIndex = ( currentJumpIndex + 1 )%jumpMovesActivated.Length;
-			else
-				currentJumpIndex = ( currentJumpIndex + ( jumpMovesActivated.Length - 1 ) )%jumpMovesActivated.Length;
-
-		} while( !jumpMovesActivated[ currentJumpIndex ] );
-
-		if( actions.ContainsKey( InputController.ButtonType.Jump ) )
-		   actions.Remove( InputController.ButtonType.Jump );
-
-		if( repeatableActions.ContainsKey( InputController.ButtonType.Jump ) )
-			repeatableActions.Remove( InputController.ButtonType.Jump );
-
-		if( actions.ContainsKey( InputController.ButtonType.Sel ) )
-		   actions.Remove( InputController.ButtonType.Sel );
-
-		if( repeatableActions.ContainsKey( InputController.ButtonType.Sel ) )
-			repeatableActions.Remove( InputController.ButtonType.Sel );
-
-		if( actions.ContainsKey( InputController.ButtonType.Start ) )
-		   actions.Remove( InputController.ButtonType.Start );
-
-		if( repeatableActions.ContainsKey( InputController.ButtonType.Start ) )
-			repeatableActions.Remove( InputController.ButtonType.Start );
-
-		switch( currentJumpIndex )
-		{
-			case (int)JumpCategory.Jump:
-			{
-				AddRoutine( InputController.ButtonType.Jump, "Jump", true );
-			} break;
-
-			case (int)JumpCategory.Shift:
-			{
-				AddRoutine( InputController.ButtonType.Jump, "GravityShift", false );
-			} break;
-
-			case (int)JumpCategory.Jet:
-			{
-				AddRoutine( InputController.ButtonType.Sel, "JetLeft", true );
-				AddRoutine( InputController.ButtonType.Start, "JetRight", true );
-			} break;
 		}
+
+		int swapToLocation = -1;
+
+		for( int i = 0; i < maxNumRoutines; i++ )
+		{
+			if( currentActions[i] == newFunctionName )
+				swapToLocation = i;
+		}
+
+		if( swapToLocation != -1 )
+		{
+			string temp = currentActions[ swapToLocation ];
+			currentActions[ swapToLocation ] = currentActions[ currentlySelectedRoutine ];
+			currentActions[ currentlySelectedRoutine ] = temp;
+		}
+		else
+		{
+			RoutineAgent.RoutineInfo temp = foundRoutines[ currentlySelectedNewRoutine ];
+				
+			RemoveByValue( actions, oldFunctionName );
+			RemoveByValue( repeatableActions, oldFunctionName );
+
+			actions.Add( temp.button, temp.functionName );
+
+			if( temp.isRepeatableAction )
+				repeatableActions.Add( temp.button, temp.functionName );
+
+			currentActions[ currentlySelectedRoutine ] = newFunctionName;
+		}
+
+		displayAllRoutines = false;
+	}
+			                                   
+	private void RemoveByValue<TKey,TValue>( Dictionary<TKey, TValue> dictionary, TValue value )
+	{
+		List<TKey> itemsToRemove = new List<TKey>();
+		
+		foreach( var pair in dictionary )
+		   if( pair.Value.Equals( value ) )
+				itemsToRemove.Add( pair.Key );
+		
+		foreach( TKey item in itemsToRemove )
+			dictionary.Remove(item);
 	}
 }
