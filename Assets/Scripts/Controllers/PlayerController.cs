@@ -414,7 +414,7 @@ public class PlayerController : MonoBehaviour {
 
 		isJumping = true;
 
-		yield return StartCoroutine( MovementOverTime( Vector3.up, 10f, 0.5f ) );
+		yield return StartCoroutine( MovementOverTime( gravityVector.normalized * -1f, 10f, 0.5f ) );
 
 		while( !isGrounded() )
 			yield return null;
