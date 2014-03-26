@@ -5,12 +5,15 @@ public class CrankController : MonoBehaviour {
 
 	public float order;
 	public float timing;
-	public Transform platPos;
+	public Transform mainPos;
 	
 	private bool spin = false;
 	private bool set = false;
 	private bool hasWaited = false;
-	
+
+	private Vector3 setTarget;
+
+	private float newY;
 	
 	// Use this for initialization
 	void Start () {
@@ -19,6 +22,7 @@ public class CrankController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		/*
 		if (spin == true) {
 			//transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(1f, 1f, 1f), .1f);
 			platPos.RotateAround(transform.position, Vector3.up, 45 * Time.deltaTime);
@@ -36,10 +40,17 @@ public class CrankController : MonoBehaviour {
 				StartCoroutine(platFlipWait(timing));
 				set = true;
 			}
-		}
+		}*/
+	
+		transform.RotateAround(mainPos.position, Vector3.forward, 90f * Time.deltaTime); //orbit code
+
+		newY = transform.position.y + 10f;
+		setTarget = new Vector3 (transform.position.x, newY, 0f); //makes platform face up (flips axis but just scale appropriately if need to change
+		transform.LookAt (setTarget);
+
 	}
 	
-	
+
 	IEnumerator platFlipWait(float timeWait) {
 		if(!hasWaited)
 		{
