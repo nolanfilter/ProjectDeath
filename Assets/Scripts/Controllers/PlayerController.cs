@@ -71,7 +71,6 @@ public class PlayerController : MonoBehaviour {
 	private Rect[] actionRects;
 	private List<Rect> allRoutinesRects;
 
-	//TO DO: Generalize
 	private bool hasChosenLoadout = false;
 
 	void Awake()
@@ -114,8 +113,7 @@ public class PlayerController : MonoBehaviour {
 
 		isMobile = true;
 
-		textStyle = new GUIStyle();
-		textStyle.normal.textColor = Color.magenta;
+		textStyle = FontAgent.GetTextStyle();
 
 		spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 
