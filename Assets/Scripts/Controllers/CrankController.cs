@@ -45,7 +45,7 @@ public class CrankController : MonoBehaviour {
 		transform.RotateAround(mainPos.position, Vector3.forward, 90f * Time.deltaTime); //orbit code
 
 		newY = transform.position.y + 10f;
-		setTarget = new Vector3 (transform.position.x, newY, 0f); //makes platform face up (flips axis but just scale appropriately if need to change
+		setTarget = new Vector3 (transform.position.x, transform.position.y, transform.position.z-1); //makes platform face up (flips axis but just scale appropriately if need to change
 		transform.LookAt (setTarget);
 
 	}

@@ -166,13 +166,13 @@ public class PlayerController : MonoBehaviour {
 			Destroy( checkpoint.gameObject );
 		}
 	}
-
+	/*
 	void OnTriggerStay( Collider collider )
 	{
 		if( collider.tag == "ConveyorLeft" )
 			movementVector += Vector3.left * speed * 0.25f * Time.deltaTime;
 	}
-
+	*/
 	void Update()
 	{	
 		applyGravity();
@@ -715,5 +715,9 @@ public class PlayerController : MonoBehaviour {
 		
 		foreach( TKey item in itemsToRemove )
 			dictionary.Remove(item);
+	}
+
+	public void AddExternalMovementForce (Vector3 direction) {
+		movementVector += direction;
 	}
 }
