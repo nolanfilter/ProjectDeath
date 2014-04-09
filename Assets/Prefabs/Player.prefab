@@ -189,7 +189,7 @@ GameObject:
   - 95: {fileID: 9500016}
   - 114: {fileID: 11400020}
   m_Layer: 8
-  m_Name: ShieldOff
+  m_Name: Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -207,12 +207,12 @@ GameObject:
   - 95: {fileID: 9500018}
   - 114: {fileID: 11400022}
   m_Layer: 8
-  m_Name: ShieldOn
+  m_Name: ShieldActive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &100024
 GameObject:
   m_ObjectHideFlags: 1
@@ -247,7 +247,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &100028
 GameObject:
   m_ObjectHideFlags: 1
@@ -281,7 +281,22 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!1 &100032
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400032}
+  m_Layer: 0
+  m_Name: Particle Systems Root
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -289,7 +304,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .40719676, y: -1.55615544, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400006}
@@ -334,7 +349,6 @@ Transform:
   - {fileID: 400016}
   - {fileID: 400002}
   - {fileID: 400018}
-  - {fileID: 400022}
   - {fileID: 400020}
   - {fileID: 400008}
   - {fileID: 400024}
@@ -393,8 +407,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: -.375384092}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
-  - {fileID: 400026}
-  - {fileID: 400030}
+  - {fileID: 400032}
   m_Father: {fileID: 400006}
 --- !u!4 &400018
 Transform:
@@ -416,7 +429,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0, z: -.504588008}
   m_LocalScale: {x: 10, y: 10, z: 10}
-  m_Children: []
+  m_Children:
+  - {fileID: 400022}
   m_Father: {fileID: 400006}
 --- !u!4 &400022
 Transform:
@@ -425,10 +439,10 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100022}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -.546600282}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalPosition: {x: 0, y: 0, z: -.00420122733}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 400006}
+  m_Father: {fileID: 400020}
 --- !u!4 &400024
 Transform:
   m_ObjectHideFlags: 1
@@ -450,7 +464,7 @@ Transform:
   m_LocalPosition: {x: .0239052176, y: -.065224126, z: .0512911044}
   m_LocalScale: {x: .100000001, y: .0262096524, z: .100000001}
   m_Children: []
-  m_Father: {fileID: 400016}
+  m_Father: {fileID: 400032}
 --- !u!4 &400028
 Transform:
   m_ObjectHideFlags: 1
@@ -470,8 +484,21 @@ Transform:
   m_GameObject: {fileID: 100030}
   m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106829}
   m_LocalPosition: {x: -.0199516565, y: -.0576931499, z: .14438796}
-  m_LocalScale: {x: .100000001, y: .0262096003, z: .100000009}
+  m_LocalScale: {x: .100000001, y: .0262096003, z: .100000016}
   m_Children: []
+  m_Father: {fileID: 400032}
+--- !u!4 &400032
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100032}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 400030}
+  - {fileID: 400026}
   m_Father: {fileID: 400016}
 --- !u!95 &9500000
 Animator:
@@ -638,6 +665,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3c22bdaafa8448ab8910e2cc1a51ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  constantSpriteRenderers:
+  - {fileID: 21200002}
+  - {fileID: 21200008}
+  - {fileID: 21200004}
+  ExhaustSpriteRenderer: {fileID: 21200000}
+  GravFlipSpriteRenderer: {fileID: 21200010}
+  JumperCablesSpriteRenderer: {fileID: 21200014}
+  MagnetSpriteRenderer: {fileID: 21200006}
+  RocketSpriteRenderer: {fileID: 21200012}
+  ShieldSpriteRenderer: {fileID: 21200016}
+  ThermostatSpriteRenderer: {fileID: 21200020}
+  ExhaustEffectObject: {fileID: 100028}
+  RocketEffectObject: {fileID: 100032}
+  ShieldEffectObject: {fileID: 100022}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

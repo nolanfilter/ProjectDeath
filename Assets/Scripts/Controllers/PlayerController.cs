@@ -5,6 +5,20 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
 
+	public SpriteRenderer[] constantSpriteRenderers;
+
+	public SpriteRenderer ExhaustSpriteRenderer;
+	public SpriteRenderer GravFlipSpriteRenderer;
+	public SpriteRenderer JumperCablesSpriteRenderer;
+	public SpriteRenderer MagnetSpriteRenderer;
+	public SpriteRenderer RocketSpriteRenderer;
+	public SpriteRenderer ShieldSpriteRenderer;
+	public SpriteRenderer ThermostatSpriteRenderer;
+
+	public GameObject ExhaustEffectObject;
+	public GameObject RocketEffectObject;
+	public GameObject ShieldEffectObject;
+
 	private SpriteRenderer[] spriteRenderers;
 
 	private GUIStyle textStyle;
@@ -46,7 +60,7 @@ public class PlayerController : MonoBehaviour {
 	private float jumpCoolDown = 0.05f;
 
 	private bool isDashing;
-	private float dashCoolDown = 0.05f;
+	private float dashCoolDown = 1.25f;
 
 	private bool isFacingRight;
 	private bool isMobile;
@@ -115,8 +129,6 @@ public class PlayerController : MonoBehaviour {
 
 		textStyle = FontAgent.GetTextStyle();
 
-		spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-
 		respawn();
 	}
 
@@ -164,13 +176,27 @@ public class PlayerController : MonoBehaviour {
 			Destroy( checkpoint.gameObject );
 		}
 	}
-	/*
+
 	void OnTriggerStay( Collider collider )
 	{
-		if( collider.tag == "ConveyorLeft" )
-			movementVector += Vector3.left * speed * 0.25f * Time.deltaTime;
+		/*
+		if( !isMobile )
+			return;
+		
+		if( collider.tag == deathTag )
+		{
+			Debug.Log( "Dying" );
+
+			StopAllCoroutines();
+			StartCoroutine( "DeathRoutine" );
+			return;
+		}
+
+		//if( collider.tag == "ConveyorLeft" )
+		//	movementVector += Vector3.left * speed * 0.25f * Time.deltaTime;
+		*/
 	}
-	*/
+
 	void Update()
 	{	
 		applyGravity();
@@ -436,7 +462,11 @@ public class PlayerController : MonoBehaviour {
 //		while( !isGrounded() )
 //			yield return null;
 
+		speed *= 0.5f;
+
 		yield return new WaitForSeconds( dashCoolDown );
+
+		speed *= 2f;
 
 		isDashing = false;
 	}
@@ -486,6 +516,8 @@ public class PlayerController : MonoBehaviour {
 
 	private void respawn()
 	{
+		UpdateSprites();
+
 		gravityVector = transform.up * gravity;
 
 		isJumping = false;
@@ -572,6 +604,8 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		currentActions[ foundRoutines.Count - 1 ] = routineInfo.functionName;
+
+		UpdateSprites();
 	}
 
 	private bool CurrentActionsContains( string functionName )
@@ -609,8 +643,10 @@ public class PlayerController : MonoBehaviour {
 	{
 		isMobile = false;
 
-		for( int i = 0; i < spriteRenderers.Length; i++ )
-			spriteRenderers[ i ].enabled = false;
+		for( int i = 0; i < constantSpriteRenderers.Length; i++ )
+			constantSpriteRenderers[ i ].enabled = false;
+
+		UpdateSprites( false );
 
 		AnimationAgent.SetLeftBool( false );
 		AnimationAgent.SetRightBool( false );
@@ -652,8 +688,10 @@ public class PlayerController : MonoBehaviour {
 
 		yield return new WaitForSeconds( respawnDuration );
 
-		for( int i = 0; i < spriteRenderers.Length; i++ )
-			spriteRenderers[ i ].enabled = true;
+		for( int i = 0; i < constantSpriteRenderers.Length; i++ )
+			constantSpriteRenderers[ i ].enabled = true;
+
+		UpdateSprites();
 
 		isMobile = true;
 
@@ -713,6 +751,49 @@ public class PlayerController : MonoBehaviour {
 		
 		foreach( TKey item in itemsToRemove )
 			dictionary.Remove(item);
+	}
+
+	private void UpdateSprites( bool display = true )
+	{
+		ExhaustEffectObject.SetActiveRecursively( false );
+		RocketEffectObject.SetActiveRecursively( false );
+		ShieldEffectObject.SetActiveRecursively( false );
+		
+		if( ExhaustSpriteRenderer )
+			ExhaustSpriteRenderer.enabled = false;
+		
+		if( GravFlipSpriteRenderer )
+			GravFlipSpriteRenderer.enabled = false;
+		
+		if( JumperCablesSpriteRenderer )
+			JumperCablesSpriteRenderer.enabled = false;
+		
+		if( MagnetSpriteRenderer )
+			MagnetSpriteRenderer.enabled = false;
+		
+		if( RocketSpriteRenderer )
+			RocketSpriteRenderer.enabled = false;
+		
+		if( ShieldSpriteRenderer )
+			ShieldSpriteRenderer.enabled = false;
+		
+		if( ThermostatSpriteRenderer )
+			ThermostatSpriteRenderer.enabled = false;
+
+		if( !display )
+			return;
+
+		var values = actions.Values;
+
+		foreach( var value in values )
+		{
+			switch( value.ToString() )
+			{
+				case "Dash": ExhaustSpriteRenderer.enabled = true; break;
+				case "GravityShift": GravFlipSpriteRenderer.enabled = true; break;
+				case "Rocket": RocketSpriteRenderer.enabled = true; break;
+			}
+		}
 	}
 
 	public void AddExternalMovementForce (Vector3 direction) {
