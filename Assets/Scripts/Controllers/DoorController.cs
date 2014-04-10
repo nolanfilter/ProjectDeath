@@ -14,6 +14,7 @@ public class DoorController : MonoBehaviour {
 	private SpriteRenderer sprite1;
 	private SpriteRenderer sprite2;
 	private SpriteRenderer sprite3;
+	//private bool openSaysMe;
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +29,8 @@ public class DoorController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+
 		if (openSaysMe == true) {
 			if (block3.transform.position.y <= topPoint.y) {
 				block1.transform.position += new Vector3(0f, speed, 0f);
