@@ -5,6 +5,20 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
 
+	public SpriteRenderer[] constantSpriteRenderers;
+
+	public SpriteRenderer ExhaustSpriteRenderer;
+	public SpriteRenderer GravFlipSpriteRenderer;
+	public SpriteRenderer JumperCablesSpriteRenderer;
+	public SpriteRenderer MagnetSpriteRenderer;
+	public SpriteRenderer RocketSpriteRenderer;
+	public SpriteRenderer ShieldSpriteRenderer;
+	public SpriteRenderer ThermostatSpriteRenderer;
+
+	public GameObject ExhaustEffectObject;
+	public GameObject RocketEffectObject;
+	public GameObject ShieldEffectObject;
+
 	private SpriteRenderer[] spriteRenderers;
 
 	private GUIStyle textStyle;
@@ -46,7 +60,7 @@ public class PlayerController : MonoBehaviour {
 	private float jumpCoolDown = 0.05f;
 
 	private bool isDashing;
-	private float dashCoolDown = 0.05f;
+	private float dashCoolDown = 1.25f;
 
 	private bool isFacingRight;
 	private bool isMobile;
@@ -115,8 +129,6 @@ public class PlayerController : MonoBehaviour {
 
 		textStyle = FontAgent.GetTextStyle();
 
-		spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-
 		respawn();
 	}
 
@@ -164,13 +176,27 @@ public class PlayerController : MonoBehaviour {
 			Destroy( checkpoint.gameObject );
 		}
 	}
-	/*
+
 	void OnTriggerStay( Collider collider )
 	{
-		if( collider.tag == "ConveyorLeft" )
-			movementVector += Vector3.left * speed * 0.25f * Time.deltaTime;
+		/*
+		if( !isMobile )
+			return;
+		
+		if( collider.tag == deathTag )
+		{
+			Debug.Log( "Dying" );
+
+			StopAllCoroutines();
+			StartCoroutine( "DeathRoutine" );
+			return;
+		}
+
+		//if( collider.tag == "ConveyorLeft" )
+		//	movementVector += Vector3.left * speed * 0.25f * Time.deltaTime;
+		*/
 	}
-	*/
+
 	void Update()
 	{	
 		applyGravity();
@@ -218,6 +244,7 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	/*
 	void OnGUI()
 	{	
 		int index = 0;
@@ -245,6 +272,7 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 	}
+	*/
 
 	//event handlers
 	private void OnButtonDown( InputController.ButtonType button )
@@ -301,9 +329,16 @@ public class PlayerController : MonoBehaviour {
 		if( isSelecting )
 		{
 			if( displayAllRoutines )
+			{
 				SetNewRoutine();
+
+				SelectionScreenAgent.SetArrow( SelectionScreenAgent.TextType.Invalid );
+				UpdateSelectionScreen();
+			}
 			else
+			{
 				hasChosenLoadout = true;
+			}
 		}
 
 		yield break;
@@ -315,17 +350,19 @@ public class PlayerController : MonoBehaviour {
 		{
 			if( displayAllRoutines )
 			{
-				currentlySelectedNewRoutine--;
-				if( currentlySelectedNewRoutine < 0 )
-					currentlySelectedNewRoutine = 0;
+				currentlySelectedNewRoutine = ( currentlySelectedNewRoutine + ( foundRoutines.Count - 1 ) )%foundRoutines.Count;
 			}
 			else
 			{
 				currentlySelectedRoutine--;
 				if( currentlySelectedRoutine < 0 )
 					currentlySelectedRoutine = 0;
+
+				SelectionScreenAgent.HighlightText( (SelectionScreenAgent.TextType)currentlySelectedRoutine );
 			}
-			
+
+			UpdateSelectionScreen();
+
 			yield break;
 		}
 	}
@@ -336,16 +373,18 @@ public class PlayerController : MonoBehaviour {
 		{
 			if( displayAllRoutines )
 			{
-				currentlySelectedNewRoutine++;
-				if( currentlySelectedNewRoutine >= foundRoutines.Count )
-					currentlySelectedNewRoutine = foundRoutines.Count - 1;
+				currentlySelectedNewRoutine = ( currentlySelectedNewRoutine + 1 )%foundRoutines.Count;
 			}
 			else
 			{
 				currentlySelectedRoutine++;
 				if( currentlySelectedRoutine >= maxNumRoutines )
 					currentlySelectedRoutine = maxNumRoutines - 1;
+
+				SelectionScreenAgent.HighlightText( (SelectionScreenAgent.TextType)currentlySelectedRoutine );
 			}
+
+			UpdateSelectionScreen();
 			
 			yield break;
 		}
@@ -357,7 +396,10 @@ public class PlayerController : MonoBehaviour {
 		{
 			if( displayAllRoutines )
 				SetNewRoutine();
-			
+
+			SelectionScreenAgent.SetArrow( SelectionScreenAgent.TextType.Invalid );
+			UpdateSelectionScreen();
+
 			yield break;
 		}
 	}
@@ -370,7 +412,11 @@ public class PlayerController : MonoBehaviour {
 				currentlySelectedNewRoutine = 0;
 			
 			displayAllRoutines = true;
-			
+
+			SelectionScreenAgent.SetArrow( (SelectionScreenAgent.TextType)currentlySelectedRoutine );
+
+			UpdateSelectionScreen();
+
 			yield break;
 		}
 	}
@@ -436,7 +482,11 @@ public class PlayerController : MonoBehaviour {
 //		while( !isGrounded() )
 //			yield return null;
 
+		speed *= 0.5f;
+
 		yield return new WaitForSeconds( dashCoolDown );
+
+		speed *= 2f;
 
 		isDashing = false;
 	}
@@ -486,6 +536,8 @@ public class PlayerController : MonoBehaviour {
 
 	private void respawn()
 	{
+		UpdateSprites();
+
 		gravityVector = transform.up * gravity;
 
 		isJumping = false;
@@ -572,6 +624,9 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		currentActions[ foundRoutines.Count - 1 ] = routineInfo.functionName;
+
+		UpdateSprites();
+		UpdateSelectionScreen();
 	}
 
 	private bool CurrentActionsContains( string functionName )
@@ -609,8 +664,10 @@ public class PlayerController : MonoBehaviour {
 	{
 		isMobile = false;
 
-		for( int i = 0; i < spriteRenderers.Length; i++ )
-			spriteRenderers[ i ].enabled = false;
+		for( int i = 0; i < constantSpriteRenderers.Length; i++ )
+			constantSpriteRenderers[ i ].enabled = false;
+
+		UpdateSprites( false );
 
 		AnimationAgent.SetLeftBool( false );
 		AnimationAgent.SetRightBool( false );
@@ -642,18 +699,25 @@ public class PlayerController : MonoBehaviour {
 
 		currentlySelectedRoutine = 0;
 
+		SelectionScreenAgent.HighlightText( (SelectionScreenAgent.TextType)currentlySelectedRoutine );
+		UpdateSelectionScreen();
+
 		if( canChooseLoadout )
 			while( !hasChosenLoadout )
 				yield return null;
 
 		isSelecting = false;
 
+		SelectionScreenAgent.HighlightText( SelectionScreenAgent.TextType.Invalid );
+
 		respawn();
 
 		yield return new WaitForSeconds( respawnDuration );
 
-		for( int i = 0; i < spriteRenderers.Length; i++ )
-			spriteRenderers[ i ].enabled = true;
+		for( int i = 0; i < constantSpriteRenderers.Length; i++ )
+			constantSpriteRenderers[ i ].enabled = true;
+
+		UpdateSprites();
 
 		isMobile = true;
 
@@ -713,6 +777,78 @@ public class PlayerController : MonoBehaviour {
 		
 		foreach( TKey item in itemsToRemove )
 			dictionary.Remove(item);
+	}
+
+	private void UpdateSprites( bool display = true )
+	{
+		ExhaustEffectObject.SetActiveRecursively( false );
+		RocketEffectObject.SetActiveRecursively( false );
+		ShieldEffectObject.SetActiveRecursively( false );
+		
+		if( ExhaustSpriteRenderer )
+			ExhaustSpriteRenderer.enabled = false;
+		
+		if( GravFlipSpriteRenderer )
+			GravFlipSpriteRenderer.enabled = false;
+		
+		if( JumperCablesSpriteRenderer )
+			JumperCablesSpriteRenderer.enabled = false;
+		
+		if( MagnetSpriteRenderer )
+			MagnetSpriteRenderer.enabled = false;
+		
+		if( RocketSpriteRenderer )
+			RocketSpriteRenderer.enabled = false;
+		
+		if( ShieldSpriteRenderer )
+			ShieldSpriteRenderer.enabled = false;
+		
+		if( ThermostatSpriteRenderer )
+			ThermostatSpriteRenderer.enabled = false;
+
+		if( !display )
+			return;
+
+		for( int i = 0; i < currentActions.Length; i++ )
+		{
+			switch( currentActions[i] )
+			{
+				case "Dash": ExhaustSpriteRenderer.enabled = true; break;
+				case "GravityShift": GravFlipSpriteRenderer.enabled = true; break;
+				case "Rocket": RocketSpriteRenderer.enabled = true; break;
+			}
+		}
+	}
+
+	private void UpdateSelectionScreen()
+	{
+		for( int i = 0; i < currentActions.Length; i++ )
+			SelectionScreenAgent.SetText( (SelectionScreenAgent.TextType)i, currentActions[i] );
+
+		int count = foundRoutines.Count;
+
+		if( displayAllRoutines && count > 0 )
+		{
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPower, foundRoutines[ currentlySelectedNewRoutine ].functionName );
+
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerPlus1, foundRoutines[ ( currentlySelectedNewRoutine + 1 )%count ].functionName );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerPlus2, foundRoutines[ ( currentlySelectedNewRoutine + 2 )%count ].functionName );
+
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus1, foundRoutines[ ( currentlySelectedNewRoutine + ( count - ( 1 % count ) ) )%count ].functionName );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus2, foundRoutines[ ( currentlySelectedNewRoutine + ( count - ( 2 % count ) ) )%count ].functionName );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus3, foundRoutines[ ( currentlySelectedNewRoutine + ( count - ( 3 % count )) )%count ].functionName );
+		}
+		else
+		{
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPower, "" );
+			
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerPlus1, "" );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerPlus2, "" );
+			
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus1, "" );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus2, "" );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus3, "" );
+		}
 	}
 
 	public void AddExternalMovementForce (Vector3 direction) {

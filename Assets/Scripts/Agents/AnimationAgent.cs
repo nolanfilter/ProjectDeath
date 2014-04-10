@@ -70,7 +70,8 @@ public class AnimationAgent : MonoBehaviour {
 		int count = animators.Count;
 
 		for( int i = 0; i < count; i++ )
-			animators[i].SetBool( "Left", newValue ); 
+			if( animators[i].enabled )
+				animators[i].SetBool( "Left", newValue ); 
 	}
 
 	public static void SetRightBool( bool newValue )
@@ -84,7 +85,8 @@ public class AnimationAgent : MonoBehaviour {
 		int count = animators.Count;
 		
 		for( int i = 0; i < count; i++ )
-			animators[i].SetBool( "Right", newValue ); 
+			if( animators[i].enabled )
+				animators[i].SetBool( "Right", newValue ); 
 	}
 
 	public static void SetJumpBool( bool newValue )
@@ -98,7 +100,8 @@ public class AnimationAgent : MonoBehaviour {
 		int count = animators.Count;
 		
 		for( int i = 0; i < count; i++ )
-			animators[i].SetBool( "Jump", newValue ); 
+			if( animators[i].enabled )
+				animators[i].SetBool( "Jump", newValue ); 
 	}
 
 	public static void PrintStates()
