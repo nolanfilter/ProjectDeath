@@ -18,16 +18,18 @@ public class MultiTriggerReceivers : MonoBehaviour {
 	private SpriteRenderer sprite1;
 	private SpriteRenderer sprite2;
 	private SpriteRenderer sprite3;
+	private bool doorMoved = false;
 	//end door variables
 
 	//button variables
 	private Vector3 lowPoint;
 	public bool rise = true;
 	public float delay;
-	private bool delayPassed = false;
-	private bool dropped = false;
-	public bool lockGate = false;
-	public bool holdButton = false;
+	private bool delayPassed = true;
+	private bool delayCalled = true;
+	//private bool dropped = false;
+	//public bool lockGate = false;
+	public bool holdButton = true;
 	//end button variables
 
 
@@ -54,26 +56,42 @@ public class MultiTriggerReceivers : MonoBehaviour {
 	void Update () {
 		if (gameObject.tag == "Door") {
 			if (activate == true) {
-				if (block3.transform.position.y <= topPoint.y) {
-					block1.transform.position += new Vector3(0f, speed, 0f);
-					block2.transform.position += new Vector3(0f, speed, 0f);
-					block3.transform.position += new Vector3(0f, speed, 0f);
+				if (doorMoved == false) {
+					//Debug.Log("Going Up");
+					if (block3.transform.position.y <= topPoint.y) {
+						block1.transform.position += new Vector3(0f, speed, 0f);
+						block2.transform.position += new Vector3(0f, speed, 0f);
+						block3.transform.position += new Vector3(0f, speed, 0f);
+					}
+				} else {
+					//Debug.Log("Going Down");
+					if (block2.transform.position.y >= origin.y) {
+						block1.transform.position -= new Vector3(0f, speed, 0f);
+						block2.transform.position -= new Vector3(0f, speed, 0f);
+						block3.transform.position -= new Vector3(0f, speed, 0f);
+					}
 				}
-			} else {
-				if (block2.transform.position.y >= origin.y) {
-					block1.transform.position -= new Vector3(0f, speed, 0f);
-					block2.transform.position -= new Vector3(0f, speed, 0f);
-					block3.transform.position -= new Vector3(0f, speed, 0f);
+
+				if (block3.transform.position.y >= topPoint.y) {
+					//Debug.Log ("resetting");
+					doorMoved = true;
+					activate = false;
+					//Debug.Log (activate);
+				}
+				if (block2.transform.position.y <= origin.y) {
+					//Debug.Log ("resetting a");
+					doorMoved = false;
+					activate = false;
+					//Debug.Log (activate);
 				}
 			}
-			
 			if (block1.transform.position.y >= topPoint.y) {
 				sprite1.enabled = false;
 			}
 			if (block2.transform.position.y >= topPoint.y) {
 				sprite2.enabled = false;
 			}
-
+			
 			if (block1.transform.position.y <= topPoint.y) {
 				sprite1.enabled = true;
 			}
@@ -81,48 +99,52 @@ public class MultiTriggerReceivers : MonoBehaviour {
 				sprite2.enabled = true;
 			}
 
-
 		} //end door script
 
-		holdButton = false;
 
 		if (gameObject.tag == "Button") {
-			if (activate == true) {
-				if (lockGate == false) { // if lockGate is false, then the button will sink
-					if ((transform.position.y >= lowPoint.y) && (dropped == false)) {
+			if (rise == false) {
+					if (transform.position.y >= lowPoint.y){
 						transform.position -= new Vector3(0f,speed,0f);
-						Debug.Log ("Falling");
+						//Debug.Log ("Falling");
 					}
-					//dropped = true;
-					//Debug.Log (lockGate);
+				rise = true;
+				delayCalled = false;
+				delayPassed = false;
+				//Debug.Log (holdButton);
+				//}
+			}	
+			else { // this makes it so the button won't jump up and down
+				//Debug.Log (rise);
+				if (transform.position.y <= origin.y) { //makes the button rise
+					if (delayCalled == false) {
+						if (delayPassed == false) {
+							StartCoroutine(waitCall (delay)); //delay coroutine so it doesn't pop up immediately
+							Debug.Log ("Waited");
+						}
+					}
+					if (delayCalled == true) {
+						Debug.Log ("change");
+						holdButton = false;
+						delayPassed = true;
+					}
+				}
+				if (holdButton == false) {
+					//Debug.Log ("up");
+					if (transform.position.y < origin.y) { //resets boolean variables for next press
+						transform.position += new Vector3(0f, (speed/2), 0f);
+					}
 				}
 			}
-			if (holdButton == false) { // this makes it so the button won't jump up and down
-				//Debug.Log ("past Hold");
-				if ((rise = true) && (transform.position.y < origin.y)) { //makes the button rise
-					//Debug.Log ("Calling wait");
-					if (delayPassed == false) {
-						Debug.Log (lockGate);
-						StartCoroutine(waitCall(delay)); //delay coroutine so it doesn't pop up immediately
-					} else {
-						Debug.Log ("Rising");
-						transform.position += new Vector3(0f,(speed/2),0f); //causes button to rise slower than it dropped
-					}
-					lockGate = true; //this seems to be the cause of the bug
-							//moving this around will either cause the button to not rise up for only work intermittenly on passes
-				}
-				if (transform.position.y == origin.y) { //resets boolean variables for next press
-					delayPassed = false;
-					rise = false;
-				}
-			} // end button script
-		}
+		}// end button script
 	}
 
 	IEnumerator waitCall (float waitTime) {
 		//Debug.Log ("Wait Call");
 		yield return new WaitForSeconds(waitTime);
-		delayPassed = true;
-		//Debug.Log ("Waited");
+		if (delayCalled == false) {
+			delayCalled = true;
+			Debug.Log (delayCalled);
+		}
 	}
 }
