@@ -40,10 +40,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fc30f87233ad49e897822955b03566e, type: 3}
+  m_Script: {fileID: 11500000, guid: 9240812481c6e4c47a92f9d673d4882b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AudioLayerVolumes: []
+  audioObject: {fileID: 0}
+  backgroundMusicClip: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
