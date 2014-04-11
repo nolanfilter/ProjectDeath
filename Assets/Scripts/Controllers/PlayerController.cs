@@ -87,6 +87,16 @@ public class PlayerController : MonoBehaviour {
 
 	private bool hasChosenLoadout = false;
 
+	public bool isGrounded;
+
+	private Transform activePlatform;
+	private Vector3 activeLocalPlatformPoint;
+	private Vector3 activeGlobalPlatformPoint;
+	private Vector3 lastPlatformVelocity;
+
+	private Quaternion activeLocalPlatformRotation;
+	private Quaternion activeGlobalPlatformRotation;
+
 	void Awake()
 	{
 		controller = GetComponent<CharacterController>();
@@ -177,28 +187,36 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerStay( Collider collider )
+	void OnControllerColliderHit( ControllerColliderHit hit )
 	{
-		/*
-		if( !isMobile )
-			return;
-		
-		if( collider.tag == deathTag )
-		{
-			Debug.Log( "Dying" );
-
-			StopAllCoroutines();
-			StartCoroutine( "DeathRoutine" );
-			return;
-		}
-
-		//if( collider.tag == "ConveyorLeft" )
-		//	movementVector += Vector3.left * speed * 0.25f * Time.deltaTime;
-		*/
+		if( hit.moveDirection.y < -0.9f && hit.normal.y > 0.5f )
+			activePlatform = hit.collider.transform;
 	}
 
 	void Update()
 	{	
+		if( activePlatform != null )
+		{
+			Vector3 newGlobalPlatformPoint = activePlatform.TransformPoint( activeLocalPlatformPoint );
+			Vector3 moveDistance = newGlobalPlatformPoint - activeGlobalPlatformPoint;
+			if( moveDistance != Vector3.zero )
+				controller.Move( moveDistance );
+			lastPlatformVelocity = ( newGlobalPlatformPoint - activeGlobalPlatformPoint ) / Time.deltaTime;
+
+			Quaternion newGlobalPlatformRotation = activePlatform.rotation * activeLocalPlatformRotation;
+			Quaternion rotationDiff = newGlobalPlatformRotation * Quaternion.Inverse( activeGlobalPlatformRotation );
+
+			rotationDiff = Quaternion.FromToRotation( rotationDiff * transform.up, transform.up ) * rotationDiff;
+
+			transform.rotation = rotationDiff * transform.rotation;
+		}
+		else
+		{
+			lastPlatformVelocity = Vector3.zero;
+		}
+		
+		activePlatform = null;
+
 		applyGravity();
 
 		if( movementVector.x > 0f )
@@ -237,42 +255,30 @@ public class PlayerController : MonoBehaviour {
 		movementVector = Vector3.zero;
 		applyHeading = false;
 
-		if( isGrounded() )
+		if( isGrounded )
 		{
 			heading = Mathf.Lerp( heading, startingHeading, 0.5f );
 			fallBeginTime = Time.time;
 		}
-	}
 
-	/*
-	void OnGUI()
-	{	
-		int index = 0;
-
-		for( int i = 0; i < maxNumRoutines; i++ )
+		if( activePlatform != null )
 		{
-			string displayString = currentActions[i];
+			activeGlobalPlatformPoint = transform.position;
+			activeLocalPlatformPoint = activePlatform.InverseTransformPoint( transform.position );
 
-			if( isSelecting && canChooseLoadout && currentlySelectedRoutine == i )
-				displayString = "*" + displayString;
-
-			GUI.Label( actionRects[i], displayString, textStyle );
-		}
-
-		if( displayAllRoutines )
-		{
-			for( int i = 0; i < allRoutinesRects.Count; i++ )
-			{
-				string displayString = foundRoutines[i].functionName;
-
-				if( currentlySelectedNewRoutine == i )
-					displayString = "*" + displayString;
-				
-				GUI.Label( allRoutinesRects[i], displayString, textStyle );
-			}
+			activeGlobalPlatformRotation = transform.rotation;
+			activeLocalPlatformRotation = Quaternion.Inverse( activePlatform.rotation ) * transform.rotation;
 		}
 	}
-	*/
+
+	void FixedUpdate()
+	{
+		ray = new Ray( transform.position + controller.center, gravityVector );
+		
+		Physics.Raycast( ray, out hit, controller.height * 0.6f, 1 << 8 );
+		
+		isGrounded = ( ( hit.collider != null && !hit.collider.isTrigger ) || activePlatform != null );
+	}
 
 	//event handlers
 	private void OnButtonDown( InputController.ButtonType button )
@@ -453,14 +459,14 @@ public class PlayerController : MonoBehaviour {
 
 	private IEnumerator Jump()
 	{
-		if( isJumping || !isGrounded() )
+		if( isJumping || !isGrounded )
 			yield break;
 
 		isJumping = true;
 
 		yield return StartCoroutine( MovementOverTime( gravityVector.normalized * -1f, 10f, 0.5f ) );
 
-		while( !isGrounded() )
+		while( !isGrounded )
 			yield return null;
 
 		AnimationAgent.SetJumpBool( false );
@@ -479,21 +485,22 @@ public class PlayerController : MonoBehaviour {
 
 		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), 10f, 0.5f ) );
 
-//		while( !isGrounded() )
+//		while( !isGrounded )
 //			yield return null;
+
 
 		speed *= 0.5f;
 
 		yield return new WaitForSeconds( dashCoolDown );
 
-		speed *= 2f;
+		speed = setSpeed;
 
 		isDashing = false;
 	}
 
 	private IEnumerator GravityShift()
 	{
-		if( !isGrounded() || !isMobile )
+		if( !isGrounded || !isMobile )
 			yield break;
 
 		gravityVector *= -1f;	
@@ -522,22 +529,8 @@ public class PlayerController : MonoBehaviour {
 	}
 	//end routines
 
-	private bool isGrounded()
-	{
-		ray = new Ray( transform.position + controller.center, gravityVector );
-			
-		Physics.Raycast( ray, out hit, controller.height * 0.6f, 1 << 8 );
-
-		if( hit.collider != null && !hit.collider.isTrigger )
-			return true;
-		else
-			return false;
-	}
-
 	private void respawn()
 	{
-		UpdateSprites();
-
 		gravityVector = transform.up * gravity;
 
 		isJumping = false;
@@ -545,6 +538,7 @@ public class PlayerController : MonoBehaviour {
 		isFacingRight = true;
 		wasFalling = true;
 		fallBeginTime = Time.time;
+		speed = setSpeed;
 
 		heading = startingHeading;
 		applyHeading = false;
@@ -554,7 +548,7 @@ public class PlayerController : MonoBehaviour {
 
 	private void applyGravity()
 	{		
-		if( !isGrounded() && isMobile )
+		if( isMobile )
 		{
 			if( isFalling )
 				movementVector += gravityVector * ( Time.deltaTime + Mathf.Clamp01( ( Time.time - fallBeginTime ) / maxFallDuration ) * maxVelocity );
@@ -565,7 +559,7 @@ public class PlayerController : MonoBehaviour {
 
 	private void slopeCorrection()
 	{
-		if( !isGrounded() || isJumping )
+		if( !isGrounded || isJumping )
 			return;
 
 		leftRay = new Ray( transform.position + Vector3.left * transform.localScale.x * 0.5f, gravityVector );

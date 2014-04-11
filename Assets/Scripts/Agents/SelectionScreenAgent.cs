@@ -23,8 +23,8 @@ public class SelectionScreenAgent : MonoBehaviour {
 	private GameObject selectionScreenObject = null;
 	private SelectionScreenController controller = null;
 
-	public Color regularColor;
-	public Color highlightColor;
+	private Color regularColor = new Color( 0.753f, 0.914f, 0.929f, 1f );
+	private Color highlightColor = Color.white;
 
 	private static SelectionScreenAgent mInstance = null;
 	public static SelectionScreenAgent instance
@@ -65,7 +65,7 @@ public class SelectionScreenAgent : MonoBehaviour {
 
 	public static void SetText( TextType type, string newText )
 	{
-		if( instance )
+		if( instance && instance.enabled )
 			instance.internalSetText( type, newText );
 	}
 
@@ -91,7 +91,7 @@ public class SelectionScreenAgent : MonoBehaviour {
 
 	public static void HighlightText( TextType type )
 	{
-		if( instance )
+		if( instance && instance.enabled )
 			instance.internalHighlightText( type );
 	}
 
@@ -112,7 +112,7 @@ public class SelectionScreenAgent : MonoBehaviour {
 
 	public static void SetArrow( TextType type )
 	{
-		if( instance )
+		if( instance && instance.enabled )
 			instance.internalSetArrow( type );
 	}
 
