@@ -64,6 +64,8 @@ public class PlayerController : MonoBehaviour {
 
 	private bool isFacingRight;
 	private bool isMobile;
+	private bool isGrounded;
+	private bool isMoving = false;
 
 	private int maxNumRoutines = 4;
 	private bool canChooseLoadout = false;
@@ -86,8 +88,6 @@ public class PlayerController : MonoBehaviour {
 	private List<Rect> allRoutinesRects;
 
 	private bool hasChosenLoadout = false;
-
-	public bool isGrounded;
 
 	private Transform activePlatform;
 	private Vector3 activeLocalPlatformPoint;
@@ -671,6 +671,8 @@ public class PlayerController : MonoBehaviour {
 
 		yield return new WaitForSeconds( deathDuration );
 
+		isMoving = true;
+
 		float beginTime = Time.time;
 		float currentTime;
 		float lerp;
@@ -688,6 +690,8 @@ public class PlayerController : MonoBehaviour {
 			yield return null;
 
 		} while( currentTime < relocationDuration );
+
+		isMoving = false;
 
 		isSelecting = true;
 
@@ -847,5 +851,10 @@ public class PlayerController : MonoBehaviour {
 
 	public void AddExternalMovementForce (Vector3 direction) {
 		movementVector += direction;
+	}
+
+	public bool GetIsMoving()
+	{
+		return isMoving;
 	}
 }
