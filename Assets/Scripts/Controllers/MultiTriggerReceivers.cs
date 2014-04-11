@@ -38,7 +38,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 		//Debug.Log (gameObject.tag);
 		if (gameObject.tag == "Door") { //door start
 			origin = transform.position;
-			topPoint = new Vector3 (origin.x, origin.y + 1.3f, origin.z);
+			topPoint = new Vector3 (origin.x, origin.y + 2f, origin.z);
 			sprite1 = block1.GetComponent<SpriteRenderer>();
 			sprite2 = block2.GetComponent<SpriteRenderer>();
 			sprite3 = block3.GetComponent<SpriteRenderer>();
