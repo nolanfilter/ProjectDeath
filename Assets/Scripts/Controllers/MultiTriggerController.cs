@@ -27,9 +27,11 @@ public class MultiTriggerController : MonoBehaviour {
 				itemScript = item.GetComponent<MultiTriggerReceivers>();
 				if (itemScript.activate == false) {
 					itemScript.activate = true;
-				} else {
+				}/* 
+				else {
 					itemScript.activate = false;
 				}
+				*/
 			}
 		}
 	}
@@ -42,12 +44,12 @@ public class MultiTriggerController : MonoBehaviour {
 				if (itemScript.rise == true) {
 					itemScript.rise = false;
 				}
-
+				/*
 				if (itemScript.lockGate == true) {
 					Debug.Log ("Unlocking");
 					itemScript.lockGate = false;
 				}
-
+				*/
 				if (itemScript.holdButton == false) {
 					itemScript.holdButton = true;
 				}
