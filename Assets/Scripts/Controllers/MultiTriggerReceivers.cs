@@ -57,11 +57,11 @@ public class MultiTriggerReceivers : MonoBehaviour {
 			speed = (speed * 0.03f); //modify door speed
 			if (direction == "Left") {
 				//speed *= -1;
-				topPoint = new Vector3 (origin.x - 2f, origin.y, origin.z);
+				topPoint = new Vector3 (origin.x - 1.5f, origin.y, origin.z);
 			} 
 			if (direction == "Right") {
 				//speed = speed;
-				topPoint = new Vector3 (origin.x + 2f, origin.y, origin.z);
+				topPoint = new Vector3 (origin.x + 1.5f, origin.y, origin.z);
 			}
 		}
 
