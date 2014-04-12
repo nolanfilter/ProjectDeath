@@ -821,6 +821,7 @@ public class PlayerController : MonoBehaviour {
 			{
 				case "Dash": slotSprite = SelectionScreenController.SlotSprite.Dash; break;
 				case "GravShift": slotSprite = SelectionScreenController.SlotSprite.GravShift; break;
+				case "Jump": slotSprite = SelectionScreenController.SlotSprite.Jump; break;
 				case "JumperCable": slotSprite = SelectionScreenController.SlotSprite.JumperCable; break;
 				case "LaserShield": slotSprite = SelectionScreenController.SlotSprite.LaserShield; break;
 				case "Magnet": slotSprite = SelectionScreenController.SlotSprite.Magnet; break;
