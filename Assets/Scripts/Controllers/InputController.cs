@@ -52,6 +52,22 @@ public class InputController : MonoBehaviour {
 		{	
 			switch( Input.GetJoystickNames()[0] )
 			{
+				//NES
+				case " USB Gamepad ":
+				{
+					Debug.Log( "Set to NES" );
+
+					codes[ (int)ButtonType.Up ] = (KeyCode)( (int)KeyCode.Joystick1Button0 + 20 );
+					codes[ (int)ButtonType.Down ] = (KeyCode)( (int)KeyCode.Joystick1Button1 + 20 );
+					codes[ (int)ButtonType.Left ] = (KeyCode)( (int)KeyCode.Joystick1Button2 + 20 );
+					codes[ (int)ButtonType.Right ] = (KeyCode)( (int)KeyCode.Joystick1Button3 + 20 );
+					codes[ (int)ButtonType.Sel ] = (KeyCode)( (int)KeyCode.Joystick1Button4 + 20 );
+					codes[ (int)ButtonType.Start ] = (KeyCode)( (int)KeyCode.Joystick1Button5 + 20 );
+					codes[ (int)ButtonType.Jump ] = (KeyCode)( (int)KeyCode.Joystick1Button6 + 20 );
+					codes[ (int)ButtonType.Jump2 ] = (KeyCode)( (int)KeyCode.Joystick1Button7 + 20 );
+					codes[ (int)ButtonType.Action ] = (KeyCode)( (int)KeyCode.Joystick1Button8 + 20 );
+					codes[ (int)ButtonType.Action2 ] = (KeyCode)( (int)KeyCode.Joystick1Button9 + 20 );
+				} break;
 				//PS3
 				case "Sony PLAYSTATION(R)3 Controller":
 				{
@@ -85,16 +101,18 @@ public class InputController : MonoBehaviour {
 				//SNES
 				case " 2Axes 11Keys Game  Pad":
 				{
-					codes[ (int)ButtonType.Up ] = (KeyCode)( (int)KeyCode.Joystick1Button6 + 20 );
-					codes[ (int)ButtonType.Down ] = (KeyCode)( (int)KeyCode.Joystick1Button7 + 20 );
-					codes[ (int)ButtonType.Left ] = (KeyCode)( (int)KeyCode.Joystick1Button10 + 20 );
-					codes[ (int)ButtonType.Right ] = (KeyCode)( (int)KeyCode.Joystick1Button11 + 20 );
-					codes[ (int)ButtonType.Sel ] = (KeyCode)( (int)KeyCode.Joystick1Button8 + 20 );
-					codes[ (int)ButtonType.Start ] = (KeyCode)( (int)KeyCode.Joystick1Button9 + 20 );
-					codes[ (int)ButtonType.Jump ] = (KeyCode)( (int)KeyCode.Joystick1Button2 + 20 );
-					codes[ (int)ButtonType.Jump2 ] = (KeyCode)( (int)KeyCode.Joystick1Button0 + 20 );
-					codes[ (int)ButtonType.Action ] = (KeyCode)( (int)KeyCode.Joystick1Button1 + 20 );
-					codes[ (int)ButtonType.Action2 ] = (KeyCode)( (int)KeyCode.Joystick1Button3 + 20 );
+					Debug.Log( "Set to SNES" );
+
+					codes[ (int)ButtonType.Up ] = (KeyCode)( (int)KeyCode.Joystick1Button0 + 20 );
+					codes[ (int)ButtonType.Down ] = (KeyCode)( (int)KeyCode.Joystick1Button1 + 20 );
+					codes[ (int)ButtonType.Left ] = (KeyCode)( (int)KeyCode.Joystick1Button2 + 20 );
+					codes[ (int)ButtonType.Right ] = (KeyCode)( (int)KeyCode.Joystick1Button3 + 20 );
+					codes[ (int)ButtonType.Sel ] = (KeyCode)( (int)KeyCode.Joystick1Button4 + 20 );
+					codes[ (int)ButtonType.Start ] = (KeyCode)( (int)KeyCode.Joystick1Button5 + 20 );
+					codes[ (int)ButtonType.Jump ] = (KeyCode)( (int)KeyCode.JoystickButton1 + 20 );
+					codes[ (int)ButtonType.Jump2 ] = (KeyCode)( (int)KeyCode.JoystickButton2 + 20 );
+					codes[ (int)ButtonType.Action ] = (KeyCode)( (int)KeyCode.JoystickButton0 + 20 );
+					codes[ (int)ButtonType.Action2 ] = (KeyCode)( (int)KeyCode.JoystickButton3 + 20 );
 				} break;
 				
 				//XBOX 360
@@ -161,6 +179,8 @@ public class InputController : MonoBehaviour {
 				currentButtonList[ ButtonType.Jump ] = currentButtonList[ ButtonType.Jump ] || Input.GetKey( codes[ i ] );
 			else
 				currentButtonList[ (ButtonType)i ] = Input.GetKey( codes[ i ] );
+
+
 		}
 		
 		foreach( ButtonType button in buttonTypes )
@@ -184,7 +204,7 @@ public class InputController : MonoBehaviour {
 	
 	private void SendDownEvent( ButtonType button )
 	{						
-		//Debug.Log( button );
+		Debug.Log( "Button: " + button );
 
 		if( OnButtonDown != null )
 			OnButtonDown( button );		

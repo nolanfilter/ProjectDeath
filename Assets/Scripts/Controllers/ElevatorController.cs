@@ -17,8 +17,13 @@ public class ElevatorController : MonoBehaviour {
 	private bool noMove = false;
 	private Vector3 origin;
 
+	private bool up = true;
+
+	private int currentLevel;
+
 	// Use this for initialization
 	void Start () {
+		currentLevel = 0;
 		speed = (speed * 0.03f);
 		origin = new Vector3(elevatorBlock.transform.position.x, elevatorBlock.transform.position.y,elevatorBlock.transform.position.z);
 		//Debug.Log (levels.Length);
@@ -26,7 +31,7 @@ public class ElevatorController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (playerOn == false) {
+		if (!playerOn) {
 			elevatorBlock.transform.position = Vector3.MoveTowards(elevatorBlock.transform.position, origin, (speed * 2));
 			/*
 			for (int i = 0; i < levels.Length; i++) {
@@ -37,48 +42,91 @@ public class ElevatorController : MonoBehaviour {
 			}
 			*/
 		}
+		if(playerOn)
+		{
+
+		}
 	}
 
 	void OnTriggerStay (Collider collider) {
 		if (collider.gameObject.tag == "Player") {
 			playerOn = true;
-			for (int i = 0; i<levels.Length; i++) {
-				//Debug.Log (i);
-				if (active == true) {
-					if (noMove == false) {
-						elevatorBlock.transform.position = Vector3.MoveTowards (elevatorBlock.transform.position, levels[i].transform.position, speed);
-						hold = false;
-					}
-					if (elevatorBlock.transform.position.y >= levels[i].transform.position.y) {
-						noMove = true;
-						//Debug.Log (set);
-						if (set == false) {
-							if (hold == false) {
-								StartCoroutine (waitCall(delay));
-							}
-						}
-						//Debug.Log (set);
-						if (set == true) {
-							//Debug.Log ("reset");
-							set = false;
-							hold = true;
-							noMove = false;
-							i++;
-						}
-					}
 
+
+			if(currentLevel == levels.Length)
+			{
+				up = false;
+			}
+
+				if(up)
+			{
+				if (noMove == false) {
+					elevatorBlock.transform.position = Vector3.MoveTowards (elevatorBlock.transform.position, levels[currentLevel].transform.position, speed);
+				}
+				if (elevatorBlock.transform.position.y >= levels[currentLevel].transform.position.y) {
+					noMove = true;
+					if (set == false) {
+							StartCoroutine (waitCall(delay));
+					}
+					if (set == true) {
+						currentLevel ++;
+						noMove = false;
+						set = false;
+					}
+				}
+				if(currentLevel == levels.Length)
+				{
+					up = false;
+					currentLevel--;
 				}
 			}
+
+
+			if(!up)
+			{
+				if (noMove == false) {
+					elevatorBlock.transform.position = Vector3.MoveTowards (elevatorBlock.transform.position, levels[currentLevel].transform.position, speed);
+					hold = false;
+					
+				}
+				if (elevatorBlock.transform.position.y <= levels[currentLevel].transform.position.y) {
+					noMove = true;
+					if (set == false) {
+						if (hold == false) {
+							StartCoroutine (waitCall(delay));
+							
+						}
+					}
+					if (set == true) {
+						currentLevel --;
+						hold = true;
+						noMove = false;
+						set = false;
+					}
+				}
+				if(currentLevel == -1)
+				{
+					up = true;
+					currentLevel++;
+				}
+			}
+
+
+
 		}
 	}
 
 	void OnTriggerExit (Collider collider) {
 		playerOn = false;
+		set = false;
+	 	hold = false;
+		active = true;
+		noMove = false;
 	}
 
 	IEnumerator waitCall (float waitTime) {
 		yield return new WaitForSeconds(waitTime);
-		//Debug.Log ("waited");
+
 		if (set == false) {
 			set = true;
 		}
