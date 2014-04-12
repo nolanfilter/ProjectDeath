@@ -25,14 +25,15 @@ public class SelectionScreenController : MonoBehaviour {
 	{
 		Dash = 0,
 		GravShift = 1,
-		JumperCable = 2,
-		LaserShield = 3,
-		Magnet = 4,
-		MoveLeft = 5,
-		MoveRight = 6,
-		Rocket = 7,
-		Thermostat = 8,
-		Invalid = 9,
+		Jump = 2,
+		JumperCable = 3,
+		LaserShield = 4,
+		Magnet = 5,
+		MoveLeft = 6,
+		MoveRight = 7,
+		Rocket = 8,
+		Thermostat = 9,
+		Invalid = 10,
 	}
 	
 	public SpriteRenderer[] slot1Sprites = new SpriteRenderer[ Enum.GetNames( typeof( SlotSprite ) ).Length - 1 ];

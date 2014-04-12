@@ -204,7 +204,7 @@ public class InputController : MonoBehaviour {
 	
 	private void SendDownEvent( ButtonType button )
 	{						
-		Debug.Log( "Button: " + button );
+		//Debug.Log( "Button: " + button );
 
 		if( OnButtonDown != null )
 			OnButtonDown( button );		
