@@ -10,7 +10,7 @@ public class CrusherController : MonoBehaviour {
 	public float pause;
 	public float order;
 	
-	private float rayDistance = 0.2f;
+	private float rayDistance =5f;
 	private bool deathActive = false;
 	//private float yMove = -1f;
 	private Vector3 origin;
@@ -77,14 +77,14 @@ public class CrusherController : MonoBehaviour {
 
 	void FixedUpdate () {
 
-		Ray ray = new Ray (transform.position - Vector3.up * 3.5f, -transform.up);
+		Ray ray = new Ray (transform.position - Vector3.up * 3f, -transform.up);
 		RaycastHit rayHit;
 
 		if (Physics.Raycast(ray, out rayHit, rayDistance)) 
 		{
-			deathActive = true;
-		} else {
 			deathActive = false;
+		} else {
+			deathActive = true;
 		}
 
 		/*
