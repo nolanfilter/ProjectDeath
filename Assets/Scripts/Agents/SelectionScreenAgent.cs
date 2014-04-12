@@ -156,6 +156,42 @@ public class SelectionScreenAgent : MonoBehaviour {
 			controller.Highlight.enabled = ( type != TextType.Invalid );
 	}
 
+	public static void SetSlotSprite( int slotNumber, SelectionScreenController.SlotSprite slotSprite )
+	{
+		if( instance )
+			instance.internalSetSlotSprite( slotNumber, slotSprite );
+	}
+
+	private void internalSetSlotSprite( int slotNumber, SelectionScreenController.SlotSprite slotSprite )
+	{
+		switch( slotNumber )
+		{
+			case 1:
+			{
+				for( int i = 0; i < controller.slot1Sprites.Length; i++ )
+					controller.slot1Sprites[i].enabled = ( i == (int)slotSprite );
+			} break;
+
+			case 2:
+			{
+				for( int i = 0; i < controller.slot2Sprites.Length; i++ )
+					controller.slot2Sprites[i].enabled = ( i == (int)slotSprite );
+			} break;
+
+			case 3:
+			{
+				for( int i = 0; i < controller.slot3Sprites.Length; i++ )
+					controller.slot3Sprites[i].enabled = ( i == (int)slotSprite );
+			} break;
+
+			case 4:
+			{
+				for( int i = 0; i < controller.slot4Sprites.Length; i++ )
+					controller.slot4Sprites[i].enabled = ( i == (int)slotSprite );
+			} break;
+		}
+	}
+
 	public static void RaiseScreen()
 	{
 		if( instance )

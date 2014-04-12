@@ -2336,6 +2336,46 @@ MonoBehaviour:
   Arrow3: {fileID: 21200002}
   Arrow4: {fileID: 21200008}
   Highlight: {fileID: 21200010}
+  slot1Sprites:
+  - {fileID: 21200074}
+  - {fileID: 21200086}
+  - {fileID: 21200084}
+  - {fileID: 21200082}
+  - {fileID: 21200080}
+  - {fileID: 21200078}
+  - {fileID: 21200076}
+  - {fileID: 21200072}
+  - {fileID: 21200088}
+  slot2Sprites:
+  - {fileID: 21200068}
+  - {fileID: 21200056}
+  - {fileID: 21200058}
+  - {fileID: 21200060}
+  - {fileID: 21200062}
+  - {fileID: 21200064}
+  - {fileID: 21200066}
+  - {fileID: 21200070}
+  - {fileID: 21200054}
+  slot3Sprites:
+  - {fileID: 21200038}
+  - {fileID: 21200050}
+  - {fileID: 21200048}
+  - {fileID: 21200046}
+  - {fileID: 21200044}
+  - {fileID: 21200042}
+  - {fileID: 21200040}
+  - {fileID: 21200036}
+  - {fileID: 21200052}
+  slot4Sprites:
+  - {fileID: 21200032}
+  - {fileID: 21200020}
+  - {fileID: 21200022}
+  - {fileID: 21200024}
+  - {fileID: 21200026}
+  - {fileID: 21200028}
+  - {fileID: 21200030}
+  - {fileID: 21200034}
+  - {fileID: 21200018}
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1

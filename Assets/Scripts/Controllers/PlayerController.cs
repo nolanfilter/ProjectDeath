@@ -811,6 +811,28 @@ public class PlayerController : MonoBehaviour {
 		if( ThermostatSpriteRenderer )
 			ThermostatSpriteRenderer.enabled = false;
 
+		SelectionScreenController.SlotSprite slotSprite;
+
+		for( int i = 0; i < maxNumRoutines; i++ )
+		{
+			slotSprite = SelectionScreenController.SlotSprite.Invalid;
+
+			switch( currentActions[i] )
+			{
+				case "Dash": slotSprite = SelectionScreenController.SlotSprite.Dash; break;
+				case "GravShift": slotSprite = SelectionScreenController.SlotSprite.GravShift; break;
+				case "JumperCable": slotSprite = SelectionScreenController.SlotSprite.JumperCable; break;
+				case "LaserShield": slotSprite = SelectionScreenController.SlotSprite.LaserShield; break;
+				case "Magnet": slotSprite = SelectionScreenController.SlotSprite.Magnet; break;
+				case "MoveLeft": slotSprite = SelectionScreenController.SlotSprite.MoveLeft; break;
+				case "MoveRight": slotSprite = SelectionScreenController.SlotSprite.MoveRight; break;
+				case "Rocket": slotSprite = SelectionScreenController.SlotSprite.Rocket; break;
+				case "Thermostat": slotSprite = SelectionScreenController.SlotSprite.Thermostat; break;
+			}
+
+			SelectionScreenAgent.SetSlotSprite( i+1, slotSprite );
+		}
+
 		if( !display )
 			return;
 
