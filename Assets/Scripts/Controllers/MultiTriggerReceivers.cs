@@ -3,6 +3,8 @@ using System.Collections;
 
 public class MultiTriggerReceivers : MonoBehaviour {
 
+	//Note: Rotate SideDoor so cube1/block1 is in far side away from wall door rises into before marking Left or Right
+
 	public bool activate; //receiving bool for the main controller
 
 	public float speed;
@@ -14,11 +16,13 @@ public class MultiTriggerReceivers : MonoBehaviour {
 	public GameObject block1; //top block
 	public GameObject block2; //middle block
 	public GameObject block3; //bottom block
+
 	private Vector3 topPoint;
 	private SpriteRenderer sprite1;
 	private SpriteRenderer sprite2;
 	private SpriteRenderer sprite3;
 	private bool doorMoved = false;
+	public string direction;
 	//end door variables
 
 	//button variables
@@ -45,11 +49,28 @@ public class MultiTriggerReceivers : MonoBehaviour {
 			speed = (speed * 0.03f); //modify door speed
 		}
 
+		if (gameObject.tag == "SideDoor") { //sidedoor start
+			origin = transform.position;
+			sprite1 = block1.GetComponent<SpriteRenderer>();
+			sprite2 = block2.GetComponent<SpriteRenderer>();
+			sprite3 = block3.GetComponent<SpriteRenderer>();
+			speed = (speed * 0.03f); //modify door speed
+			if (direction == "Left") {
+				//speed *= -1;
+				topPoint = new Vector3 (origin.x - 2f, origin.y, origin.z);
+			} 
+			if (direction == "Right") {
+				//speed = speed;
+				topPoint = new Vector3 (origin.x + 2f, origin.y, origin.z);
+			}
+		}
+
 		if (gameObject.tag == "Button") { //button start
 			origin = transform.position;
 			lowPoint = new Vector3 (origin.x, origin.y - 0.2f, origin.z);
 			speed = (speed * 0.03f); //modify button speed
 		}
+
 	}
 	
 	// Update is called once per frame
@@ -57,14 +78,14 @@ public class MultiTriggerReceivers : MonoBehaviour {
 		if (gameObject.tag == "Door") {
 			if (activate == true) {
 				if (doorMoved == false) {
-					//Debug.Log("Going Up");
+					Debug.Log("Going Up");
 					if (block3.transform.position.y <= topPoint.y) {
 						block1.transform.position += new Vector3(0f, speed, 0f);
 						block2.transform.position += new Vector3(0f, speed, 0f);
 						block3.transform.position += new Vector3(0f, speed, 0f);
 					}
 				} else {
-					//Debug.Log("Going Down");
+					Debug.Log("Going Down");
 					if (block2.transform.position.y >= origin.y) {
 						block1.transform.position -= new Vector3(0f, speed, 0f);
 						block2.transform.position -= new Vector3(0f, speed, 0f);
@@ -73,13 +94,13 @@ public class MultiTriggerReceivers : MonoBehaviour {
 				}
 
 				if (block3.transform.position.y >= topPoint.y) {
-					//Debug.Log ("resetting");
+					Debug.Log ("resetting");
 					doorMoved = true;
 					activate = false;
 					//Debug.Log (activate);
 				}
 				if (block2.transform.position.y <= origin.y) {
-					//Debug.Log ("resetting a");
+					Debug.Log ("resetting a");
 					doorMoved = false;
 					activate = false;
 					//Debug.Log (activate);
@@ -120,7 +141,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 					if (delayCalled == false) {
 						if (delayPassed == false) {
 							StartCoroutine(waitCall (delay)); //delay coroutine so it doesn't pop up immediately
-							Debug.Log ("Waited");
+							//Debug.Log ("Waited");
 						}
 					}
 					if (delayCalled == true) {
@@ -137,6 +158,103 @@ public class MultiTriggerReceivers : MonoBehaviour {
 				}
 			}
 		}// end button script
+
+		if (gameObject.tag == "SideDoor") {
+			if (activate == true) {
+				if (direction == "Right") {
+					//Debug.Log ("Right");
+					if (doorMoved == false) {
+						//Debug.Log("Going Up");
+						if (block1.transform.position.x <= topPoint.x) {
+							block1.transform.position += new Vector3(speed, 0f, 0f);
+							block2.transform.position += new Vector3(speed, 0f, 0f);
+							block3.transform.position += new Vector3(speed, 0f, 0f);
+						}
+					} else {
+						//Debug.Log("Going Down");
+						if (block2.transform.position.x >= origin.x) {
+							block1.transform.position -= new Vector3(speed, 0f, 0f);
+							block2.transform.position -= new Vector3(speed, 0f, 0f);
+							block3.transform.position -= new Vector3(speed, 0f, 0f);
+						}
+					}
+				
+					if (block1.transform.position.x >= topPoint.x) {
+						//Debug.Log ("resetting");
+						doorMoved = true;
+						activate = false;
+					//Debug.Log (activate);
+					}
+					if (block2.transform.position.x <= origin.x) {
+						//Debug.Log ("resetting a");
+						doorMoved = false;
+						activate = false;
+					//Debug.Log (activate);
+					}
+				}
+				if (direction == "Left") {
+					if (doorMoved == false) {
+					Debug.Log("Going Up");
+						if (block1.transform.position.x >= topPoint.x) {
+							block1.transform.position -= new Vector3(speed, 0f, 0f);
+							block2.transform.position -= new Vector3(speed, 0f, 0f);
+							block3.transform.position -= new Vector3(speed, 0f, 0f);
+						}
+					} else {
+					Debug.Log("Going Down");
+						if (block2.transform.position.x <= origin.x) {
+							block1.transform.position += new Vector3(speed, 0f, 0f);
+							block2.transform.position += new Vector3(speed, 0f, 0f);
+							block3.transform.position += new Vector3(speed, 0f, 0f);
+						}
+					}
+				
+					if (block1.transform.position.x <= topPoint.x) {
+					Debug.Log ("resetting");
+						doorMoved = true;
+						activate = false;
+					//Debug.Log (activate);
+					}
+					if (block2.transform.position.x >= origin.x) {
+					Debug.Log ("resetting a");
+						doorMoved = false;
+						activate = false;
+					//Debug.Log (activate);
+					}
+				}
+			}
+			if (direction == "Right") {
+				if (block3.transform.position.x >= topPoint.x) {
+					sprite3.enabled = false;
+				}
+				if (block2.transform.position.x >= topPoint.x) {
+					sprite2.enabled = false;
+				}
+			
+				if (block3.transform.position.x <= topPoint.x) {
+					sprite3.enabled = true;
+				}
+				if (block2.transform.position.x <= topPoint.x) {
+					sprite2.enabled = true;
+				}
+			}
+			if (direction == "Left") {
+				if (block3.transform.position.x <= topPoint.x) {
+					sprite3.enabled = false;
+				}
+				if (block2.transform.position.x <= topPoint.x) {
+					sprite2.enabled = false;
+				}
+				
+				if (block3.transform.position.x >= topPoint.x) {
+					sprite3.enabled = true;
+				}
+				if (block2.transform.position.x >= topPoint.x) {
+					sprite2.enabled = true;
+				}
+			
+			}
+		}//end sidedoor script
 	}
 
 	IEnumerator waitCall (float waitTime) {
@@ -144,7 +262,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 		yield return new WaitForSeconds(waitTime);
 		if (delayCalled == false) {
 			delayCalled = true;
-			Debug.Log (delayCalled);
+			//Debug.Log (delayCalled);
 		}
 	}
 }
