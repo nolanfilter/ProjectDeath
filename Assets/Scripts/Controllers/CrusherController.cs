@@ -77,9 +77,9 @@ public class CrusherController : MonoBehaviour {
 
 	void FixedUpdate () {
 
-		Ray ray = new Ray (transform.position - Vector3.up * 3.5f, -transform.up);
+		Ray ray = new Ray (transform.position - Vector3.up * 2.5f, -transform.up);
 		RaycastHit rayHit;
-
+		Debug.Log (ray);
 		if (Physics.Raycast(ray, out rayHit, rayDistance)) 
 		{
 			deathActive = true;
