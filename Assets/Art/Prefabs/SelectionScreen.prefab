@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 23: {fileID: 2300000}
   - 102: {fileID: 10200000}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: CurrentPower+1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ GameObject:
   - 4: {fileID: 400002}
   - 23: {fileID: 2300002}
   - 102: {fileID: 10200002}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: CurrentPower+2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - 4: {fileID: 400004}
   - 23: {fileID: 2300004}
   - 102: {fileID: 10200004}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: CurrentPower-3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   - 4: {fileID: 400006}
   - 23: {fileID: 2300006}
   - 102: {fileID: 10200006}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: CurrentPower-2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   - 4: {fileID: 400008}
   - 23: {fileID: 2300008}
   - 102: {fileID: 10200008}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: CurrentPower-1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400010}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WHEEL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   - 4: {fileID: 400012}
   - 23: {fileID: 2300010}
   - 102: {fileID: 10200010}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: CurrentPower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127,7 +127,7 @@ GameObject:
   - 4: {fileID: 400014}
   - 23: {fileID: 2300012}
   - 102: {fileID: 10200012}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: PowerScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   - 4: {fileID: 400016}
   - 23: {fileID: 2300014}
   - 102: {fileID: 10200014}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Ability3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   - 4: {fileID: 400018}
   - 23: {fileID: 2300016}
   - 102: {fileID: 10200016}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Ability4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - 4: {fileID: 400020}
   - 23: {fileID: 2300018}
   - 102: {fileID: 10200018}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Ability2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +195,7 @@ GameObject:
   - 4: {fileID: 400022}
   - 23: {fileID: 2300020}
   - 102: {fileID: 10200020}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Ability1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,7 +210,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400024}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TEXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   - 4: {fileID: 400026}
   - 212: {fileID: 21200000}
   - 114: {fileID: 11400002}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400028}
   - 212: {fileID: 21200002}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Arrow3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -259,7 +259,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400030}
   - 212: {fileID: 21200004}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Arrow2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400032}
   - 212: {fileID: 21200006}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Arrow1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,7 +291,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400034}
   - 114: {fileID: 11400004}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SelectionScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307,7 +307,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400036}
   - 212: {fileID: 21200008}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Arrow4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -323,7 +323,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400038}
   - 212: {fileID: 21200010}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Highlight Power
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,7 +339,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400040}
   - 212: {fileID: 21200012}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: HighlightButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -356,7 +356,7 @@ GameObject:
   - 4: {fileID: 400042}
   - 212: {fileID: 21200014}
   - 114: {fileID: 11400000}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,7 +372,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400044}
   - 212: {fileID: 21200016}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: SelectionBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -387,7 +387,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400046}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SLOT04
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +403,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400048}
   - 212: {fileID: 21200018}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Thermostat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -419,7 +419,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400050}
   - 212: {fileID: 21200020}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GravShift
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -435,7 +435,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400052}
   - 212: {fileID: 21200022}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: JumperCable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -451,7 +451,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400054}
   - 212: {fileID: 21200024}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LaserShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -467,7 +467,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400056}
   - 212: {fileID: 21200026}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Magnet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -483,7 +483,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400058}
   - 212: {fileID: 21200028}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoveLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -499,7 +499,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400060}
   - 212: {fileID: 21200030}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoveRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -515,7 +515,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400062}
   - 212: {fileID: 21200032}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -531,7 +531,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400064}
   - 212: {fileID: 21200034}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -547,7 +547,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400066}
   - 212: {fileID: 21200036}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -563,7 +563,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400068}
   - 212: {fileID: 21200038}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -579,7 +579,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400070}
   - 212: {fileID: 21200040}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoveRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -595,7 +595,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400072}
   - 212: {fileID: 21200042}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoveLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -611,7 +611,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400074}
   - 212: {fileID: 21200044}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Magnet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -627,7 +627,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400076}
   - 212: {fileID: 21200046}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LaserShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -643,7 +643,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400078}
   - 212: {fileID: 21200048}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: JumperCable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -659,7 +659,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400080}
   - 212: {fileID: 21200050}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GravShift
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -675,7 +675,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400082}
   - 212: {fileID: 21200052}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Thermostat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -690,7 +690,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400084}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SLOT03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -705,7 +705,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400086}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SLOT02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -721,7 +721,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400088}
   - 212: {fileID: 21200054}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Thermostat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -737,7 +737,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400090}
   - 212: {fileID: 21200056}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GravShift
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -753,7 +753,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400092}
   - 212: {fileID: 21200058}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: JumperCable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -769,7 +769,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400094}
   - 212: {fileID: 21200060}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LaserShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -785,7 +785,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400096}
   - 212: {fileID: 21200062}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Magnet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -801,7 +801,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400098}
   - 212: {fileID: 21200064}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoveLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -817,7 +817,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400100}
   - 212: {fileID: 21200066}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoveRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -833,7 +833,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400102}
   - 212: {fileID: 21200068}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -849,7 +849,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400104}
   - 212: {fileID: 21200070}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -865,7 +865,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400106}
   - 212: {fileID: 21200072}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -881,7 +881,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400108}
   - 212: {fileID: 21200074}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Dash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -897,7 +897,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400110}
   - 212: {fileID: 21200076}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoveRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -913,7 +913,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400112}
   - 212: {fileID: 21200078}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MoveLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -929,7 +929,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400114}
   - 212: {fileID: 21200080}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Magnet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -945,7 +945,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400116}
   - 212: {fileID: 21200082}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LaserShield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -961,7 +961,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400118}
   - 212: {fileID: 21200084}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: JumperCable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -977,7 +977,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400120}
   - 212: {fileID: 21200086}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GravShift
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -993,7 +993,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400122}
   - 212: {fileID: 21200088}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Thermostat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1008,7 +1008,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400124}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SLOT01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1024,7 +1024,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400126}
   - 212: {fileID: 21200090}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: InGameBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1040,7 +1040,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400128}
   - 212: {fileID: 21200092}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: InGameBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
