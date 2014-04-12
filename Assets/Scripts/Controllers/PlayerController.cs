@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour {
 	private float jumpCoolDown = 0.05f;
 
 	private bool isDashing;
-	private float dashCoolDown = 1.25f;
+	private float dashCoolDown = 0.3f;
 
 	private bool isFacingRight;
 	private bool isMobile;
@@ -465,7 +465,7 @@ public class PlayerController : MonoBehaviour {
 
 		isJumping = true;
 
-		yield return StartCoroutine( MovementOverTime( gravityVector.normalized * -1f, 10f, 0.5f ) );
+		yield return StartCoroutine( MovementOverTime( gravityVector.normalized * -1f, 12.5f, 0.5f ) );
 
 		while( !isGrounded )
 			yield return null;
@@ -484,7 +484,7 @@ public class PlayerController : MonoBehaviour {
 
 		isDashing = true;
 
-		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), 10f, 0.5f ) );
+		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), 7f, 0.5f ) );
 
 //		while( !isGrounded )
 //			yield return null;
