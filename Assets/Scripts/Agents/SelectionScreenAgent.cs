@@ -26,6 +26,14 @@ public class SelectionScreenAgent : MonoBehaviour {
 	private Color regularColor = new Color( 0.753f, 0.914f, 0.929f, 1f );
 	private Color highlightColor = Color.white;
 
+	private Camera selectionScreenCamera;
+
+	private float offscreenYValue = 5.25f;
+	private float onscreenYValue = 0f;
+	private float zOffset = 10f;
+
+	private float speed = 7f;
+
 	private static SelectionScreenAgent mInstance = null;
 	public static SelectionScreenAgent instance
 	{
@@ -49,8 +57,20 @@ public class SelectionScreenAgent : MonoBehaviour {
 
 	void Start()
 	{
+		GameObject go = new GameObject();
+		go.name = "SelectionScreenCamera";
+		selectionScreenCamera = go.AddComponent<Camera>();
+		selectionScreenCamera.clearFlags = CameraClearFlags.Depth;
+		selectionScreenCamera.isOrthoGraphic = true;
+		selectionScreenCamera.orthographicSize = 3;
+		selectionScreenCamera.cullingMask = ( 1 << LayerMask.NameToLayer( "SelectionScreen" ) );
+
 		if( selectionScreenPrefab )
+		{
 			selectionScreenObject = Instantiate( selectionScreenPrefab ) as GameObject;
+			selectionScreenObject.transform.parent = go.transform;
+			selectionScreenObject.transform.localPosition = Vector3.up * offscreenYValue + Vector3.forward * zOffset;
+		}
 
 		if( selectionScreenObject )
 			controller = selectionScreenObject.GetComponent<SelectionScreenController>();
@@ -61,6 +81,8 @@ public class SelectionScreenAgent : MonoBehaviour {
 
 		for( int i = 0; i < length; i++ )
 			SetText( (TextType)i, "" );
+
+		RaiseScreen();
 	}
 
 	public static void SetText( TextType type, string newText )
@@ -132,5 +154,57 @@ public class SelectionScreenAgent : MonoBehaviour {
 
 		if( controller.Highlight )
 			controller.Highlight.enabled = ( type != TextType.Invalid );
+	}
+
+	public static void RaiseScreen()
+	{
+		if( instance )
+			instance.internalRaiseScreen();
+	}
+
+	private void internalRaiseScreen()
+	{
+		StopAllCoroutines();
+		StartCoroutine( "DoRaiseScreen" );
+	}
+
+	private IEnumerator DoRaiseScreen()
+	{
+		if( selectionScreenObject.transform.localPosition.y == offscreenYValue )
+			yield break;
+		
+		while( selectionScreenObject.transform.localPosition.y < ( offscreenYValue - speed * Time.deltaTime ) )
+		{
+			selectionScreenObject.transform.localPosition += Vector3.up * speed * Time.deltaTime;
+			yield return null;
+		}
+		
+		selectionScreenObject.transform.localPosition = Vector3.up * offscreenYValue + Vector3.forward * zOffset;
+	}
+
+	public static void LowerScreen()
+	{
+		if( instance )
+			instance.internalLowerScreen();
+	}
+
+	private void internalLowerScreen()
+	{
+		StopAllCoroutines();
+		StartCoroutine( "DoLowerScreen" );
+	}
+
+	private IEnumerator DoLowerScreen()
+	{
+		if( selectionScreenObject.transform.localPosition.y == onscreenYValue )
+			yield break;
+		
+		while( selectionScreenObject.transform.localPosition.y > ( onscreenYValue + speed * Time.deltaTime ) )
+		{
+			selectionScreenObject.transform.localPosition -= Vector3.up * speed * Time.deltaTime;
+			yield return null;
+		}
+		
+		selectionScreenObject.transform.localPosition = Vector3.up * onscreenYValue + Vector3.forward * zOffset;
 	}
 }

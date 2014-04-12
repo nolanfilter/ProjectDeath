@@ -138,6 +138,7 @@ public class PlayerController : MonoBehaviour {
 		isMobile = true;
 
 		textStyle = FontAgent.GetTextStyle();
+		UpdateSprites();
 
 		respawn();
 	}
@@ -701,8 +702,14 @@ public class PlayerController : MonoBehaviour {
 		UpdateSelectionScreen();
 
 		if( canChooseLoadout )
+		{
+			SelectionScreenAgent.LowerScreen();
+
 			while( !hasChosenLoadout )
 				yield return null;
+
+			SelectionScreenAgent.RaiseScreen();
+		}
 
 		isSelecting = false;
 
