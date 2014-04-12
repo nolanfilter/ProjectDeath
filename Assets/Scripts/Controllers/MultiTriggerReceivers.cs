@@ -124,7 +124,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 						}
 					}
 					if (delayCalled == true) {
-						Debug.Log ("change");
+						//Debug.Log ("change");
 						holdButton = false;
 						delayPassed = true;
 					}

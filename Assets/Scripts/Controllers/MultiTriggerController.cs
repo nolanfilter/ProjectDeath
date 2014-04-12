@@ -20,12 +20,25 @@ public class MultiTriggerController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider collider) {
+
+		if(objects[1].gameObject.tag == "Death")
+		{
+			if(objects[1].activeSelf)
+			{
+				objects[1].SetActive(false);
+			}
+			else if(!objects[1].activeSelf)
+			{
+				objects[1].SetActive(true);
+			}
+		}
+
 		if (collider.gameObject.tag == "Player") {
 			//Debug.Log ("Player");
 			//switches = true;
 			foreach (GameObject item in objects) {
 				itemScript = item.GetComponent<MultiTriggerReceivers>();
-				if (itemScript.activate == false) {
+				if ( itemScript != null && itemScript.activate == false) {
 					itemScript.activate = true;
 				}/* 
 				else {
@@ -41,7 +54,7 @@ public class MultiTriggerController : MonoBehaviour {
 		if (collider.gameObject.tag == "Player") {
 			foreach (GameObject item in objects) {
 				itemScript = item.GetComponent<MultiTriggerReceivers>();
-				if (itemScript.rise == true) {
+				if ( itemScript != null && itemScript.rise == true) {
 					itemScript.rise = false;
 				}
 				/*
@@ -50,7 +63,7 @@ public class MultiTriggerController : MonoBehaviour {
 					itemScript.lockGate = false;
 				}
 				*/
-				if (itemScript.holdButton == false) {
+				if ( itemScript != null && itemScript.holdButton == false) {
 					itemScript.holdButton = true;
 				}
 			}
