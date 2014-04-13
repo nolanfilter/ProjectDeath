@@ -34,6 +34,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 	//private bool dropped = false;
 	//public bool lockGate = false;
 	public bool holdButton = true;
+	public bool inactive;
 	//end button variables
 
 
@@ -71,7 +72,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 			speed = (speed * 0.03f); //modify button speed
 		}
 
-	}
+	}	
 	
 	// Update is called once per frame
 	void Update () {
@@ -157,6 +158,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 					}
 				}
 			}
+
 		}// end button script
 
 		if (gameObject.tag == "SideDoor") {
@@ -255,6 +257,15 @@ public class MultiTriggerReceivers : MonoBehaviour {
 			
 			}
 		}//end sidedoor script
+
+		if (gameObject.tag == "Controller") {
+			if (inactive) {
+				gameObject.collider.enabled = false;
+				Debug.Log ("False");
+			} else {
+				gameObject.collider.enabled = true;
+			}
+		} //end controller inactive
 	}
 
 	IEnumerator waitCall (float waitTime) {
