@@ -10,7 +10,7 @@ public class CrusherController : MonoBehaviour {
 	public float pause;
 	public float order;
 	
-	private float rayDistance =5f;
+	private float rayDistance = 1f;
 	private bool deathActive = false;
 	//private float yMove = -1f;
 	private Vector3 origin;
@@ -47,10 +47,12 @@ public class CrusherController : MonoBehaviour {
 		} else {
 			transform.position = Vector3.Lerp (transform.position, origin, upSpeed);
 			set = true;
+			deathActive = false;
 		}
 		if(moveDist > 0)
 		{
 			if (transform.position.y <= newY.y + 0.1f) {
+				deathActive = true;
 				if (set == true) {
 					StartCoroutine (waitPause(pause));
 				}
@@ -63,6 +65,7 @@ public class CrusherController : MonoBehaviour {
 		if(moveDist < 0)
 		{
 			if (transform.position.y >= newY.y - 0.1f) {
+				deathActive = true;
 				if (set == true) {
 					StartCoroutine (waitPause(pause));
 				}
@@ -71,33 +74,33 @@ public class CrusherController : MonoBehaviour {
 				direct = true;
 			}
 		}
-
-
 	}
 
+	/*
 	void FixedUpdate () {
 
-		Ray ray = new Ray (transform.position - Vector3.up * 3f, -transform.up);
-		RaycastHit rayHit;
-
-		if (Physics.Raycast(ray, out rayHit, rayDistance)) 
-		{
-			deathActive = false;
+		if (gameObject.collider.tag != "OtherCollider") {
+			Ray ray = new Ray (transform.position - (Vector3.up * 2.5f), -transform.up);
+			RaycastHit rayHit;
+			if (!Physics.Raycast(ray, out rayHit, rayDistance)) 
+			{
+				deathActive = false;
+			} else {
+				deathActive = true;
+			}
 		} else {
-			deathActive = true;
+			rayDistance = 5f;
+			Ray ray = new Ray (transform.position - (Vector3.up * 3f), -transform.up);
+			RaycastHit rayHit;
+			if (Physics.Raycast(ray, out rayHit, rayDistance)) 
+			{
+				deathActive = false;
+			} else {
+				deathActive = true;
+			}
 		}
-
-		/*
-		if (Physics.Raycast (ray, out rayHit, 0.1f)) {
-			yMove *= 1;
-		} 
-
-		if (Physics.Raycast (ray, out rayHit, 4f)) {
-			yMove *= -1;
-		}
-		*/
 	}	
-
+	*/
 	IEnumerator waitPause (float waitTime) {
 		yield return new WaitForSeconds(waitTime);
 		set = false;
