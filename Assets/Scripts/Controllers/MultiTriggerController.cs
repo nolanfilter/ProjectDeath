@@ -11,6 +11,8 @@ public class MultiTriggerController : MonoBehaviour {
 
 	public Animator anim;
 
+	//public bool activate = false;
+
 	// Use this for initialization
 	void Start () {
 
@@ -24,15 +26,15 @@ public class MultiTriggerController : MonoBehaviour {
 	void OnTriggerEnter(Collider collider) {
 
 
-		if(objects[1].gameObject.tag == "Death")
+		if(objects[0].gameObject.tag == "Death")
 		{
-			if(objects[1].activeSelf)
+			if(objects[0].activeSelf)
 			{
-				objects[1].SetActive(false);
+				objects[0].SetActive(false);
 			}
-			else if(!objects[1].activeSelf)
+			else if(!objects[0].activeSelf)
 			{
-				objects[1].SetActive(true);
+				objects[0].SetActive(true);
 			}
 		}
 
@@ -44,6 +46,7 @@ public class MultiTriggerController : MonoBehaviour {
 				itemScript = item.GetComponent<MultiTriggerReceivers>();
 				if ( itemScript != null && itemScript.activate == false) {
 					itemScript.activate = true;
+					itemScript.inactive = false;
 				}/* 
 				else {
 					itemScript.activate = false;
@@ -60,6 +63,7 @@ public class MultiTriggerController : MonoBehaviour {
 				itemScript = item.GetComponent<MultiTriggerReceivers>();
 				if ( itemScript != null && itemScript.rise == true) {
 					itemScript.rise = false;
+					itemScript.inactive = false;
 				}
 				/*
 				if (itemScript.lockGate == true) {
@@ -69,6 +73,7 @@ public class MultiTriggerController : MonoBehaviour {
 				*/
 				if ( itemScript != null && itemScript.holdButton == false) {
 					itemScript.holdButton = true;
+					itemScript.inactive = false;
 				}
 			}
 		}
