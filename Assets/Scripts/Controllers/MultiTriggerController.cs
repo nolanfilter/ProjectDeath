@@ -9,9 +9,11 @@ public class MultiTriggerController : MonoBehaviour {
 		
 	private MultiTriggerReceivers itemScript;
 
+	public Animator anim;
+
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
@@ -20,6 +22,7 @@ public class MultiTriggerController : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider collider) {
+
 
 		if(objects[1].gameObject.tag == "Death")
 		{
@@ -34,6 +37,7 @@ public class MultiTriggerController : MonoBehaviour {
 		}
 
 		if (collider.gameObject.tag == "Player") {
+			anim.SetBool("Pressed", true);
 			//Debug.Log ("Player");
 			//switches = true;
 			foreach (GameObject item in objects) {
@@ -67,6 +71,12 @@ public class MultiTriggerController : MonoBehaviour {
 					itemScript.holdButton = true;
 				}
 			}
+		}
+	}
+
+	void OnTriggerExit (Collider collider) {
+		if (collider.gameObject.tag == "Player") {
+			anim.SetBool("Pressed", false);
 		}
 	}
 }
