@@ -9,7 +9,8 @@ public class ColdController : MonoBehaviour {
 
 	private float count;
 	private ColdSender blockScript;
-	private bool check;
+	//private bool check;
+	//private float match = 0f;
 
 
 	// Use this for initialization
@@ -22,11 +23,12 @@ public class ColdController : MonoBehaviour {
 		foreach (GameObject block in coldBlocks) {
 			blockScript = block.GetComponent<ColdSender>();
 			if (blockScript.active == true) {
-				check = true;
+				count += rate * 2f; //alter temp increase rate here
+				//Debug.Log ("Active");
 			} else {
+				//Debug.Log ("inactive");
 				if (count > 0) {
-					check = false;
-					count -= 15f * Time.deltaTime;
+					count -= rate * 1.5f * Time.deltaTime; //increase drop of temperature here
 				}
 			}
 			if (count >= maxVal) {
@@ -36,10 +38,22 @@ public class ColdController : MonoBehaviour {
 				blockScript.kill = false;
 			}
 		}
+		/*
+		if (match > 0) {
+			check = true;
+		}
+		if (match <= 0) {
+			check = false;
+		}
 		if (check) {
 			count += rate;
+		} else {
+			if (count > 0) {
+				count -= 15f * Time.deltaTime;
+			}
 		}
-		Debug.Log(count);
+		*/
+		Debug.Log(count); //watch rates of increase and decrease here
 	}
 
 }

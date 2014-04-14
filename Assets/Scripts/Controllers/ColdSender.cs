@@ -8,11 +8,17 @@ public class ColdSender : MonoBehaviour {
 	public bool kill = false;
 	public GameObject killBlock;
 
+	private Vector3 vibPlusX;
+	private Vector3 vibMinusX;
+
 	// Use this for initialization
 	void Start () {
 		//StartCoroutine(switchKill());
 		active = false;
+		//inactive = true;
 		//rate *= 0.5f;
+		vibPlusX = new Vector3(killBlock.transform.position.x + 0.02f, killBlock.transform.position.y, killBlock.transform.position.z);
+		vibMinusX = new Vector3(killBlock.transform.position.x - 0.04f, killBlock.transform.position.y, killBlock.transform.position.z);
 	}
 	
 	// Update is called once per frame
@@ -27,9 +33,13 @@ public class ColdSender : MonoBehaviour {
 
 		if (kill == true) {
 			killBlock.collider.enabled = true;
+			killBlock.transform.position = vibPlusX; 
+			killBlock.transform.position = vibMinusX;
+			killBlock.transform.position = vibPlusX;
 		} else {
 			killBlock.collider.enabled = false;
 		}
+		active = false;
 
 	}
 
@@ -37,6 +47,7 @@ public class ColdSender : MonoBehaviour {
 		if (collider.gameObject.tag == "Player") {
 			active = true;
 		}
+
 		/*
 		if (kill == true) {
 			gameObject.tag = "Death";
@@ -46,12 +57,15 @@ public class ColdSender : MonoBehaviour {
 		*/
 	}
 
+	/*
 	void OnTriggerExit (Collider collider) {
 		if (collider.gameObject.tag == "Player") {
+			//Debug.Log ("Exit");
 			active = false;
 		}
 
 	}
+	*/
 	/*
 	IEnumerator switchKill () {
 		yield return new WaitForSeconds(2f);
