@@ -294,50 +294,64 @@ public class PlayerController : MonoBehaviour {
 	//event handlers
 	private void OnButtonDown( InputController.ButtonType button )
 	{
+		string functionName = "";
+
 		if( actions.ContainsKey( button ) )
-			StartCoroutine( actions[ button ] );
+		{
+			functionName = actions[ button ];
+			StartCoroutine( functionName );
+		}
 
 		if( !isMobile )
 			return;
 
-		switch( button )
+		switch( functionName )
 		{
-			case InputController.ButtonType.Left: if( CurrentActionsContains( "MoveLeft" ) ) AnimationAgent.SetLeftBool( true ); break;
-			case InputController.ButtonType.Right: if( CurrentActionsContains( "MoveRight" ) ) AnimationAgent.SetRightBool( true ); break;
-			case InputController.ButtonType.Jump: if( CurrentActionsContains( "Jump" ) ) AnimationAgent.SetJumpBool( true ); break;
-			//case InputController.ButtonType.Sel: AnimationAgent.PrintStates(); break;
+			case "MoveLeft": if( CurrentActionsContains( "MoveLeft" ) ) AnimationAgent.SetLeftBool( true ); break;
+			case "MoveRight": if( CurrentActionsContains( "MoveRight" ) ) AnimationAgent.SetRightBool( true ); break;
+			case "Jump": if( CurrentActionsContains( "Jump" ) ) AnimationAgent.SetJumpBool( true ); break;
 		}
 	}
 	
 	private void OnButtonHeld( InputController.ButtonType button )
 	{	
+		string functionName = "";
+
 		if( repeatableActions.ContainsKey( button ) )
-			StartCoroutine( repeatableActions[ button ] );
+		{
+			functionName = repeatableActions[ button ];
+			StartCoroutine( functionName );
+		}
 
 		if( !isMobile )
 			return;
 
-		switch( button )
+		switch( functionName )
 		{
-			case InputController.ButtonType.Left: if( CurrentActionsContains( "MoveLeft" ) ) AnimationAgent.SetLeftBool( true ); break;
-			case InputController.ButtonType.Right: if( CurrentActionsContains( "MoveRight" ) ) AnimationAgent.SetRightBool( true ); break;
-			case InputController.ButtonType.Jump: if( CurrentActionsContains( "Jump" ) ) AnimationAgent.SetJumpBool( true ); break;
+			case "MoveLeft": if( CurrentActionsContains( "MoveLeft" ) ) AnimationAgent.SetLeftBool( true ); break;
+			case "MoveRight": if( CurrentActionsContains( "MoveRight" ) ) AnimationAgent.SetRightBool( true ); break;
+			case "Jump": if( CurrentActionsContains( "Jump" ) ) AnimationAgent.SetJumpBool( true ); break;
 		}
 	}
 	
 	private void OnButtonUp( InputController.ButtonType button )
 	{
-		if( actions.ContainsKey( button ) && actions[ button ] == "Jump" )
+		string functionName = "";
+
+		if( actions.ContainsKey( button ) )
+			functionName = actions[ button ];
+
+		if( functionName == "Jump" )
 			isHoldingJump = false;
 
 		if( !isMobile )
 			return;
 
-		switch( button )
+		switch( functionName )
 		{
-			case InputController.ButtonType.Left: if( CurrentActionsContains( "MoveLeft" ) ) AnimationAgent.SetLeftBool( false ); break;
-			case InputController.ButtonType.Right: if( CurrentActionsContains( "MoveRight" ) ) AnimationAgent.SetRightBool( false ); break;
-			case InputController.ButtonType.Jump: if( CurrentActionsContains( "Jump" ) ) AnimationAgent.SetJumpBool( false ); break;
+			case "MoveLeft": if( CurrentActionsContains( "MoveLeft" ) ) AnimationAgent.SetLeftBool( false ); break;
+			case "MoveRight": if( CurrentActionsContains( "MoveRight" ) ) AnimationAgent.SetRightBool( false ); break;
+			case "Jump": if( CurrentActionsContains( "Jump" ) ) AnimationAgent.SetJumpBool( false ); break;
 		}
 
 	}
@@ -635,17 +649,19 @@ public class PlayerController : MonoBehaviour {
 			return;
 		}
 
-		if( actions.ContainsKey( routineInfo.button ) )
-			actions[ routineInfo.button ] = routineInfo.functionName;
+		InputController.ButtonType button = GetButtonFromSlot( foundRoutines.Count );
+
+		if( actions.ContainsKey( button ) )
+			actions[ button ] = routineInfo.functionName;
 		else
-			actions.Add( routineInfo.button, routineInfo.functionName );
+			actions.Add( button, routineInfo.functionName );
 
 		if( routineInfo.isRepeatableAction )
 		{
-			if( repeatableActions.ContainsKey( routineInfo.button ) )
-				repeatableActions[ routineInfo.button ] = routineInfo.functionName;
+			if( repeatableActions.ContainsKey( button ) )
+				repeatableActions[ button ] = routineInfo.functionName;
 			else
-				repeatableActions.Add( routineInfo.button, routineInfo.functionName );
+				repeatableActions.Add( button, routineInfo.functionName );
 		}
 
 		currentActions[ foundRoutines.Count - 1 ] = routineInfo.functionName;
@@ -663,6 +679,19 @@ public class PlayerController : MonoBehaviour {
 				contains = true;
 
 		return contains;
+	}
+
+	private InputController.ButtonType GetButtonFromSlot( int slotIndex )
+	{
+		switch( slotIndex )
+		{
+			case 1: return InputController.ButtonType.Left; break;
+			case 2: return InputController.ButtonType.Right; break;
+			case 3: return InputController.ButtonType.Jump; break;
+			case 4: return InputController.ButtonType.Sel; break;
+		}
+
+		return InputController.ButtonType.Invalid;
 	}
 
 	private IEnumerator MovementOverTime( Vector3 directionVector, float force, float duration, bool useAdditionalForce = false )	
@@ -795,6 +824,34 @@ public class PlayerController : MonoBehaviour {
 			string temp = currentActions[ swapToLocation ];
 			currentActions[ swapToLocation ] = currentActions[ currentlySelectedRoutine ];
 			currentActions[ currentlySelectedRoutine ] = temp;
+
+			InputController.ButtonType oldButton = GetButtonFromSlot( swapToLocation + 1 );
+			InputController.ButtonType newButton = GetButtonFromSlot( currentlySelectedRoutine + 1 );
+
+			actions[ oldButton ] = oldFunctionName;
+			actions[ newButton ] = newFunctionName;
+
+			if( repeatableActions.ContainsKey( oldButton ) && repeatableActions.ContainsKey( newButton ) )
+			{
+				temp = repeatableActions[ oldButton ];
+				repeatableActions[ oldButton ] = repeatableActions[ newButton ];
+				repeatableActions[ newButton ] = temp;
+			}
+			else
+			{
+				if( repeatableActions.ContainsKey( oldButton ) )
+				{
+					temp = repeatableActions[ oldButton ];
+					repeatableActions.Remove( oldButton );
+					repeatableActions.Add( newButton, temp );
+				}
+				else if( repeatableActions.ContainsKey( newButton ) )
+				{
+					temp = repeatableActions[ newButton ];
+					repeatableActions.Remove( newButton );
+					repeatableActions.Add( oldButton, temp );
+				}
+			}
 		}
 		else
 		{
@@ -803,13 +860,20 @@ public class PlayerController : MonoBehaviour {
 			RemoveByValue( actions, oldFunctionName );
 			RemoveByValue( repeatableActions, oldFunctionName );
 
-			actions.Add( temp.button, temp.functionName );
+			InputController.ButtonType button = GetButtonFromSlot( currentlySelectedRoutine + 1 );
+
+			if( actions.ContainsKey( button ) )
+				actions[ button ] = temp.functionName;
+			else
+				actions.Add( button, temp.functionName );
 
 			if( temp.isRepeatableAction )
-				repeatableActions.Add( temp.button, temp.functionName );
+				repeatableActions.Add( button, temp.functionName );
 
 			currentActions[ currentlySelectedRoutine ] = newFunctionName;
 		}
+
+
 
 		displayAllRoutines = false;
 	}
@@ -924,7 +988,7 @@ public class PlayerController : MonoBehaviour {
 	public void AddExternalMovementForce (Vector3 direction) {
 		movementVector += direction;
 	}
-
+	
 	public bool GetIsMoving()
 	{
 		return isMoving;
