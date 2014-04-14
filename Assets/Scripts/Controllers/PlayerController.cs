@@ -59,11 +59,11 @@ public class PlayerController : MonoBehaviour {
 	private float additionalForce;
 
 	private bool isJumping;
-	private float jumpForce = 12.5f;
+	private float jumpForce = 8f;
 	private float jumpDuration = 0.5f;
 	private float maxJumpTime = 0.1f;
 	private float jumpBeginTime;
-	private float addedJumpForce = 12.5f;
+	private float addedJumpForce = 6.5f;
 	private float jumpCoolDown = 0.05f;
 	private bool isHoldingJump = false;
 

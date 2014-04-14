@@ -8,7 +8,7 @@ public class VignetteControl : MonoBehaviour {
 	private Color change;
 	// Use this for initialization
 	void Start () {
-		change = Color.black;
+		change = new Color(1f,1f,1f,.3f);
 	}
 	
 	// Update is called once per frame

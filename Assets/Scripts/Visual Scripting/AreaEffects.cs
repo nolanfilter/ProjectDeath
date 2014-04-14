@@ -9,6 +9,9 @@ public class AreaEffects : MonoBehaviour {
 	public float tintG;
 	public float tintB;
 
+	public GameObject leaving;
+	public GameObject entering;
+
 
 	// Use this for initialization
 	void Start () {
@@ -20,5 +23,7 @@ public class AreaEffects : MonoBehaviour {
 
 	void OnTriggerExit (Collider collider) {
 		vignetteScreen.GetComponent<VignetteControl>().amount = new Color(tintR, tintG, tintB, vignettingAmount);
+		leaving.GetComponent<AreaCoverControl>().on = true;
+		entering.GetComponent<AreaCoverControl>().on = false;
 	}
 }
