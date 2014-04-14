@@ -56,10 +56,20 @@ public class PlayerController : MonoBehaviour {
 	private float deltaAngle = 1f;
 	private bool applyHeading;
 
+	private float additionalForce;
+
 	private bool isJumping;
+	private float jumpForce = 12.5f;
+	private float jumpDuration = 0.5f;
+	private float maxJumpTime = 0.1f;
+	private float jumpBeginTime;
+	private float addedJumpForce = 12.5f;
 	private float jumpCoolDown = 0.05f;
+	private bool isHoldingJump = false;
 
 	private bool isDashing;
+	private float dashForce = 7f;
+	private float dashDuration = 0.5f;
 	private float dashCoolDown = 0.3f;
 
 	private bool isFacingRight;
@@ -317,6 +327,9 @@ public class PlayerController : MonoBehaviour {
 	
 	private void OnButtonUp( InputController.ButtonType button )
 	{
+		if( actions.ContainsKey( button ) && actions[ button ] == "Jump" )
+			isHoldingJump = false;
+
 		if( !isMobile )
 			return;
 
@@ -460,12 +473,29 @@ public class PlayerController : MonoBehaviour {
 
 	private IEnumerator Jump()
 	{
-		if( isJumping || !isGrounded )
+		if( !isJumping ) 
+		{
+			if( !isGrounded )
+				yield break;
+
+			isJumping = true;
+			additionalForce = 0;
+			jumpBeginTime = Time.time + maxJumpTime;
+			isHoldingJump = true;
+
+			StartCoroutine( "WaitAndSetJumpBeginTime" );
+		}
+		else
+		{
+			if( isHoldingJump )
+				additionalForce = Mathf.Lerp( 0f, addedJumpForce * ( gravityVector.y < 0f ? 1f : -1f ), Mathf.Clamp01( ( Time.time - jumpBeginTime ) / maxJumpTime ) );
+
 			yield break;
+		}
 
-		isJumping = true;
+		yield return StartCoroutine( MovementOverTime( gravityVector.normalized * -1f, jumpForce, jumpDuration, true ) );
 
-		yield return StartCoroutine( MovementOverTime( gravityVector.normalized * -1f, 12.5f, 0.5f ) );
+		additionalForce = 0f;
 
 		while( !isGrounded )
 			yield return null;
@@ -484,7 +514,7 @@ public class PlayerController : MonoBehaviour {
 
 		isDashing = true;
 
-		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), 7f, 0.5f ) );
+		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), dashForce, dashDuration ) );
 
 //		while( !isGrounded )
 //			yield return null;
@@ -635,7 +665,7 @@ public class PlayerController : MonoBehaviour {
 		return contains;
 	}
 
-	private IEnumerator MovementOverTime( Vector3 directionVector, float force, float duration )	
+	private IEnumerator MovementOverTime( Vector3 directionVector, float force, float duration, bool useAdditionalForce = false )	
 	{
 		float beginTime = Time.time;
 		float currentTime;
@@ -645,14 +675,26 @@ public class PlayerController : MonoBehaviour {
 		{
 			currentTime = Time.time - beginTime;
 			lerp = 1f - ( currentTime / duration );
-			
-			Vector3 newMovement = directionVector * force * lerp * Time.deltaTime;
+
+			Vector3 newMovement;
+
+			if( useAdditionalForce )
+				newMovement = directionVector * ( force + additionalForce ) * lerp * Time.deltaTime;
+			else
+				newMovement = directionVector * force * lerp * Time.deltaTime;
 			
 			movementVector += newMovement;
 			
 			yield return null;
 			
 		} while( currentTime < duration );	
+	}
+
+	private IEnumerator WaitAndSetJumpBeginTime()
+	{
+		yield return new WaitForSeconds( 0.05f );
+
+		jumpBeginTime = Time.time;
 	}
 
 	private IEnumerator DeathRoutine()
