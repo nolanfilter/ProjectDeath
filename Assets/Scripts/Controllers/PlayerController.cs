@@ -637,11 +637,11 @@ public class PlayerController : MonoBehaviour {
 			if( !canChooseLoadout )
 			{
 				//hardcoded
-				actions.Add( InputController.ButtonType.Action, "Activate" );
+				actions.Add( InputController.ButtonType.Start, "Activate" );
 				actions.Add( InputController.ButtonType.Up, "SelectUp" );
 				actions.Add( InputController.ButtonType.Down, "SelectDown" );
-				actions.Add( InputController.ButtonType.Left2, "SelectLeft" );
-				actions.Add( InputController.ButtonType.Right2, "SelectRight" );
+				actions.Add( InputController.ButtonType.Left, "SelectLeft" );
+				actions.Add( InputController.ButtonType.Right, "SelectRight" );
 
 				canChooseLoadout = true;
 			}
@@ -685,10 +685,10 @@ public class PlayerController : MonoBehaviour {
 	{
 		switch( slotIndex )
 		{
-			case 1: return InputController.ButtonType.Left; break;
-			case 2: return InputController.ButtonType.Right; break;
-			case 3: return InputController.ButtonType.Jump; break;
-			case 4: return InputController.ButtonType.Sel; break;
+			case 1: return InputController.ButtonType.FirstPower; break;
+			case 2: return InputController.ButtonType.SecondPower; break;
+			case 3: return InputController.ButtonType.ThirdPower; break;
+			case 4: return InputController.ButtonType.FourthPower; break;
 		}
 
 		return InputController.ButtonType.Invalid;
