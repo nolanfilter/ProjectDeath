@@ -24,7 +24,7 @@ public class AreaCoverControl : MonoBehaviour {
 		}
 		if(on)
 		{
-			newColor = Color.Lerp(renderer.material.color, new Color(0,0,0,0), Time.deltaTime * .6f);
+			newColor = Color.Lerp(renderer.material.color, new Color(0,0,0,0), Time.deltaTime * .8f);
 		}
 
 		renderer.material.color = newColor;
