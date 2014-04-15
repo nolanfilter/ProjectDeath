@@ -7,6 +7,11 @@ TagManager:
   - ConveyorLeft
   - Plain
   - 
+  - Door
+  - Controller
+  - Button
+  - Vignette
+  - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
   Builtin Layer 2: Ignore Raycast
@@ -18,7 +23,7 @@ TagManager:
   User Layer 8: 2D
   User Layer 9: 3D
   User Layer 10: SelectionScreen
-  User Layer 11: 
+  User Layer 11: Vignette
   User Layer 12: 
   User Layer 13: 
   User Layer 14: 
