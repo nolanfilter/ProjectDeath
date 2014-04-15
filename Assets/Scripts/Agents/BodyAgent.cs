@@ -4,6 +4,16 @@ using System.Collections.Generic;
 
 public class BodyAgent : MonoBehaviour {
 
+	public enum DeathType
+	{
+		Laser = 0,
+		Fire = 1,
+		Crusher = 2,
+		Cold = 3,
+		Heat = 4,
+		Invalid = 5,
+	}
+
 	public GameObject body;
 	private List<GameObject> bodies;
 
@@ -32,24 +42,41 @@ public class BodyAgent : MonoBehaviour {
 		bodies = new List<GameObject>();
 	}
 
-	public static void SpawnBody( Vector3 position )
+	public static Animator SpawnBody( Vector3 position, bool isFacingRight, DeathType type = DeathType.Invalid )
 	{
 		if( instance )
-			instance.internalSpawnBody( position );
+			return instance.internalSpawnBody( position, isFacingRight, type );
+
+		return null;
 	}
 
-	private void internalSpawnBody( Vector3 position )
+	private Animator internalSpawnBody( Vector3 position, bool isFacingRight, DeathType type )
 	{
 		if( body == null )
-			return;
+			return null;
 
 		GameObject temp = Instantiate( body, position, Quaternion.identity ) as GameObject;
 
 		temp.transform.parent = transform;
 
+		if( isFacingRight )
+			temp.transform.localScale = new Vector3( temp.transform.localScale.x * -1f, temp.transform.localScale.y, temp.transform.localScale.z );
+
 		bodies.Add( temp );
 
 		if( bodies.Count > maxNumBodies )
 			bodies.RemoveAt( 0 );
+
+		if( type == DeathType.Invalid )
+			return null;
+
+		Animator animator = temp.GetComponentInChildren<Animator>();
+
+		if( animator == null )
+			return null;
+
+		animator.SetInteger( "deathType", (int)type );
+
+		return animator;
 	}
 }
