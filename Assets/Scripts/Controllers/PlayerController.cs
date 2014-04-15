@@ -652,19 +652,19 @@ public class PlayerController : MonoBehaviour {
 		InputController.ButtonType button = GetButtonFromSlot( foundRoutines.Count );
 
 		if( actions.ContainsKey( button ) )
-			actions[ button ] = routineInfo.functionName;
+			actions[ button ] = routineInfo.functionName.ToString();
 		else
-			actions.Add( button, routineInfo.functionName );
+			actions.Add( button, routineInfo.functionName.ToString() );
 
 		if( routineInfo.isRepeatableAction )
 		{
 			if( repeatableActions.ContainsKey( button ) )
-				repeatableActions[ button ] = routineInfo.functionName;
+				repeatableActions[ button ] = routineInfo.functionName.ToString();
 			else
-				repeatableActions.Add( button, routineInfo.functionName );
+				repeatableActions.Add( button, routineInfo.functionName.ToString() );
 		}
 
-		currentActions[ foundRoutines.Count - 1 ] = routineInfo.functionName;
+		currentActions[ foundRoutines.Count - 1 ] = routineInfo.functionName.ToString();
 
 		UpdateSprites();
 		UpdateSelectionScreen();
@@ -803,7 +803,7 @@ public class PlayerController : MonoBehaviour {
 	private void SetNewRoutine()
 	{
 		string oldFunctionName = currentActions[ currentlySelectedRoutine ];
-		string newFunctionName = foundRoutines[ currentlySelectedNewRoutine ].functionName;
+		string newFunctionName = foundRoutines[ currentlySelectedNewRoutine ].functionName.ToString();
 
 		if( oldFunctionName == newFunctionName )
 		{
@@ -863,12 +863,12 @@ public class PlayerController : MonoBehaviour {
 			InputController.ButtonType button = GetButtonFromSlot( currentlySelectedRoutine + 1 );
 
 			if( actions.ContainsKey( button ) )
-				actions[ button ] = temp.functionName;
+				actions[ button ] = temp.functionName.ToString();
 			else
-				actions.Add( button, temp.functionName );
+				actions.Add( button, temp.functionName.ToString() );
 
 			if( temp.isRepeatableAction )
-				repeatableActions.Add( button, temp.functionName );
+				repeatableActions.Add( button, temp.functionName.ToString() );
 
 			currentActions[ currentlySelectedRoutine ] = newFunctionName;
 		}
@@ -963,14 +963,14 @@ public class PlayerController : MonoBehaviour {
 
 		if( displayAllRoutines && count > 0 )
 		{
-			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPower, foundRoutines[ currentlySelectedNewRoutine ].functionName );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPower, foundRoutines[ currentlySelectedNewRoutine ].functionName.ToString() );
 
-			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerPlus1, foundRoutines[ ( currentlySelectedNewRoutine + 1 )%count ].functionName );
-			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerPlus2, foundRoutines[ ( currentlySelectedNewRoutine + 2 )%count ].functionName );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerPlus1, foundRoutines[ ( currentlySelectedNewRoutine + 1 )%count ].functionName.ToString() );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerPlus2, foundRoutines[ ( currentlySelectedNewRoutine + 2 )%count ].functionName.ToString() );
 
-			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus1, foundRoutines[ ( currentlySelectedNewRoutine + ( count - ( 1 % count ) ) )%count ].functionName );
-			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus2, foundRoutines[ ( currentlySelectedNewRoutine + ( count - ( 2 % count ) ) )%count ].functionName );
-			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus3, foundRoutines[ ( currentlySelectedNewRoutine + ( count - ( 3 % count )) )%count ].functionName );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus1, foundRoutines[ ( currentlySelectedNewRoutine + ( count - ( 1 % count ) ) )%count ].functionName.ToString() );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus2, foundRoutines[ ( currentlySelectedNewRoutine + ( count - ( 2 % count ) ) )%count ].functionName.ToString() );
+			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus3, foundRoutines[ ( currentlySelectedNewRoutine + ( count - ( 3 % count )) )%count ].functionName.ToString() );
 		}
 		else
 		{
