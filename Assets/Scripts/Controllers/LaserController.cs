@@ -5,7 +5,7 @@ public class LaserController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		SoundAgent.PlayClip (SoundAgent.SoundEffects.LaserSound,1f, true, gameObject);
+		//SoundAgent.PlayClip (SoundAgent.SoundEffects.LaserSound,1f, true, gameObject);
 
 	}
 	
