@@ -3,8 +3,9 @@ using System.Collections;
 
 public class TeachingController : MonoBehaviour {
 	
-	public InputController.ButtonType button = InputController.ButtonType.Invalid;
-	public string functionName = "";
+	//public InputController.ButtonType button = InputController.ButtonType.Invalid;
+	public RoutineAgent.Routine functionName = RoutineAgent.Routine.Invalid;
+	//public string functionName = "";
 
 	public bool isRepeatableAction = false;
 
@@ -12,7 +13,7 @@ public class TeachingController : MonoBehaviour {
 
 	void Start()
 	{
-		routineInfo = new RoutineAgent.RoutineInfo( button, functionName, isRepeatableAction );
+		routineInfo = new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, functionName, isRepeatableAction );
 	}
 
 	public RoutineAgent.RoutineInfo GetRoutineInfo()
