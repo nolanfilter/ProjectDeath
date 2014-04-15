@@ -62,14 +62,17 @@ public class SoundAgent : MonoBehaviour {
 		backgroundMusicSource.clip = backgroundMusicClip;
 	}
 	
-	public static void PlayClip( SoundEffects soundEffect )
+	public static void PlayClip( SoundEffects soundEffect, GameObject singleAudioObject = null )
 	{
 		if( instance )
-			instance.internalPlayClip( soundEffect );
+			instance.internalPlayClip( soundEffect, singleAudioObject );
 	}
 	
-	private void internalPlayClip( SoundEffects soundEffect )
+	private void internalPlayClip( SoundEffects soundEffect, GameObject singleAudioObject )
 	{
+		if( singleAudioObject != null )
+			audioObject = singleAudioObject;
+
 		if( audioObject == null )
 			return;
 		
