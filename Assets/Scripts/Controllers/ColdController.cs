@@ -33,6 +33,7 @@ public class ColdController : MonoBehaviour {
 			}
 			if (count >= maxVal) {
 				blockScript.kill = true;
+				StartCoroutine (resetCount());
 			}
 			if (count < maxVal) {
 				blockScript.kill = false;
@@ -54,6 +55,11 @@ public class ColdController : MonoBehaviour {
 		}
 		*/
 		Debug.Log(count); //watch rates of increase and decrease here
+	}
+
+	IEnumerator resetCount() {
+		yield return new WaitForSeconds (.5f);
+		count = 0f;
 	}
 
 }
