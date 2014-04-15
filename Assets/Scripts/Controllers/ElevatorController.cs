@@ -34,7 +34,7 @@ public class ElevatorController : MonoBehaviour {
 		if (!playerOn) {
 			elevatorBlock.transform.position = Vector3.MoveTowards(elevatorBlock.transform.position, origin, (speed * 2));
 
-			SoundAgent.PlayClip(SoundAgent.SoundEffects.Elevator,1f, false,gameObject);
+			//SoundAgent.PlayClip(SoundAgent.SoundEffects.Elevator,1f, false,gameObject);
 			/*
 			for (int i = 0; i < levels.Length; i++) {
 				if ((levels[i].transform.position.y - player.transform.position.y) <= 1f) {

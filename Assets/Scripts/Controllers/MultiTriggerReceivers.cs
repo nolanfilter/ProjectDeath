@@ -130,7 +130,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 			if (rise == false) {
 					if (transform.position.y >= lowPoint.y){
 						transform.position -= new Vector3(0f,speed,0f);
-						SoundAgent.PlayClip(SoundAgent.SoundEffects.ButtonClick,1f, false,gameObject);
+						SoundAgent.PlayClip(SoundAgent.SoundEffects.ButtonClick, 1f, false,gameObject);
 						//Debug.Log ("Falling");
 					}
 				rise = true;
@@ -174,7 +174,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 							block1.transform.position += new Vector3(speed, 0f, 0f);
 							block2.transform.position += new Vector3(speed, 0f, 0f);
 							block3.transform.position += new Vector3(speed, 0f, 0f);
-							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
+							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound, 1f, false, gameObject);
 						}
 					} else {
 						//Debug.Log("Going Down");
@@ -182,7 +182,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 							block1.transform.position -= new Vector3(speed, 0f, 0f);
 							block2.transform.position -= new Vector3(speed, 0f, 0f);
 							block3.transform.position -= new Vector3(speed, 0f, 0f);
-							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
+							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound, 1f, false, gameObject);
 						}
 					}
 				
@@ -206,7 +206,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 							block1.transform.position -= new Vector3(speed, 0f, 0f);
 							block2.transform.position -= new Vector3(speed, 0f, 0f);
 							block3.transform.position -= new Vector3(speed, 0f, 0f);
-							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
+							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound, 1f, false, gameObject);
 						}
 					} else {
 					//Debug.Log("Going Down");
@@ -214,7 +214,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 							block1.transform.position += new Vector3(speed, 0f, 0f);
 							block2.transform.position += new Vector3(speed, 0f, 0f);
 							block3.transform.position += new Vector3(speed, 0f, 0f);
-							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
+							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound, 1f, false, gameObject);
 						}
 					}
 				
