@@ -5,8 +5,8 @@ public class RoutineAgent : MonoBehaviour {
 
 	public enum Routine
 	{
-		MoveRight = 0,
-		MoveLeft = 1,
+		MoveLeft = 0,
+		MoveRight = 1,
 		Jump = 2,
 		Dash = 3,
 		GravityShift = 4,
