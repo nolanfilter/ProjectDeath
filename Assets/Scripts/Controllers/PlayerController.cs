@@ -195,7 +195,9 @@ public class PlayerController : MonoBehaviour {
 
 		if( checkpoint != null )
 		{
-			SpawnerAgent.SetSpawnerPosition( checkpoint.checkpointPosition );
+			SpawnerAgent.SetSpawnerPosition( checkpoint.spawnerPosition );
+			SpawnerAgent.AddCheckpointPosition( checkpoint.checkpointPosition );
+			SpawnerAgent.SetSpawnerAnimator( checkpoint.screenAnimator );
 			Destroy( checkpoint.gameObject );
 		}
 	}
@@ -453,7 +455,11 @@ public class PlayerController : MonoBehaviour {
 		if( isSelecting )
 		{
 			if( !displayAllRoutines )
-				currentlySelectedNewRoutine = 0;
+			{
+				for( int i = 0; i < foundRoutines.Count; i++ )
+					if( foundRoutines[i].functionName.ToString() == currentActions[ currentlySelectedRoutine ] )
+						currentlySelectedNewRoutine = i;
+			}
 			
 			displayAllRoutines = true;
 
@@ -598,7 +604,7 @@ public class PlayerController : MonoBehaviour {
 		heading = startingHeading;
 		applyHeading = false;
 
-		transform.position = SpawnerAgent.GetSpawnerPosition();
+		transform.position = SpawnerAgent.GetCheckpointPosition();
 
 		lastLearnedRoutine = RoutineAgent.Routine.Invalid;
 	}
@@ -765,33 +771,68 @@ public class PlayerController : MonoBehaviour {
 
 		isMoving = true;
 
-		float beginTime = Time.time;
+		float beginTime;
 		float currentTime;
 		float lerp;
 
-		Vector3 beginPosition = transform.position;
-		Vector3 endPosition = SpawnerAgent.GetSpawnerPosition();
+		Vector3 beginPosition;
+		Vector3 endPosition;
 
+		if( lastLearnedRoutine != RoutineAgent.Routine.Invalid )
+		{
+			beginTime = Time.time;
+
+			beginPosition = transform.position;
+			endPosition = SpawnerAgent.GetSpawnerPosition();
+			
+			do
+			{
+				currentTime = Time.time - beginTime;
+				lerp = currentTime / relocationDuration;
+
+				transform.position = Vector3.Lerp( beginPosition, endPosition, lerp );
+
+				yield return null;
+
+			} while( currentTime < relocationDuration );
+
+			transform.position = endPosition;
+
+
+			Animator spawnerAnimator = SpawnerAgent.GetSpawnerAnimator();
+
+			if( spawnerAnimator != null )
+			{			
+				spawnerAnimator.SetInteger( "routine", (int)lastLearnedRoutine );
+
+				yield return new WaitForSeconds( 0.1f );
+
+				spawnerAnimator.SetInteger( "routine", -1 );
+
+				while( !spawnerAnimator.GetCurrentAnimatorStateInfo(0).IsName( "Blinking" ) )
+					yield return null;
+			}
+
+			yield return new WaitForSeconds( 1f );
+		}
+
+		beginTime = Time.time;
+
+		beginPosition = transform.position;
+		endPosition = SpawnerAgent.GetCheckpointPosition();
+				
 		do
 		{
 			currentTime = Time.time - beginTime;
 			lerp = currentTime / relocationDuration;
-
+					
 			transform.position = Vector3.Lerp( beginPosition, endPosition, lerp );
-
+				
 			yield return null;
-
+					
 		} while( currentTime < relocationDuration );
 
 		isMoving = false;
-
-
-		if( lastLearnedRoutine != RoutineAgent.Routine.Invalid )
-		{
-			//Play learning animation
-		}
-
-
 
 
 		isSelecting = true;
@@ -901,7 +942,6 @@ public class PlayerController : MonoBehaviour {
 
 			currentActions[ currentlySelectedRoutine ] = newFunctionName;
 		}
-
 
 
 		displayAllRoutines = false;
