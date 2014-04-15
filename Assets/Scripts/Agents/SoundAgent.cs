@@ -5,12 +5,16 @@ public class SoundAgent : MonoBehaviour {
 	
 	public enum SoundEffects
 	{
-		
+		Elevator = 0,
+		PlayerTouchGround = 1,
+
+		Invalid = 2,
 	}
 	
 	public GameObject audioObject;
 	
-	//clips go here
+	public AudioClip ElevatorClip;
+	public AudioClip PlayerTouchGroundClip;
 	
 	public AudioClip backgroundMusicClip;
 	private AudioSource backgroundMusicSource;
@@ -83,7 +87,8 @@ public class SoundAgent : MonoBehaviour {
 		
 		switch( soundEffect )
 		{
-			//put clips here
+			case SoundEffects.Elevator: audioSource.clip = ElevatorClip; break;
+			case SoundEffects.PlayerTouchGround: audioSource.clip = PlayerTouchGroundClip; break;
 		}
 		
 		
