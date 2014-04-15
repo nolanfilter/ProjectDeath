@@ -79,29 +79,31 @@ public class MultiTriggerReceivers : MonoBehaviour {
 		if (gameObject.tag == "Door") {
 			if (activate == true) {
 				if (doorMoved == false) {
-					Debug.Log("Going Up");
+					//Debug.Log("Going Up");
 					if (block3.transform.position.y <= topPoint.y) {
 						block1.transform.position += new Vector3(0f, speed, 0f);
 						block2.transform.position += new Vector3(0f, speed, 0f);
 						block3.transform.position += new Vector3(0f, speed, 0f);
+						SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
 					}
 				} else {
-					Debug.Log("Going Down");
+					//Debug.Log("Going Down");
 					if (block2.transform.position.y >= origin.y) {
 						block1.transform.position -= new Vector3(0f, speed, 0f);
 						block2.transform.position -= new Vector3(0f, speed, 0f);
 						block3.transform.position -= new Vector3(0f, speed, 0f);
+						SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
 					}
 				}
 
 				if (block3.transform.position.y >= topPoint.y) {
-					Debug.Log ("resetting");
+					//Debug.Log ("resetting");
 					doorMoved = true;
 					activate = false;
 					//Debug.Log (activate);
 				}
 				if (block2.transform.position.y <= origin.y) {
-					Debug.Log ("resetting a");
+					//Debug.Log ("resetting a");
 					doorMoved = false;
 					activate = false;
 					//Debug.Log (activate);
@@ -128,6 +130,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 			if (rise == false) {
 					if (transform.position.y >= lowPoint.y){
 						transform.position -= new Vector3(0f,speed,0f);
+						SoundAgent.PlayClip(SoundAgent.SoundEffects.ButtonClick,1f, false,gameObject);
 						//Debug.Log ("Falling");
 					}
 				rise = true;
@@ -171,6 +174,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 							block1.transform.position += new Vector3(speed, 0f, 0f);
 							block2.transform.position += new Vector3(speed, 0f, 0f);
 							block3.transform.position += new Vector3(speed, 0f, 0f);
+							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
 						}
 					} else {
 						//Debug.Log("Going Down");
@@ -178,6 +182,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 							block1.transform.position -= new Vector3(speed, 0f, 0f);
 							block2.transform.position -= new Vector3(speed, 0f, 0f);
 							block3.transform.position -= new Vector3(speed, 0f, 0f);
+							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
 						}
 					}
 				
@@ -196,29 +201,31 @@ public class MultiTriggerReceivers : MonoBehaviour {
 				}
 				if (direction == "Left") {
 					if (doorMoved == false) {
-					Debug.Log("Going Up");
+					//Debug.Log("Going Up");
 						if (block1.transform.position.x >= topPoint.x) {
 							block1.transform.position -= new Vector3(speed, 0f, 0f);
 							block2.transform.position -= new Vector3(speed, 0f, 0f);
 							block3.transform.position -= new Vector3(speed, 0f, 0f);
+							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
 						}
 					} else {
-					Debug.Log("Going Down");
+					//Debug.Log("Going Down");
 						if (block2.transform.position.x <= origin.x) {
 							block1.transform.position += new Vector3(speed, 0f, 0f);
 							block2.transform.position += new Vector3(speed, 0f, 0f);
 							block3.transform.position += new Vector3(speed, 0f, 0f);
+							SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false,gameObject);
 						}
 					}
 				
 					if (block1.transform.position.x <= topPoint.x) {
-					Debug.Log ("resetting");
+					//Debug.Log ("resetting");
 						doorMoved = true;
 						activate = false;
 					//Debug.Log (activate);
 					}
 					if (block2.transform.position.x >= origin.x) {
-					Debug.Log ("resetting a");
+					//Debug.Log ("resetting a");
 						doorMoved = false;
 						activate = false;
 					//Debug.Log (activate);
@@ -261,7 +268,7 @@ public class MultiTriggerReceivers : MonoBehaviour {
 		if (gameObject.tag == "Controller") {
 			if (inactive) {
 				gameObject.collider.enabled = false;
-				Debug.Log ("False");
+				//Debug.Log ("False");
 			} else {
 				gameObject.collider.enabled = true;
 			}

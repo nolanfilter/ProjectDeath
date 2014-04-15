@@ -36,6 +36,7 @@ public class DoorController : MonoBehaviour {
 				block1.transform.position += new Vector3(0f, speed, 0f);
 				block2.transform.position += new Vector3(0f, speed, 0f);
 				block3.transform.position += new Vector3(0f, speed, 0f);
+				SoundAgent.PlayClip(SoundAgent.SoundEffects.DoorSound,1f, false, gameObject);
 			}
 		}
 
