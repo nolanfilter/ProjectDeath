@@ -54,7 +54,7 @@ public class ColdController : MonoBehaviour {
 			}
 		}
 		*/
-		Debug.Log(count); //watch rates of increase and decrease here
+		//Debug.Log(count); //watch rates of increase and decrease here
 	}
 
 	IEnumerator resetCount() {

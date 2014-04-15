@@ -44,14 +44,17 @@ public class CrusherController : MonoBehaviour {
 
 		if (direct == true) {
 			transform.position = Vector3.MoveTowards (transform.position, newY, downSpeed);
+			SoundAgent.PlayClip (SoundAgent.SoundEffects.CrusherSwoosh,1f, false, gameObject);
 		} else {
 			transform.position = Vector3.Lerp (transform.position, origin, upSpeed);
+			SoundAgent.PlayClip (SoundAgent.SoundEffects.CrusherRise,1f, false, gameObject);
 			set = true;
 			deathActive = false;
 		}
 		if(moveDist > 0)
 		{
 			if (transform.position.y <= newY.y + 0.1f) {
+				SoundAgent.PlayClip(SoundAgent.SoundEffects.CrusherHit,1f, false, gameObject);
 				deathActive = true;
 				if (set == true) {
 					StartCoroutine (waitPause(pause));

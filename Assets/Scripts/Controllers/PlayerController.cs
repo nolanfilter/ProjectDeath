@@ -289,8 +289,16 @@ public class PlayerController : MonoBehaviour {
 		ray = new Ray( transform.position + controller.center, gravityVector );
 		
 		Physics.Raycast( ray, out hit, controller.height * 0.6f, 1 << 8 );
-		
+
+		bool wasGrounded;
+
+		wasGrounded = isGrounded;
+
 		isGrounded = ( ( hit.collider != null && !hit.collider.isTrigger ) || activePlatform != null );
+
+		if (isGrounded && !wasGrounded) {
+			SoundAgent.PlayClip(SoundAgent.SoundEffects.PlayerTouchGround,1f, false, gameObject);
+		}
 	}
 
 	//event handlers
@@ -493,7 +501,7 @@ public class PlayerController : MonoBehaviour {
 		{
 			if( !isGrounded )
 				yield break;
-
+			SoundAgent.PlayClip (SoundAgent.SoundEffects.PlayerJump, 1f, false, gameObject);
 			isJumping = true;
 			additionalForce = 0;
 			jumpBeginTime = Time.time + maxJumpTime;

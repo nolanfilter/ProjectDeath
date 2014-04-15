@@ -6,15 +6,31 @@ public class SoundAgent : MonoBehaviour {
 	public enum SoundEffects
 	{
 		Elevator = 0,
-		PlayerTouchGround = 1,
+		PlayerJump = 1,
+		PlayerTouchGround = 2,
+		LaserSound = 3,
+		CrusherSwoosh = 4,
+		CrusherHit = 5,
+		CrusherRise = 6,
+		TeachSound = 7,
+		DoorSound = 8,
+		ButtonClick = 9,
 
-		Invalid = 2,
+		Invalid = 10,
 	}
 	
 	public GameObject audioObject;
 	
 	public AudioClip ElevatorClip;
+	public AudioClip PlayerJumpClip;
 	public AudioClip PlayerTouchGroundClip;
+	public AudioClip LaserClip;
+	public AudioClip CrusherSwooshClip;
+	public AudioClip CrusherHitClip;
+	public AudioClip CrusherRiseClip;
+	public AudioClip TeachClip;
+	public AudioClip DoorClip;
+	public AudioClip ButtonClip;
 	
 	public AudioClip backgroundMusicClip;
 	private AudioSource backgroundMusicSource;
@@ -66,13 +82,13 @@ public class SoundAgent : MonoBehaviour {
 		backgroundMusicSource.clip = backgroundMusicClip;
 	}
 	
-	public static void PlayClip( SoundEffects soundEffect, GameObject singleAudioObject = null )
+	public static void PlayClip( SoundEffects soundEffect, float volume, bool shouldLoop = false, GameObject singleAudioObject = null )
 	{
 		if( instance )
-			instance.internalPlayClip( soundEffect, singleAudioObject );
+			instance.internalPlayClip( soundEffect, volume, shouldLoop, singleAudioObject );
 	}
 	
-	private void internalPlayClip( SoundEffects soundEffect, GameObject singleAudioObject )
+	private void internalPlayClip( SoundEffects soundEffect, float volume, bool shouldLoop, GameObject singleAudioObject )
 	{
 		if( singleAudioObject != null )
 			audioObject = singleAudioObject;
@@ -80,15 +96,28 @@ public class SoundAgent : MonoBehaviour {
 		if( audioObject == null )
 			return;
 		
+		if( Vector3.Distance( audioObject.transform.position, Camera.main.transform.position ) > 20f )
+			return;
+
 		AudioSource audioSource = audioObject.AddComponent<AudioSource>();
 		
-		audioSource.loop = false;
-		audioSource.volume = (float)globalVolume;
+		audioSource.loop = shouldLoop;
+		audioSource.volume = volume;
 		
 		switch( soundEffect )
 		{
+			//add clips here
 			case SoundEffects.Elevator: audioSource.clip = ElevatorClip; break;
+			case SoundEffects.PlayerJump: audioSource.clip = PlayerJumpClip; break;
 			case SoundEffects.PlayerTouchGround: audioSource.clip = PlayerTouchGroundClip; break;
+			case SoundEffects.LaserSound: audioSource.clip = LaserClip; break;
+			case SoundEffects.CrusherSwoosh: audioSource.clip = CrusherSwooshClip; break;
+			case SoundEffects.CrusherHit: audioSource.clip = CrusherHitClip; break;
+			case SoundEffects.CrusherRise: audioSource.clip = CrusherRiseClip; break;
+			case SoundEffects.TeachSound: audioSource.clip = TeachClip; break;
+			case SoundEffects.DoorSound: audioSource.clip = DoorClip; break;
+			case SoundEffects.ButtonClick: audioSource.clip = ButtonClip; break;
+
 		}
 		
 		
@@ -99,8 +128,9 @@ public class SoundAgent : MonoBehaviour {
 		}
 		
 		audioSource.Play();
-		
-		StartCoroutine( DestroyOnFinish( audioSource, audioSource.clip.length ) );
+
+		if( !shouldLoop )
+			StartCoroutine( DestroyOnFinish( audioSource, audioSource.clip.length ) );
 	}
 	
 	public static void PlayBackgroundMusic( bool reset = false )
