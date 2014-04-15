@@ -107,6 +107,8 @@ public class PlayerController : MonoBehaviour {
 	private Quaternion activeLocalPlatformRotation;
 	private Quaternion activeGlobalPlatformRotation;
 
+	private RoutineAgent.Routine lastLearnedRoutine = RoutineAgent.Routine.Invalid;
+
 	void Awake()
 	{
 		controller = GetComponent<CharacterController>();
@@ -589,6 +591,8 @@ public class PlayerController : MonoBehaviour {
 		applyHeading = false;
 
 		transform.position = SpawnerAgent.GetSpawnerPosition();
+
+		lastLearnedRoutine = RoutineAgent.Routine.Invalid;
 	}
 
 	private void applyGravity()
@@ -631,6 +635,8 @@ public class PlayerController : MonoBehaviour {
 		foundRoutines.Add( routineInfo );
 
 		allRoutinesRects.Add( new Rect( 85f, 20f * (float)( foundRoutines.Count - 1 ), 100f, 20f ) );
+
+		lastLearnedRoutine = routineInfo.functionName;
 
 		if( foundRoutines.Count > maxNumRoutines )
 		{
@@ -739,7 +745,13 @@ public class PlayerController : MonoBehaviour {
 		AnimationAgent.SetRightBool( false );
 		AnimationAgent.SetJumpBool( false );
 
-		BodyAgent.SpawnBody( transform.position );
+		Animator deathAnimationAnimator = BodyAgent.SpawnBody( transform.position, isFacingRight, BodyAgent.DeathType.Laser );
+
+		if( deathAnimationAnimator != null )
+		{
+			while( !deathAnimationAnimator.GetCurrentAnimatorStateInfo(0).IsName( "IsDone" ) )
+				yield return null;
+		}
 
 		yield return new WaitForSeconds( deathDuration );
 
@@ -764,6 +776,15 @@ public class PlayerController : MonoBehaviour {
 		} while( currentTime < relocationDuration );
 
 		isMoving = false;
+
+
+		if( lastLearnedRoutine != RoutineAgent.Routine.Invalid )
+		{
+			//Play learning animation
+		}
+
+
+
 
 		isSelecting = true;
 
@@ -791,7 +812,7 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSeconds( respawnDuration );
 
 		for( int i = 0; i < constantSpriteRenderers.Length; i++ )
-			constantSpriteRenderers[ i ].enabled = true;
+			constantSpriteRenderers[i].enabled = true;
 
 		UpdateSprites();
 
