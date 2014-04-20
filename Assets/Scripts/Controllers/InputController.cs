@@ -101,11 +101,13 @@ public class InputController : MonoBehaviour {
 				//SNES
 				case " 2Axes 11Keys Game  Pad":
 				{
+					Debug.Log( "Set to SNES" );
+
 					codes[ (int)ButtonType.Up ] = (KeyCode)( (int)KeyCode.Joystick1Button0 + 20 );
 					codes[ (int)ButtonType.Down ] = (KeyCode)( (int)KeyCode.Joystick1Button1 + 20 );
 					codes[ (int)ButtonType.Left ] = (KeyCode)( (int)KeyCode.Joystick1Button2 + 20 );
 					codes[ (int)ButtonType.Right ] = (KeyCode)( (int)KeyCode.Joystick1Button3 + 20 );
-					codes[ (int)ButtonType.FirstPower ] = (KeyCode)( (int)KeyCode.Joystick1Button19 + 20 );
+					codes[ (int)ButtonType.FirstPower ] = (KeyCode)( (int)KeyCode.Joystick1Button2 + 20 );
 					codes[ (int)ButtonType.SecondPower ] = (KeyCode)( (int)KeyCode.Joystick1Button19 + 20 );
 					codes[ (int)ButtonType.ThirdPower ] = (KeyCode)( (int)KeyCode.Joystick1Button19 + 20 );
 					codes[ (int)ButtonType.FourthPower ] = (KeyCode)( (int)KeyCode.Joystick1Button19 + 20 );

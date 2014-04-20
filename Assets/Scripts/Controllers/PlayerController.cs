@@ -89,9 +89,9 @@ public class PlayerController : MonoBehaviour {
 	private List<RoutineAgent.RoutineInfo> foundRoutines;
 
 	private string deathTag = "Death";
-	private float deathDuration = 0.5f;
-	private float relocationDuration = 0.5f;
-	private float respawnDuration = 0.25f;
+	private float deathDuration = 1.0f;
+	private float relocationDuration = 1.5f;
+	private float respawnDuration = 1f;
 
 	private string[] currentActions;
 	private Rect[] actionRects;
