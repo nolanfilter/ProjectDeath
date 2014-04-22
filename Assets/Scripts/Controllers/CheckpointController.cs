@@ -5,10 +5,11 @@ public class CheckpointController : MonoBehaviour {
 
 	public Vector3 checkpointPosition;
 	public Vector3 spawnerPosition;
-	public Animator screenAnimator;
+	public Animator animator;
+	public GameObject areaCoverObject;
 
 	void Start()
 	{
-		screenAnimator = transform.parent.parent.FindChild( "Screen" ).GetComponent<Animator>();
+		animator = transform.parent.parent.FindChild( "Screen" ).GetComponent<Animator>();
 	}
 }
