@@ -55,7 +55,10 @@ public class ColdController : MonoBehaviour {
 		*/
 		//Debug.Log(count); //watch rates of increase and decrease here
 
-		PlayerAgent.GetPlayerController().AdjustTemperature( ( count / maxVal ) * -1f );
+		PlayerController controller = PlayerAgent.GetPlayerController();
+
+		if( controller )
+			controller.AdjustTemperature( ( count / maxVal ) * -1f );
 	}
 
 	IEnumerator resetCount() {
