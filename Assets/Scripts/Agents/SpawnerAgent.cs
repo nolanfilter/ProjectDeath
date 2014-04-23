@@ -8,13 +8,13 @@ public class SpawnerAgent : MonoBehaviour {
 	{
 		public Vector3 position { get; private set; }
 		public Animator animator { get; private set; }
-		public GameObject areaCoverObject { get; private set; }
+		public RegionAgent.RegionType region { get; private set; }
 
-		public SpawnerInfo( Vector3 newPosition, Animator newAnimator, GameObject newAreaCoverObject )
+		public SpawnerInfo( Vector3 newPosition, Animator newAnimator, RegionAgent.RegionType newRegion )
 		{
 			position = newPosition;
 			animator = newAnimator;
-			areaCoverObject = newAreaCoverObject;
+			region = newRegion;
 		}
 	}
 
@@ -23,7 +23,7 @@ public class SpawnerAgent : MonoBehaviour {
 	public Vector3 beginCheckpointPosition = Vector3.zero;
 	public Vector3 beginSpawnerPosition = Vector3.zero;
 	public Animator beginSpawnerAnimator = null;
-	public GameObject beginAreaCoverObject = null;
+	public RegionAgent.RegionType beginRegion = RegionAgent.RegionType.Invalid;
 
 	private List<Vector3> checkpointPositions;
 	private Vector3 spawnerPosition;
@@ -57,7 +57,7 @@ public class SpawnerAgent : MonoBehaviour {
 	void Start()
 	{
 		AddCheckpointPosition( beginCheckpointPosition );
-		AddSpawner( new SpawnerInfo( beginSpawnerPosition, beginSpawnerAnimator, beginAreaCoverObject ) );
+		AddSpawner( new SpawnerInfo( beginSpawnerPosition, beginSpawnerAnimator, beginRegion ) );
 	}
 
 	public static void AddCheckpointPosition( Vector3 newPosition )
@@ -88,7 +88,7 @@ public class SpawnerAgent : MonoBehaviour {
 		Vector3 nearestCheckpoint = checkpointPositions[0];
 
 		for( int i = 1; i < checkpointPositions.Count; i++ )
-			if( Vector3.Distance( currentPosition, checkpointPositions[i] ) < Vector3.Distance( currentPosition, checkpointPositions[i] ) )
+			if( Vector3.Distance( currentPosition, checkpointPositions[i] ) < Vector3.Distance( currentPosition, nearestCheckpoint ) )
 				nearestCheckpoint = checkpointPositions[i];
 
 		return nearestCheckpoint;
@@ -99,13 +99,13 @@ public class SpawnerAgent : MonoBehaviour {
 		if( instance )
 			return instance.internalGetNearestSpawner( currentPosition );
 
-		return new SpawnerInfo( Vector3.zero, null, null );
+		return new SpawnerInfo( Vector3.zero, null, RegionAgent.RegionType.Invalid );
 	}
 
 	private SpawnerInfo internalGetNearestSpawner( Vector3 currentPosition )
 	{
 		if( spawners.Count == 0 )
-			return new SpawnerInfo( Vector3.zero, null, null );
+			return new SpawnerInfo( Vector3.zero, null, RegionAgent.RegionType.Invalid );
 
 		SpawnerInfo nearestSpawner = spawners[0];
 

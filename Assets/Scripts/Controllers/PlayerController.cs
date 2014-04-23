@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour {
 	public SpriteRenderer MagnetSpriteRenderer;
 	public SpriteRenderer RocketSpriteRenderer;
 	public SpriteRenderer ShieldSpriteRenderer;
+	public SpriteRenderer ShieldEffectSpriteRenderer;
 	public SpriteRenderer ThermostatSpriteRenderer;
 	
 	public GameObject ExhaustEffectObject;
@@ -110,7 +111,8 @@ public class PlayerController : MonoBehaviour {
 	private RoutineAgent.Routine lastLearnedRoutine = RoutineAgent.Routine.Invalid;
 	
 	private float temperature;
-	private float maxTemperature = 5f;
+	private float maxTemperature = 1f;
+	//private float temperatureDecayRate = 0.2f;
 
 	private float shieldPower;
 	private float beginShieldPower = 5f;
@@ -158,9 +160,19 @@ public class PlayerController : MonoBehaviour {
 		isMobile = true;
 		
 		textStyle = FontAgent.GetTextStyle();
+
+		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.MoveLeft, true ) );
+		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.MoveRight, true ) );
+		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.Jump, true ) );
+		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.Dash, false ) );
+		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.GravityShift, false ) );
+
+
 		UpdateSprites();
 		
 		respawn();
+
+		UpdateAreaCover();
 	}
 	
 	void OnEnable()
@@ -168,10 +180,14 @@ public class PlayerController : MonoBehaviour {
 		inputController.OnButtonDown += OnButtonDown;
 		inputController.OnButtonHeld += OnButtonHeld;
 		inputController.OnButtonUp += OnButtonUp;
+
+		PlayerAgent.RegisterPlayerController( this );
 	}
 	
 	void OnDisable()
 	{
+		PlayerAgent.UnregisterPlayerController();
+
 		inputController.OnButtonDown -= OnButtonDown;
 		inputController.OnButtonHeld -= OnButtonHeld;
 		inputController.OnButtonUp -= OnButtonUp;
@@ -204,7 +220,7 @@ public class PlayerController : MonoBehaviour {
 		if( checkpoint != null )
 		{
 			SpawnerAgent.AddCheckpointPosition( checkpoint.checkpointPosition );
-			SpawnerAgent.AddSpawner( new SpawnerAgent.SpawnerInfo( checkpoint.spawnerPosition, checkpoint.animator, checkpoint.areaCoverObject ) );
+			SpawnerAgent.AddSpawner( new SpawnerAgent.SpawnerInfo( checkpoint.spawnerPosition, checkpoint.GetAnimator(), checkpoint.region ) );
 			
 			Destroy( checkpoint.gameObject );
 		}
@@ -292,6 +308,18 @@ public class PlayerController : MonoBehaviour {
 			activeGlobalPlatformRotation = transform.rotation;
 			activeLocalPlatformRotation = Quaternion.Inverse( activePlatform.rotation ) * transform.rotation;
 		}
+
+		/*
+		if( temperature != 0f )
+		{
+			bool wasHot = ( temperature > 0f );
+
+			AdjustTemperature( temperature + temperatureDecayRate * ( temperature > 0f ? -1f : 1f ) );
+
+			if( wasHot != ( temperature > 0f ) )
+				AdjustTemperature( 0f );
+		}
+		*/
 	}
 	
 	void FixedUpdate()
@@ -556,11 +584,7 @@ public class PlayerController : MonoBehaviour {
 		isDashing = true;
 		
 		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), dashForce, dashDuration ) );
-		
-		//		while( !isGrounded )
-		//			yield return null;
-		
-		
+
 		speed *= 0.5f;
 		
 		yield return new WaitForSeconds( dashCoolDown );
@@ -583,7 +607,7 @@ public class PlayerController : MonoBehaviour {
 		if( !isMobile )
 			yield break;
 
-		AdjustTemperature( temperature * -1f );
+		AdjustTemperature( 0f );
 	}
 
 	private IEnumerator LaserShield()
@@ -599,22 +623,20 @@ public class PlayerController : MonoBehaviour {
 			shieldPower = 0f;
 
 		if( ShieldEffectObject )
-		{
-			SpriteRenderer shieldEffectObjectSpriteRenderer = ShieldEffectObject.GetComponent<SpriteRenderer>();
-
-			if( shieldEffectObjectSpriteRenderer )
-			{
-				Color temp = shieldEffectObjectSpriteRenderer.color;
-
-				if( shieldPower == 0f )
-					temp.a = 0f;
-				else
-					temp.a = Mathf.Lerp( 1f, 0.25f, ( beginShieldPower - shieldPower ) / beginShieldPower );
-
-				shieldEffectObjectSpriteRenderer.color = temp;
-			}
-
 			ShieldEffectObject.SetActive( true );
+
+		if( ShieldEffectSpriteRenderer )
+		{
+			Color temp = ShieldEffectSpriteRenderer.color;
+			
+			if( shieldPower == 0f )
+				temp.a = 0f;
+			else
+				temp.a = Mathf.Lerp( 1f, 0.25f, ( beginShieldPower - shieldPower ) / beginShieldPower );
+			
+			ShieldEffectSpriteRenderer.color = temp;
+			
+			ShieldEffectSpriteRenderer.enabled = true;
 		}
 	}
 	//end routines
@@ -636,10 +658,12 @@ public class PlayerController : MonoBehaviour {
 		transform.position = SpawnerAgent.GetNearestCheckpoint( transform.position );
 		
 		lastLearnedRoutine = RoutineAgent.Routine.Invalid;
-		
-		temperature = 0f;
+
+		AdjustTemperature( 0f );
 
 		shieldPower = beginShieldPower;
+
+		ShieldEffectSpriteRenderer.enabled = false;
 	}
 	
 	private void applyGravity()
@@ -718,9 +742,6 @@ public class PlayerController : MonoBehaviour {
 		}
 		
 		currentActions[ foundRoutines.Count - 1 ] = routineInfo.functionName.ToString();
-		
-		UpdateSprites();
-		UpdateSelectionScreen();
 	}
 	
 	private bool CurrentActionsContains( string functionName )
@@ -784,6 +805,9 @@ public class PlayerController : MonoBehaviour {
 		if( ShieldEffectObject )
 			ShieldEffectObject.SetActive( false );
 
+		if( ShieldEffectSpriteRenderer )
+			ShieldEffectSpriteRenderer.enabled = false;
+
 		while( shieldPower < beginShieldPower )
 		{
 			shieldPower += shieldPowerGrowthRate * Time.deltaTime;
@@ -816,12 +840,7 @@ public class PlayerController : MonoBehaviour {
 		
 		yield return new WaitForSeconds( deathDuration );
 		
-		//RegionAgent.DarkenAllRegions();
-		
-		//GameObject temp = SpawnerAgent.GetAreaCoverObject();
-		
-		//if( temp != null )
-		//	temp.GetComponent<AreaCoverControl>().on = true;
+		UpdateAreaCover();
 		
 		isMoving = true;
 		
@@ -1015,9 +1034,14 @@ public class PlayerController : MonoBehaviour {
 	
 	private void UpdateSprites( bool display = true )
 	{
-		ExhaustEffectObject.SetActiveRecursively( false );
-		RocketEffectObject.SetActiveRecursively( false );
-		ShieldEffectObject.SetActiveRecursively( false );
+		if( ExhaustEffectObject )
+			ExhaustEffectObject.SetActiveRecursively( false );
+
+		if( RocketEffectObject )
+			RocketEffectObject.SetActiveRecursively( false );
+
+		if( ShieldEffectObject )
+			ShieldEffectObject.SetActiveRecursively( false );
 		
 		if( ExhaustSpriteRenderer )
 			ExhaustSpriteRenderer.enabled = false;
@@ -1039,7 +1063,10 @@ public class PlayerController : MonoBehaviour {
 		
 		if( ThermostatSpriteRenderer )
 			ThermostatSpriteRenderer.enabled = false;
-		
+
+		if( !display )
+			return;
+
 		SelectionScreenController.SlotSprite slotSprite;
 		
 		for( int i = 0; i < maxNumRoutines; i++ )
@@ -1048,31 +1075,29 @@ public class PlayerController : MonoBehaviour {
 			
 			switch( currentActions[i] )
 			{
-			case "Dash": slotSprite = SelectionScreenController.SlotSprite.Dash; break;
-			case "GravShift": slotSprite = SelectionScreenController.SlotSprite.GravShift; break;
-			case "Jump": slotSprite = SelectionScreenController.SlotSprite.Jump; break;
-			case "JumperCable": slotSprite = SelectionScreenController.SlotSprite.JumperCable; break;
-			case "LaserShield": slotSprite = SelectionScreenController.SlotSprite.LaserShield; break;
-			case "Magnet": slotSprite = SelectionScreenController.SlotSprite.Magnet; break;
-			case "MoveLeft": slotSprite = SelectionScreenController.SlotSprite.MoveLeft; break;
-			case "MoveRight": slotSprite = SelectionScreenController.SlotSprite.MoveRight; break;
-			case "Rocket": slotSprite = SelectionScreenController.SlotSprite.Rocket; break;
-			case "Thermostat": slotSprite = SelectionScreenController.SlotSprite.Thermostat; break;
+				case "Dash": slotSprite = SelectionScreenController.SlotSprite.Dash; break;
+				case "GravShift": slotSprite = SelectionScreenController.SlotSprite.GravShift; break;
+				case "Jump": slotSprite = SelectionScreenController.SlotSprite.Jump; break;
+				case "JumperCable": slotSprite = SelectionScreenController.SlotSprite.JumperCable; break;
+				case "LaserShield": slotSprite = SelectionScreenController.SlotSprite.LaserShield; break;
+				case "Magnet": slotSprite = SelectionScreenController.SlotSprite.Magnet; break;
+				case "MoveLeft": slotSprite = SelectionScreenController.SlotSprite.MoveLeft; break;
+				case "MoveRight": slotSprite = SelectionScreenController.SlotSprite.MoveRight; break;
+				case "Rocket": slotSprite = SelectionScreenController.SlotSprite.Rocket; break;
+				case "Thermostat": slotSprite = SelectionScreenController.SlotSprite.Thermostat; break;
 			}
 			
 			SelectionScreenAgent.SetSlotSprite( i+1, slotSprite );
 		}
-		
-		if( !display )
-			return;
-		
+
 		for( int i = 0; i < currentActions.Length; i++ )
 		{
 			switch( currentActions[i] )
 			{
-			case "Dash": ExhaustSpriteRenderer.enabled = true; break;
-			case "GravityShift": GravFlipSpriteRenderer.enabled = true; break;
-			case "Rocket": RocketSpriteRenderer.enabled = true; break;
+				case "Dash": ExhaustSpriteRenderer.enabled = true; break;
+				case "GravityShift": GravFlipSpriteRenderer.enabled = true; break;
+				case "Rocket": RocketSpriteRenderer.enabled = true; break;
+				case "LaserShield": ShieldSpriteRenderer.enabled = true; break;
 			}
 		}
 	}
@@ -1107,7 +1132,14 @@ public class PlayerController : MonoBehaviour {
 			SelectionScreenAgent.SetText( SelectionScreenAgent.TextType.CurrentPowerMinus3, "" );
 		}
 	}
-	
+
+	private void UpdateAreaCover()
+	{
+		RegionAgent.DarkenAllRegions();
+
+		RegionAgent.LightenRegion( SpawnerAgent.GetNearestSpawner( SpawnerAgent.GetNearestCheckpoint( transform.position ) ).region );
+	}
+
 	public void AddExternalMovementForce (Vector3 direction) {
 		movementVector += direction;
 	}
@@ -1117,18 +1149,39 @@ public class PlayerController : MonoBehaviour {
 		return isMoving;
 	}
 	
-	public void AdjustTemperature( float deltaTemperature )
+	public void AdjustTemperature( float newtemperature )
 	{
-		temperature += deltaTemperature;
+		temperature = newtemperature;
 		
 		Color tint = Color.white;
 		
 		if( temperature > 0f )
-			tint = Color.Lerp( Color.white, Color.red, deltaTemperature / maxTemperature );
+			tint = Color.Lerp( Color.white, Color.red, temperature / maxTemperature );
 		else if( temperature < 0f )
-			tint = Color.Lerp( Color.white, Color.blue, Mathf.Abs( deltaTemperature ) / maxTemperature );
+			tint = Color.Lerp( Color.white, new Color( 0f, 0.4f, 1f, 1f ), Mathf.Abs( temperature ) / maxTemperature );
 		
-		for( int i = 0; i < spriteRenderers.Length; i++ )
-			spriteRenderers[i].color = tint;
+		for( int i = 0; i < constantSpriteRenderers.Length; i++ )
+			constantSpriteRenderers[i].color = tint;
+
+		if( ExhaustSpriteRenderer )
+			ExhaustSpriteRenderer.color = tint;
+		
+		if( GravFlipSpriteRenderer )
+			GravFlipSpriteRenderer.color = tint;
+		
+		if( JumperCablesSpriteRenderer )
+			JumperCablesSpriteRenderer.color = tint;
+		
+		if( MagnetSpriteRenderer )
+			MagnetSpriteRenderer.color = tint;
+		
+		if( RocketSpriteRenderer )
+			RocketSpriteRenderer.color = tint;
+		
+		if( ShieldSpriteRenderer )
+			ShieldSpriteRenderer.color = tint;
+		
+		if( ThermostatSpriteRenderer )
+			ThermostatSpriteRenderer.color = tint;
 	}
 }
