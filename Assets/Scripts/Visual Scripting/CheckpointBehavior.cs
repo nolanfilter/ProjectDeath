@@ -20,7 +20,7 @@ public class CheckpointBehavior : MonoBehaviour {
 			animLeft.SetBool("checkSet", true);
 			animRight.SetBool("checkSet", true);
 			checkpoint.SetActive(true);
-			timer = 0;
+			enabled = false;
 		}
 	}
 

@@ -11,13 +11,8 @@ public class ColdController : MonoBehaviour {
 	private ColdSender blockScript;
 	//private bool check;
 	//private float match = 0f;
-
-
-	// Use this for initialization
-	void Start () {
-		rate *= 0.5f;
-	}
 	
+
 	// Update is called once per frame
 	void Update () {
 		foreach (GameObject block in coldBlocks) {
@@ -29,6 +24,10 @@ public class ColdController : MonoBehaviour {
 				//Debug.Log ("inactive");
 				if (count > 0) {
 					count -= rate * 1.5f * Time.deltaTime; //increase drop of temperature here
+				}
+				else
+				{
+					count = 0;
 				}
 			}
 			if (count >= maxVal) {
@@ -55,6 +54,8 @@ public class ColdController : MonoBehaviour {
 		}
 		*/
 		//Debug.Log(count); //watch rates of increase and decrease here
+
+		PlayerAgent.GetPlayerController().AdjustTemperature( ( count / maxVal ) * -1f );
 	}
 
 	IEnumerator resetCount() {
