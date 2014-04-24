@@ -1,0 +1,270 @@
+fileFormatVersion: 2
+guid: 05c4d562e08a04d979ceaa7e24bf5e4b
+TextureImporter:
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  seamlessCubemap: 0
+  textureFormat: -3
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: 0
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spritePixelsToUnits: 96
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: Janitor's Closet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 416
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_1
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 416
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_2
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 416
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_3
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 416
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_4
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 416
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_6
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_7
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_8
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_9
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 320
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_11
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_12
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_13
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_14
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 224
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_16
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_17
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_18
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_19
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_21
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_22
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 32
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_23
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 32
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+    - name: Janitor's Closet_24
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 32
+        width: 96
+        height: 96
+      alignment: 0
+      pivot: {x: 0, y: 0}
+  spritePackingTag: 
+  userData: 

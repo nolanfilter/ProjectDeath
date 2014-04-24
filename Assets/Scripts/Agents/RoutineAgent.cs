@@ -11,11 +11,8 @@ public class RoutineAgent : MonoBehaviour {
 		Dash = 3,
 		GravityShift = 4,
 		Thermostat = 5,
-		JumperCable = 6,
-		LaserShield = 7,
-		Rocket = 8,
-		Magnet = 9,
-		Invalid = 10,
+		LaserShield = 6,
+		Invalid = 7,
 	}
 
 	public struct RoutineInfo

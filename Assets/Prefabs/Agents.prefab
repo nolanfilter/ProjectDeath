@@ -14,6 +14,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400012}
+  - 114: {fileID: 11400010}
   m_Layer: 0
   m_Name: Agents
   m_TagString: Untagged
@@ -28,7 +29,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -78.9394379, y: 15.6388922, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -44,7 +45,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioObject: {fileID: 0}
-  backgroundMusicClip: {fileID: 0}
+  ElevatorClip: {fileID: 8300000, guid: 2e18c37a0f60cd7478e61d6c5348cc61, type: 3}
+  PlayerJumpClip: {fileID: 8300000, guid: 084ad39ca175c494bb8d02ccc8f40eab, type: 3}
+  PlayerTouchGroundClip: {fileID: 8300000, guid: 783d79ed3651e456a80b697e3c6b1b44,
+    type: 3}
+  LaserClip: {fileID: 8300000, guid: f012475a7e0364c1cba1b6c9cb330516, type: 3}
+  CrusherSwooshClip: {fileID: 8300000, guid: f16379f177ae5cd44b2763bfc612ccaa, type: 3}
+  CrusherHitClip: {fileID: 8300000, guid: d47443352d2bf9241bc2e5c94de6aef5, type: 3}
+  CrusherRiseClip: {fileID: 8300000, guid: 2eb2caaa9c74145478d4e6e800f0886d, type: 3}
+  TeachClip: {fileID: 8300000, guid: 2ad9ffe62b04a474095ebb9d8950f109, type: 3}
+  DoorClip: {fileID: 8300000, guid: 13f8425b633464a0980c2cbd661e183a, type: 3}
+  ButtonClip: {fileID: 8300000, guid: 7ce2edc3c20abc64fbf9806a4ba8700a, type: 3}
+  backgroundMusicClip: {fileID: 8300000, guid: bb9342cc2d392ba429806ddd9e67ab72, type: 3}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -68,7 +80,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673fd5750d0614ff6a72a07752ab9435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beginSpawnerPosition: {x: -3, y: 6, z: 0}
+  beginCheckpointPosition: {x: -51, y: 8, z: 0}
+  beginSpawnerPosition: {x: -43, y: 2, z: 0}
+  beginSpawnerAnimator: {fileID: 0}
+  beginRegion: 5
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -91,6 +106,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e13e1c2412f248ebbf0cbb8401b04c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11400010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9109f1d9cf489440b84d7adf26793a36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BridgeRegionCoverObject: {fileID: 0}
+  CryoRegionCoverObject: {fileID: 0}
+  DiscoRegionCoverObject: {fileID: 0}
+  EngineRegionCoverObject: {fileID: 0}
+  HubRegionCoverObject: {fileID: 0}
+  JanitorRegionCoverObject: {fileID: 0}
+  SpaceRegionCoverObject: {fileID: 0}
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1

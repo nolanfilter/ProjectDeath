@@ -7,6 +7,7 @@ public class AreaCoverControl : MonoBehaviour {
 
 	private Color newColor;
 
+	/*
 	// Use this for initialization
 	void Start () {
 		on = true;
@@ -15,6 +16,7 @@ public class AreaCoverControl : MonoBehaviour {
 			on = false;
 		}
 	}
+	*/
 	
 	// Update is called once per frame
 	void Update () {
