@@ -9,6 +9,8 @@ public class ElevatorController : MonoBehaviour {
 	public float delay;
 	public float speed;
 
+	public bool inactive;
+
 
 	private bool playerOn = false;
 	private bool set = false;
@@ -51,7 +53,7 @@ public class ElevatorController : MonoBehaviour {
 	}
 
 	void OnTriggerStay (Collider collider) {
-		if (collider.gameObject.tag == "Player") {
+		if ((collider.gameObject.tag == "Player") && !inactive) {
 			playerOn = true;
 
 
