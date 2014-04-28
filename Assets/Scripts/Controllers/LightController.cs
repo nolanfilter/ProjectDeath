@@ -29,7 +29,7 @@ public class LightController : MonoBehaviour {
 	private float rayAngle;
 	private float alphaNum = 0f;
 	private Color blockColor;
-	private LightContControl lightCont;
+	//private LightContControl lightCont;
 	//private Shader blockShader;
 	//private Vector3 eulerOrigin;
 	//private Vector3 eulerTarget;
@@ -44,7 +44,7 @@ public class LightController : MonoBehaviour {
 			StartCoroutine (RotateWaitLoop ());
 		}
 		camBlock.renderer.material.shader = Shader.Find("Transparent/Diffuse");
-		lightCont = GetComponent<LightContControl>();
+		//lightCont = GetComponent<LightContControl>();
 	}
 	
 	// Update is called once per frame
