@@ -15,6 +15,7 @@ public class LightController : MonoBehaviour {
 	public float angleTiming;
 	public GameObject camBlock;
 	public float fadeRate = 10f;
+	public bool switchOther = false;
 
 
 	private bool flash = false;
@@ -28,6 +29,7 @@ public class LightController : MonoBehaviour {
 	private float rayAngle;
 	private float alphaNum = 0f;
 	private Color blockColor;
+	private LightContControl lightCont;
 	//private Shader blockShader;
 	//private Vector3 eulerOrigin;
 	//private Vector3 eulerTarget;
@@ -42,6 +44,7 @@ public class LightController : MonoBehaviour {
 			StartCoroutine (RotateWaitLoop ());
 		}
 		camBlock.renderer.material.shader = Shader.Find("Transparent/Diffuse");
+		lightCont = GetComponent<LightContControl>();
 	}
 	
 	// Update is called once per frame
@@ -59,9 +62,10 @@ public class LightController : MonoBehaviour {
 			//Debug.Log (rayVector);
 			Ray ray = new Ray(transform.position, rayVector);
 			RaycastHit rayHit;
-			Debug.DrawRay (transform.position,rayVector);
+			Debug.DrawRay (transform.position,rayVector); //comment this out when ready to show
 			if (Physics.Raycast (ray,out rayHit, distance)) {
 				if (rayHit.collider.tag == "Player") {
+					switchOther = true;
 					flash = true;
 				}
 			}

@@ -8,6 +8,7 @@ public class MultiTriggerController : MonoBehaviour {
 	private bool switches = false;
 		
 	private MultiTriggerReceivers itemScript;
+	private ElevatorController elevatorScript;
 
 	public Animator anim;
 
@@ -45,15 +46,18 @@ public class MultiTriggerController : MonoBehaviour {
 			//switches = true;
 			foreach (GameObject item in objects) {
 				if (item != null) {
-				itemScript = item.GetComponent<MultiTriggerReceivers>();
-				if ( itemScript != null && itemScript.activate == false) {
-					itemScript.activate = true;
-					itemScript.inactive = false;
-				}/* 
-				else {
-					itemScript.activate = false;
-				}
-				*/
+					if (item.tag == "Elevator") {
+						elevatorScript = item.GetComponent<ElevatorController>();
+						if (elevatorScript != null && elevatorScript.inactive == true) {
+							elevatorScript.inactive = false;
+						}
+					} else {
+						itemScript = item.GetComponent<MultiTriggerReceivers>();
+						if ( itemScript != null && itemScript.activate == false) {
+							itemScript.activate = true;
+							itemScript.inactive = false;
+						}
+					}
 				}
 			}
 		}
