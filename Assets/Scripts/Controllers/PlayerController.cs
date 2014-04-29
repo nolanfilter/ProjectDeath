@@ -4,7 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
-	
+
+	public bool teachMoveRightOnStart;
+	public bool teachJumpOnStart;
+	public bool teachDashOnStart;
+	public bool teachGravityShiftOnStart;
+	public bool teachThermostatOnStart;
+	public bool teachLaserShieldOnStart;
+
 	public SpriteRenderer[] constantSpriteRenderers;
 	
 	public SpriteRenderer ExhaustSpriteRenderer;
@@ -162,11 +169,24 @@ public class PlayerController : MonoBehaviour {
 		textStyle = FontAgent.GetTextStyle();
 
 		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.MoveLeft, true ) );
-		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.MoveRight, true ) );
-		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.Jump, true ) );
-		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.Dash, false ) );
-		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.GravityShift, false ) );
 
+		if( teachMoveRightOnStart )
+			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.MoveRight, true ) );
+
+		if( teachJumpOnStart )
+			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.Jump, true ) );
+
+		if( teachDashOnStart )
+			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.Dash, false ) );
+
+		if( teachGravityShiftOnStart )
+			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.GravityShift, false ) );
+
+		if( teachThermostatOnStart )
+			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.Thermostat, false ) );
+
+		if( teachLaserShieldOnStart )
+			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.LaserShield, true ) );
 
 		UpdateSprites();
 		
@@ -308,18 +328,6 @@ public class PlayerController : MonoBehaviour {
 			activeGlobalPlatformRotation = transform.rotation;
 			activeLocalPlatformRotation = Quaternion.Inverse( activePlatform.rotation ) * transform.rotation;
 		}
-
-		/*
-		if( temperature != 0f )
-		{
-			bool wasHot = ( temperature > 0f );
-
-			AdjustTemperature( temperature + temperatureDecayRate * ( temperature > 0f ? -1f : 1f ) );
-
-			if( wasHot != ( temperature > 0f ) )
-				AdjustTemperature( 0f );
-		}
-		*/
 	}
 	
 	void FixedUpdate()
@@ -1101,7 +1109,7 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 	}
-	
+
 	private void UpdateSelectionScreen()
 	{
 		for( int i = 0; i < currentActions.Length; i++ )
@@ -1151,6 +1159,12 @@ public class PlayerController : MonoBehaviour {
 	
 	public void AdjustTemperature( float newtemperature )
 	{
+		if( CurrentActionsContains( "Thermostat" ) )
+		{
+			temperature = 0f;
+			return;
+		}
+
 		temperature = newtemperature;
 		
 		Color tint = Color.white;
@@ -1162,7 +1176,7 @@ public class PlayerController : MonoBehaviour {
 		
 		for( int i = 0; i < constantSpriteRenderers.Length; i++ )
 			constantSpriteRenderers[i].color = tint;
-
+		
 		if( ExhaustSpriteRenderer )
 			ExhaustSpriteRenderer.color = tint;
 		
