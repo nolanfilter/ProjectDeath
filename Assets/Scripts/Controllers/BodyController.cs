@@ -6,7 +6,7 @@ public class BodyController : MonoBehaviour {
 	private float waitTime = 0.25f;
 	private CharacterController controller;
 
-	private float gravity = -1.45f;
+	private float gravity = 0f;
 	private Vector3 gravityVector;
 
 	void Start()
