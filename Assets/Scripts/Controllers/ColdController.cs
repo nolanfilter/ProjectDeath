@@ -18,12 +18,12 @@ public class ColdController : MonoBehaviour {
 		foreach (GameObject block in coldBlocks) {
 			blockScript = block.GetComponent<ColdSender>();
 			if (blockScript.active == true) {
-				count += rate * 2f; //alter temp increase rate here
+				count += rate * 5f; //alter temp increase rate here
 				//Debug.Log ("Active");
 			} else {
 				//Debug.Log ("inactive");
 				if (count > 0) {
-					count -= rate * 1.5f * Time.deltaTime; //increase drop of temperature here
+					count -= rate * 6.5f * Time.deltaTime; //increase drop of temperature here
 				}
 				else
 				{
