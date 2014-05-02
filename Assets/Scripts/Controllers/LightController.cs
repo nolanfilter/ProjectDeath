@@ -14,7 +14,7 @@ public class LightController : MonoBehaviour {
 	public float moveAngle;
 	public float angleTiming;
 	public GameObject camBlock;
-	public float fadeRate = 10f;
+	public float fadeRate = 5f;
 	public bool switchOther = false;
 
 
@@ -62,7 +62,7 @@ public class LightController : MonoBehaviour {
 			//Debug.Log (rayVector);
 			Ray ray = new Ray(transform.position, rayVector);
 			RaycastHit rayHit;
-			Debug.DrawRay (transform.position,rayVector); //comment this out when ready to show
+			//Debug.DrawRay (transform.position,rayVector); //comment this out when ready to show
 			if (Physics.Raycast (ray,out rayHit, distance)) {
 				if (rayHit.collider.tag == "Player") {
 					switchOther = true;
