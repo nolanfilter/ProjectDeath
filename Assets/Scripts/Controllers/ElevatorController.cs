@@ -50,6 +50,12 @@ public class ElevatorController : MonoBehaviour {
 		{
 
 		}
+
+		if (!inactive) {
+			//add in animator to turn on here
+			//start animator as "off" then this should turn them on automatically
+			origin = new Vector3(levels[0].transform.position.x, levels[0].transform.position.y, levels[0].transform.position.z);
+		}
 	}
 
 	void OnTriggerStay (Collider collider) {
