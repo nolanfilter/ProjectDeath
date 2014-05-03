@@ -35,6 +35,8 @@ public class MultiTriggerReceivers : MonoBehaviour {
 	//public bool lockGate = false;
 	public bool holdButton = true;
 	public bool inactive;
+	
+	private bool buttonup;
 	//end button variables
 
 
@@ -127,40 +129,50 @@ public class MultiTriggerReceivers : MonoBehaviour {
 
 
 		if (gameObject.tag == "Button") {
-			if (rise == false) {
-					if (transform.position.y >= lowPoint.y){
-						transform.position -= new Vector3(0f,speed,0f);
-						//SoundAgent.PlayClip(SoundAgent.SoundEffects.ButtonClick, 1f, false,gameObject);
-						//Debug.Log ("Falling");
-					}
-				rise = true;
-				delayCalled = false;
-				delayPassed = false;
-				//Debug.Log (holdButton);
-				//}
-			}	
-			else { // this makes it so the button won't jump up and down
-				//Debug.Log (rise);
-				if (transform.position.y <= origin.y) { //makes the button rise
-					if (delayCalled == false) {
-						if (delayPassed == false) {
-							StartCoroutine(waitCall (delay)); //delay coroutine so it doesn't pop up immediately
-							//Debug.Log ("Waited");
+
+			if (inactive) {
+				transform.position = lowPoint;
+				buttonup = false;
+			} else {
+				if (buttonup = false) {
+					transform.position = origin;
+					buttonup = true;
+				}
+				if (rise == false) {
+						if (transform.position.y >= lowPoint.y){
+							transform.position -= new Vector3(0f,speed,0f);
+							//SoundAgent.PlayClip(SoundAgent.SoundEffects.ButtonClick, 1f, false,gameObject);
+							//Debug.Log ("Falling");
+						}
+					rise = true;
+					delayCalled = false;
+					delayPassed = false;
+					//Debug.Log (holdButton);
+					//}
+				}	
+				else { // this makes it so the button won't jump up and down
+					//Debug.Log (rise);
+					if (transform.position.y <= origin.y) { //makes the button rise
+						if (delayCalled == false) {
+							if (delayPassed == false) {
+								StartCoroutine(waitCall (delay)); //delay coroutine so it doesn't pop up immediately
+								//Debug.Log ("Waited");
+							}
+						}
+						if (delayCalled == true) {
+							//Debug.Log ("change");
+							holdButton = false;
+							delayPassed = true;
 						}
 					}
-					if (delayCalled == true) {
-						//Debug.Log ("change");
-						holdButton = false;
-						delayPassed = true;
+					if (holdButton == false) {
+						//Debug.Log ("up");
+						if (transform.position.y < origin.y) { //resets boolean variables for next press
+							transform.position += new Vector3(0f, (speed/2), 0f);
+						}
 					}
 				}
-				if (holdButton == false) {
-					//Debug.Log ("up");
-					if (transform.position.y < origin.y) { //resets boolean variables for next press
-						transform.position += new Vector3(0f, (speed/2), 0f);
-					}
-				}
-			}
+			} //end of inactive modifier
 
 		}// end button script
 
