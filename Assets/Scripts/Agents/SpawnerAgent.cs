@@ -20,6 +20,9 @@ public class SpawnerAgent : MonoBehaviour {
 
 	private List<SpawnerInfo> spawners;
 
+	public GameObject spawnerTubePrefab = null;
+	private GameObject spawnerTube;
+
 	public Vector3 beginCheckpointPosition = Vector3.zero;
 	public Vector3 beginSpawnerPosition = Vector3.zero;
 	public Animator beginSpawnerAnimator = null;
@@ -56,6 +59,12 @@ public class SpawnerAgent : MonoBehaviour {
 
 	void Start()
 	{
+		if( spawnerTubePrefab )
+			spawnerTube = Instantiate( spawnerTubePrefab ) as GameObject;
+
+		if( spawnerTube )
+			spawnerTube.renderer.enabled = false;
+
 		AddCheckpointPosition( beginCheckpointPosition );
 		AddSpawner( new SpawnerInfo( beginSpawnerPosition, beginSpawnerAnimator, beginRegion ) );
 	}
@@ -126,5 +135,13 @@ public class SpawnerAgent : MonoBehaviour {
 	{
 		if( !spawners.Contains( newSpawner ) )
 			spawners.Add( newSpawner );
+	}
+
+	public static GameObject GetSpawnerTube()
+	{
+		if( instance )
+			return instance.spawnerTube;
+
+		return null;
 	}
 }

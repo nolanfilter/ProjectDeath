@@ -79,6 +79,20 @@ public class BodyAgent : MonoBehaviour {
 
 		return animator;
 	}
+
+	public static void DestroyBodies()
+	{
+		if( instance )
+			instance.internalDestroyBodies();
+	}
+
+	private void internalDestroyBodies()
+	{
+		for( int i = 0; i < bodies.Count; i++ )
+			Destroy( bodies[i] );
+
+		bodies.Clear();
+	}
 }
 
 

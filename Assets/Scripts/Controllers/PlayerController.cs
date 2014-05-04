@@ -100,7 +100,8 @@ public class PlayerController : MonoBehaviour {
 	private float deathDuration = 1;
 	private float relocationDuration = 1.5f;
 	private float respawnDuration = 1f;
-	
+	private BodyAgent.DeathType lastDeathType;
+
 	private string[] currentActions;
 	private Rect[] actionRects;
 	private List<Rect> allRoutinesRects;
@@ -221,7 +222,14 @@ public class PlayerController : MonoBehaviour {
 		if( collider.tag == deathTag )
 		{
 			StopAllCoroutines();
+
+			DeathZoneController deathZoneController = collider.GetComponent<DeathZoneController>();
+			
+			if( deathZoneController )
+				lastDeathType = deathZoneController.deathZoneType;
+
 			StartCoroutine( "DeathRoutine" );
+
 			return;
 		}
 		
@@ -282,6 +290,9 @@ public class PlayerController : MonoBehaviour {
 			isFacingRight = true;
 		else if( movementVector.x < 0f )
 			isFacingRight = false;
+
+		if( ExhaustEffectObject )
+			ExhaustEffectObject.transform.eulerAngles = Vector3.up * ( isFacingRight ? 270f : 90f );
 		
 		if( applyHeading )
 		{
@@ -308,8 +319,9 @@ public class PlayerController : MonoBehaviour {
 		{
 			wasFalling = false;
 		}
-		
-		controller.Move( movementVector );
+
+		if( controller.enabled )
+			controller.Move( movementVector );
 		
 		movementVector = Vector3.zero;
 		applyHeading = false;
@@ -342,7 +354,7 @@ public class PlayerController : MonoBehaviour {
 		
 		isGrounded = ( ( hit.collider != null && !hit.collider.isTrigger ) || activePlatform != null );
 		
-		if (isGrounded && !wasGrounded) {
+		if( !isMobile && isGrounded && !wasGrounded ) {
 			SoundAgent.PlayClip(SoundAgent.SoundEffects.PlayerTouchGround,1f, false, gameObject);
 		}
 	}
@@ -590,6 +602,14 @@ public class PlayerController : MonoBehaviour {
 			yield break;
 		
 		isDashing = true;
+
+		if( ExhaustEffectObject )
+		{
+			if( ExhaustEffectObject.activeSelf )
+				ExhaustEffectObject.SetActive( false );
+
+			ExhaustEffectObject.SetActive( true );
+		}
 		
 		yield return StartCoroutine( MovementOverTime( ( isFacingRight ? Vector3.right : Vector3.left ), dashForce, dashDuration ) );
 
@@ -598,7 +618,7 @@ public class PlayerController : MonoBehaviour {
 		yield return new WaitForSeconds( dashCoolDown );
 		
 		speed = setSpeed;
-		
+
 		isDashing = false;
 	}
 	
@@ -666,6 +686,7 @@ public class PlayerController : MonoBehaviour {
 		transform.position = SpawnerAgent.GetNearestCheckpoint( transform.position );
 		
 		lastLearnedRoutine = RoutineAgent.Routine.Invalid;
+		lastDeathType = BodyAgent.DeathType.Invalid;
 
 		AdjustTemperature( 0f );
 
@@ -828,6 +849,8 @@ public class PlayerController : MonoBehaviour {
 	private IEnumerator DeathRoutine()
 	{
 		isMobile = false;
+
+		controller.enabled = false;
 		
 		for( int i = 0; i < constantSpriteRenderers.Length; i++ )
 			constantSpriteRenderers[ i ].enabled = false;
@@ -837,9 +860,9 @@ public class PlayerController : MonoBehaviour {
 		AnimationAgent.SetLeftBool( false );
 		AnimationAgent.SetRightBool( false );
 		AnimationAgent.SetJumpBool( false );
-		
-		Animator deathAnimationAnimator = BodyAgent.SpawnBody( transform.position, isFacingRight, BodyAgent.DeathType.Laser );
-		
+
+		Animator deathAnimationAnimator = BodyAgent.SpawnBody( transform.position, isFacingRight, lastDeathType );
+	
 		if( deathAnimationAnimator != null )
 		{
 			while( !deathAnimationAnimator.GetCurrentAnimatorStateInfo(0).IsName( "IsDone" ) )
@@ -847,7 +870,9 @@ public class PlayerController : MonoBehaviour {
 		}
 		
 		yield return new WaitForSeconds( deathDuration );
-		
+
+		BodyAgent.DestroyBodies();
+
 		UpdateAreaCover();
 		
 		isMoving = true;
@@ -936,19 +961,50 @@ public class PlayerController : MonoBehaviour {
 		isSelecting = false;
 		
 		SelectionScreenAgent.HighlightText( SelectionScreenAgent.TextType.Invalid );
-		
+
+		GameObject spawnerTube = SpawnerAgent.GetSpawnerTube();
+		Animator spawnerTubeAnimator = null;
+
+		if( spawnerTube != null )
+		{
+			spawnerTubeAnimator = spawnerTube.GetComponent<Animator>();
+
+			if( spawnerTubeAnimator != null )
+			{
+				spawnerTube.transform.position = transform.position;
+				spawnerTube.renderer.enabled = true;
+
+				spawnerTubeAnimator.Play( "Respawn" );
+
+				yield return new WaitForSeconds( 0.5f );
+			}
+		}
+
 		respawn();
 		
 		yield return new WaitForSeconds( respawnDuration );
-		
+
 		for( int i = 0; i < constantSpriteRenderers.Length; i++ )
 			constantSpriteRenderers[i].enabled = true;
 		
 		UpdateSprites();
-		
+
+		controller.enabled = true;
+
 		isMobile = true;
 		
 		hasChosenLoadout = false;
+
+		if( spawnerTube != null )
+		{
+			if( spawnerTubeAnimator != null  )
+			{
+				while( !spawnerTubeAnimator.GetCurrentAnimatorStateInfo(0).IsName( "IsDone" ) )
+					yield return null;
+			}
+			
+			spawnerTube.renderer.enabled = false;
+		}
 	}
 	
 	private void SetNewRoutine()
@@ -1145,7 +1201,10 @@ public class PlayerController : MonoBehaviour {
 	{
 		RegionAgent.DarkenAllRegions();
 
-		RegionAgent.LightenRegion( SpawnerAgent.GetNearestSpawner( SpawnerAgent.GetNearestCheckpoint( transform.position ) ).region );
+		RegionAgent.RegionType region = SpawnerAgent.GetNearestSpawner( SpawnerAgent.GetNearestCheckpoint( transform.position ) ).region;
+
+		RegionAgent.LightenRegion( region );
+		RegionAgent.SetVignetteAmount( region );
 	}
 
 	public void AddExternalMovementForce (Vector3 direction) {
