@@ -24,6 +24,17 @@ public class RegionAgent : MonoBehaviour {
 	public GameObject JanitorRegionCoverObject;
 	public GameObject SpaceRegionCoverObject;
 
+	public float BridgeRegionVignetteAmount;
+	public float CryoRegionVignetteAmount;
+	public float DiscoRegionVignetteAmount;
+	public float EngineRegionVignetteAmount;
+	public float HubRegionVignetteAmount;
+	public float JanitorRegionVignetteAmount;
+	public float SpaceRegionVignetteAmount;
+
+	public GameObject VignetteScreen;
+	private VignetteControl vignetteControl = null;
+
 	private static RegionAgent mInstance = null;
 	public static RegionAgent instance
 	{
@@ -43,6 +54,12 @@ public class RegionAgent : MonoBehaviour {
 		}
 		
 		mInstance = this;
+	}
+
+	void Start()
+	{
+		if( VignetteScreen )
+			vignetteControl = VignetteScreen.GetComponent<VignetteControl>();
 	}
 	
 	public static GameObject GetRegionAreaCover( RegionType region )
@@ -121,5 +138,32 @@ public class RegionAgent : MonoBehaviour {
 			case RegionType.JanitorRegion: if( JanitorRegionCoverObject != null ) JanitorRegionCoverObject.GetComponent<AreaCoverControl>().on = false; break;
 			case RegionType.SpaceRegion: if( SpaceRegionCoverObject != null ) SpaceRegionCoverObject.GetComponent<AreaCoverControl>().on = false; break;
 		}
+	}
+
+	public static void SetVignetteAmount( RegionType region )
+	{
+		if( instance )
+			instance.internalSetVignetteAmount( region ); 
+	}
+
+	private void internalSetVignetteAmount( RegionType region )
+	{
+		if( vignetteControl == null )
+			return;
+
+		Color newAmount = Color.white;
+
+		switch( region )
+		{
+			case RegionType.BridgeRegion: newAmount.a = BridgeRegionVignetteAmount; break;
+			case RegionType.CryoRegion: newAmount.a = CryoRegionVignetteAmount; break;
+			case RegionType.DiscoRegion: newAmount.a = DiscoRegionVignetteAmount; break;
+			case RegionType.EngineRegion: newAmount.a = EngineRegionVignetteAmount; break;
+			case RegionType.HubRegion: newAmount.a = HubRegionVignetteAmount; break;
+			case RegionType.JanitorRegion: newAmount.a = JanitorRegionVignetteAmount; break;
+			case RegionType.SpaceRegion: newAmount.a = SpaceRegionVignetteAmount; break;
+		}
+
+		vignetteControl.amount = newAmount;
 	}
 }

@@ -258,6 +258,7 @@ GameObject:
   - 4: {fileID: 400028}
   - 198: {fileID: 19800002}
   - 199: {fileID: 19900002}
+  - 114: {fileID: 11400026}
   m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
@@ -304,7 +305,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -100, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400006}
@@ -339,7 +340,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -2.23776627}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400004}
@@ -665,6 +666,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3c22bdaafa8448ab8910e2cc1a51ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teachMoveRightOnStart: 1
+  teachJumpOnStart: 1
+  teachDashOnStart: 1
+  teachGravityShiftOnStart: 0
+  teachThermostatOnStart: 0
+  teachLaserShieldOnStart: 0
   constantSpriteRenderers:
   - {fileID: 21200002}
   - {fileID: 21200008}
@@ -823,6 +830,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 9500020}
+--- !u!114 &11400026
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1933bcb2427604de8a84ddca607af7d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1
@@ -830,13 +848,13 @@ CharacterController:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   serializedVersion: 2
-  m_Height: .875
+  m_Height: .839999974
   m_Radius: .25
   m_SlopeLimit: 45
-  m_StepOffset: .300000012
+  m_StepOffset: .100000001
   m_SkinWidth: .0799999982
   m_MinMoveDistance: 0
-  m_Center: {x: 0, y: -.425000012, z: 0}
+  m_Center: {x: 0, y: -.400000006, z: 0}
 --- !u!198 &19800000
 ParticleSystem:
   m_ObjectHideFlags: 1
