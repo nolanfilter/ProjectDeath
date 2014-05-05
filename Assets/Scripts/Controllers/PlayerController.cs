@@ -354,7 +354,7 @@ public class PlayerController : MonoBehaviour {
 		
 		isGrounded = ( ( hit.collider != null && !hit.collider.isTrigger ) || activePlatform != null );
 		
-		if( !isMobile && isGrounded && !wasGrounded ) {
+		if( isMobile && isGrounded && !wasGrounded ) {
 			SoundAgent.PlayClip(SoundAgent.SoundEffects.PlayerTouchGround,1f, false, gameObject);
 		}
 	}
@@ -863,7 +863,7 @@ public class PlayerController : MonoBehaviour {
 
 		Animator deathAnimationAnimator = BodyAgent.SpawnBody( transform.position, isFacingRight, lastDeathType );
 	
-		if( deathAnimationAnimator != null )
+		if( deathAnimationAnimator != null && !deathAnimationAnimator.GetCurrentAnimatorStateInfo(0).IsName( "Start" ) )
 		{
 			while( !deathAnimationAnimator.GetCurrentAnimatorStateInfo(0).IsName( "IsDone" ) )
 				yield return null;
