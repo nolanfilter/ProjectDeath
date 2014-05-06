@@ -42,7 +42,7 @@ public class CrankArmController : MonoBehaviour {
 			}
 		}*/
 	
-		transform.RotateAround(mainPos.position, Vector3.forward, 90f * Time.deltaTime); //orbit code
+		transform.RotateAround(mainPos.position, Vector3.forward, (90f * Time.deltaTime) / -2.5f); //orbit code
 		/*
 		newY = transform.position.y + 10f;
 		setTarget = new Vector3 (transform.position.x, transform.position.y, transform.position.z-1); //makes platform face up (flips axis but just scale appropriately if need to change
