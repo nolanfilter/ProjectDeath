@@ -26,6 +26,9 @@ public class MultiTriggerController : MonoBehaviour {
 
 	void OnTriggerEnter(Collider collider) {
 
+		if( objects.Length < 2 )
+			return;
+
 		if (objects[1] != null) {
 		if(objects[1].gameObject.tag == "Death")
 		{
