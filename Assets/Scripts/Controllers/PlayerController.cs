@@ -249,7 +249,7 @@ public class PlayerController : MonoBehaviour {
 			if( lastDeathType == BodyAgent.DeathType.Laser && ShieldEffectSpriteRenderer && ShieldEffectSpriteRenderer.enabled && shieldPower > 0f  )
 				return;
 			
-			StartCoroutine( "DeathRoutine" );
+			StartCoroutine( "DeathRoutine", false );
 			
 			return;
 		}
@@ -882,7 +882,7 @@ public class PlayerController : MonoBehaviour {
 		shieldPower = beginShieldPower;
 	}
 	
-	private IEnumerator DeathRoutine( bool didSelfDestruct = false )
+	private IEnumerator DeathRoutine( bool didSelfDestruct )
 	{
 		isMobile = false;
 
