@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!74 &7400000
+AnimationClip:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: GravShift
+  serializedVersion: 4
+  m_AnimationType: 2
+  m_Compressed: 0
+  m_UseHighQualityCurve: 1
+  m_RotationCurves: []
+  m_CompressedRotationCurves: []
+  m_PositionCurves: []
+  m_ScaleCurves: []
+  m_FloatCurves: []
+  m_PPtrCurves:
+  - curve:
+    - time: 0
+      value: {fileID: 21300000, guid: 1572c34ea555b4e4e8467228db6b20f0, type: 3}
+    - time: .5
+      value: {fileID: 21300000, guid: 517792ab3543c416fa17d36603ea6b28, type: 3}
+    - time: 1
+      value: {fileID: 21300000, guid: f5b55f0d423e84a1e88e70434335edc9, type: 3}
+    - time: 1.5
+      value: {fileID: 21300000, guid: f5f8e6e5e6967429c9764642e8cf83ab, type: 3}
+    - time: 2
+      value: {fileID: 21300000, guid: c29331d7b7c6a4aae843d12de7cc15a1, type: 3}
+    - time: 2.5
+      value: {fileID: 21300000, guid: 4506c7c7d7545444ca8c3c7df903194e, type: 3}
+    - time: 3
+      value: {fileID: 21300000, guid: 62816189583fb4b20bda7503dd2b401a, type: 3}
+    - time: 3.5
+      value: {fileID: 21300000, guid: 8b673afbe69d243a5aff110ae75d67be, type: 3}
+    - time: 4
+      value: {fileID: 21300000, guid: c44374b89192a46ea80e2f44fe69a47b, type: 3}
+    - time: 4.5
+      value: {fileID: 21300000, guid: ee4eb5e8e6d0445c388b65bb12008271, type: 3}
+    - time: 5
+      value: {fileID: 21300000, guid: 2e65beb4465a44312a08d577dc5685ef, type: 3}
+    - time: 5.5
+      value: {fileID: 21300000, guid: a69bb51bda3fe40f3a6e3d20bdb0bec6, type: 3}
+    - time: 6
+      value: {fileID: 21300000, guid: 26e7c4c2b4f3e48fd8cc1a8df373c223, type: 3}
+    - time: 6.5
+      value: {fileID: 21300000, guid: 0c756091c5af348bf9e404843f6647cb, type: 3}
+    - time: 7
+      value: {fileID: 21300000, guid: 4ad943d09937c4f7e9460bd4091d339c, type: 3}
+    - time: 7.5
+      value: {fileID: 21300000, guid: 719f7c3574dcf468baf299c787288ff8, type: 3}
+    attribute: m_Sprite
+    path: 
+    classID: 212
+    script: {fileID: 0}
+  m_SampleRate: 2
+  m_WrapMode: 0
+  m_Bounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  m_AnimationClipSettings:
+    serializedVersion: 2
+    m_StartTime: 0
+    m_StopTime: 8
+    m_OrientationOffsetY: 0
+    m_Level: 0
+    m_CycleOffset: 0
+    m_LoopTime: 1
+    m_LoopBlend: 0
+    m_LoopBlendOrientation: 0
+    m_LoopBlendPositionY: 0
+    m_LoopBlendPositionXZ: 0
+    m_KeepOriginalOrientation: 0
+    m_KeepOriginalPositionY: 1
+    m_KeepOriginalPositionXZ: 0
+    m_HeightFromFeet: 0
+    m_Mirror: 0
+  m_EditorCurves: []
+  m_EulerEditorCurves: []
+  m_Events: []
