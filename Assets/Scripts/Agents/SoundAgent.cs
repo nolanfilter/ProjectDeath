@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class SoundAgent : MonoBehaviour {
@@ -31,12 +32,41 @@ public class SoundAgent : MonoBehaviour {
 	public AudioClip TeachClip;
 	public AudioClip DoorClip;
 	public AudioClip ButtonClip;
-	
-	public AudioClip backgroundMusicClip;
-	private AudioSource backgroundMusicSource;
-	
-	private float backgroundMusicVolume = 0.75f;
-	
+
+	public AudioClip BridgeRegionMusicClip;
+	public AudioClip CryoRegionMusicClip;
+	public AudioClip DiscoRegionMusicClip;
+	public AudioClip EngineRegionMusicClip;
+	public AudioClip HubRegionMusicClip;
+	public AudioClip JanitorRegionMusicClip;
+	public AudioClip SpaceRegionMusicClip;
+
+	public float BridgeRegionVolume = 1f;
+	public float CryoRegionVolume = 1f;
+	public float DiscoRegionVolume = 1f;
+	public float EngineRegionVolume = 1f;
+	public float HubRegionVolume = 1f;
+	public float JanitorRegionVolume = 1f;
+	public float SpaceRegionVolume = 1f;
+
+	private AudioSource BridgeRegionSource;
+	private AudioSource CryoRegionSource;
+	private AudioSource DiscoRegionSource;
+	private AudioSource EngineRegionSource;
+	private AudioSource HubRegionSource;
+	private AudioSource JanitorRegionSource;
+	private AudioSource SpaceRegionSource;
+
+	private bool BridgeRegionSourceRequested = false;
+	private bool CryoRegionSourceRequested = false;
+	private bool DiscoRegionSourceRequested = false;
+	private bool EngineRegionSourceRequested = false;
+	private bool HubRegionSourceRequested = false;
+	private bool JanitorRegionSourceRequested = false;
+	private bool SpaceRegionSourceRequested = false;
+
+	public float FadeSpeed = 0.25f;
+
 	private int globalVolume;	
 	private string globalVolumeString = "GlobalVolume";
 	
@@ -75,11 +105,43 @@ public class SoundAgent : MonoBehaviour {
 			globalVolume = 1;
 			updateGlobalVolumePref();	
 		}
-		
-		backgroundMusicSource = audioObject.AddComponent<AudioSource>();
-		backgroundMusicSource.loop = true;
-		backgroundMusicSource.volume = backgroundMusicVolume * (float)globalVolume;
-		backgroundMusicSource.clip = backgroundMusicClip;
+
+		BridgeRegionSource = audioObject.AddComponent<AudioSource>();
+		BridgeRegionSource.loop = true;
+		BridgeRegionSource.volume = 0f;
+		BridgeRegionSource.clip = BridgeRegionMusicClip;
+
+		CryoRegionSource = audioObject.AddComponent<AudioSource>();
+		CryoRegionSource.loop = true;
+		CryoRegionSource.volume = 0f;
+		CryoRegionSource.clip = CryoRegionMusicClip;
+
+		DiscoRegionSource = audioObject.AddComponent<AudioSource>();
+		DiscoRegionSource.loop = true;
+		DiscoRegionSource.volume = 0f;
+		DiscoRegionSource.clip = DiscoRegionMusicClip;
+
+		EngineRegionSource = audioObject.AddComponent<AudioSource>();
+		EngineRegionSource.loop = true;
+		EngineRegionSource.volume = 0f;
+		EngineRegionSource.clip = EngineRegionMusicClip;
+
+		HubRegionSource = audioObject.AddComponent<AudioSource>();
+		HubRegionSource.loop = true;
+		HubRegionSource.volume = 0f;
+		HubRegionSource.clip = HubRegionMusicClip;
+
+		JanitorRegionSource = audioObject.AddComponent<AudioSource>();
+		JanitorRegionSource.loop = true;
+		JanitorRegionSource.volume = 0f;
+		JanitorRegionSource.clip = JanitorRegionMusicClip;
+
+		SpaceRegionSource = audioObject.AddComponent<AudioSource>();
+		SpaceRegionSource.loop = true;
+		SpaceRegionSource.volume = 0f;
+		SpaceRegionSource.clip = SpaceRegionMusicClip;
+
+		PlayBackgroundMusic();
 	}
 	
 	public static void PlayClip( SoundEffects soundEffect, float volume, bool shouldLoop = false, GameObject singleAudioObject = null )
@@ -138,18 +200,7 @@ public class SoundAgent : MonoBehaviour {
 		if( instance )
 			instance.internalPlayBackgroundMusic( reset );
 	}
-	
-	public static void MuteSounds()
-	{
-		if( instance )
-			instance.setGlobalVolume( 0 );
-	}
-	
-	public static void UnmuteSounds()
-	{
-		if( instance )
-			instance.setGlobalVolume( 1 );
-	}
+
 	
 	public static void PauseSounds()
 	{
@@ -162,8 +213,7 @@ public class SoundAgent : MonoBehaviour {
 		AudioSource[] audioSources = audioObject.GetComponents<AudioSource>();
 		
 		for( int i = 0; i < audioSources.Length; i++ )
-			if( audioSources[i] != backgroundMusicSource )
-				audioSources[i].Pause();
+			audioSources[i].Pause();
 	}
 	
 	public static void UnpauseSounds()
@@ -177,26 +227,7 @@ public class SoundAgent : MonoBehaviour {
 		AudioSource[] audioSources = audioObject.GetComponents<AudioSource>();
 		
 		for( int i = 0; i < audioSources.Length; i++ )
-			if( audioSources[i] != backgroundMusicSource )
-				audioSources[i].Play();
-	}
-	
-	private void setGlobalVolume( int newVolume )
-	{
-		if( globalVolume == newVolume )
-			return;
-		
-		globalVolume = newVolume;
-		updateGlobalVolumePref();
-		
-		AudioSource[] audioSources = audioObject.GetComponents<AudioSource>();
-		
-		for( int i = 0; i < audioSources.Length; i++ )
-			if( audioSources[i] != backgroundMusicSource )
-				audioSources[i].volume = (float)globalVolume;
-		
-		if( backgroundMusicSource )
-			backgroundMusicSource.volume = backgroundMusicVolume * (float)globalVolume;
+			audioSources[i].Play();
 	}
 	
 	public static bool isMuted()
@@ -214,13 +245,24 @@ public class SoundAgent : MonoBehaviour {
 	
 	private void internalPlayBackgroundMusic( bool reset )
 	{
-		if( backgroundMusicClip == null || backgroundMusicSource.isPlaying )
-			return;
-		
 		if( reset )
-			backgroundMusicSource.time = 0f;
+		{
+			BridgeRegionSource.time = 0f;
+			CryoRegionSource.time = 0f;
+			DiscoRegionSource.time = 0f;
+			EngineRegionSource.time = 0f;
+			HubRegionSource.time = 0f;
+			JanitorRegionSource.time = 0f;
+			SpaceRegionSource.time = 0f;
+		}
 		
-		backgroundMusicSource.Play();
+		BridgeRegionSource.Play();
+		CryoRegionSource.Play();
+		DiscoRegionSource.Play();
+		EngineRegionSource.Play();
+		HubRegionSource.Play();
+		JanitorRegionSource.Play();
+		SpaceRegionSource.Play();
 	}
 	
 	public static void PauseBackgroundMusic()
@@ -231,10 +273,13 @@ public class SoundAgent : MonoBehaviour {
 	
 	private void internalPauseBackgroundMusic()
 	{
-		if( backgroundMusicClip == null || backgroundMusicSource == null || !backgroundMusicSource.isPlaying )
-			return;
-		
-		backgroundMusicSource.Pause();
+		BridgeRegionSource.Pause();
+		CryoRegionSource.Pause();
+		DiscoRegionSource.Pause();
+		EngineRegionSource.Pause();
+		HubRegionSource.Pause();
+		JanitorRegionSource.Pause();
+		SpaceRegionSource.Pause();
 	}
 	
 	private void updateGlobalVolumePref()
@@ -256,5 +301,104 @@ public class SoundAgent : MonoBehaviour {
 		} while( currentTime < duration );
 		
 		Destroy( source );
+	}
+
+	public static void FadeOutAllRegionMusic()
+	{
+		if( instance )
+			instance.internalFadeOutAllRegionMusic();
+	}
+
+	private void internalFadeOutAllRegionMusic()
+	{
+		int numRegions = Enum.GetNames( typeof( RegionAgent.RegionType ) ).Length - 1;
+		
+		for( int i = 0; i < numRegions; i++ )
+			FadeOutRegionMusic( (RegionAgent.RegionType)i );
+	}
+
+	public static void FadeOutRegionMusic( RegionAgent.RegionType region )
+	{
+		if( instance )
+			instance.internalFadeOutRegionMusic( region );
+	}
+
+	private void internalFadeOutRegionMusic( RegionAgent.RegionType region )
+	{
+		StartCoroutine( RegionFade( region, false ) );
+	}
+
+	public static void FadeInRegionMusic( RegionAgent.RegionType region )
+	{
+		if( instance )
+			instance.internalFadeInRegionMusic( region );
+	}
+
+	private void internalFadeInRegionMusic( RegionAgent.RegionType region )
+	{
+		StartCoroutine( RegionFade( region, true ) );
+	}
+
+	private IEnumerator RegionFade( RegionAgent.RegionType region, bool fadeIn )
+	{
+		AudioSource regionSource = null;
+		float regionVolume = 0f;
+
+
+		switch( region )
+		{
+			case RegionAgent.RegionType.BridgeRegion: regionSource = BridgeRegionSource; regionVolume = BridgeRegionVolume; BridgeRegionSourceRequested = true; break;
+			case RegionAgent.RegionType.CryoRegion: regionSource = CryoRegionSource; regionVolume = CryoRegionVolume; CryoRegionSourceRequested = true; break;
+			case RegionAgent.RegionType.DiscoRegion: regionSource = DiscoRegionSource; regionVolume = DiscoRegionVolume; DiscoRegionSourceRequested = true; break;
+			case RegionAgent.RegionType.EngineRegion: regionSource = EngineRegionSource; regionVolume = EngineRegionVolume; EngineRegionSourceRequested = true; break;
+			case RegionAgent.RegionType.HubRegion: regionSource = HubRegionSource; regionVolume = HubRegionVolume; HubRegionSourceRequested = true; break;
+			case RegionAgent.RegionType.JanitorRegion: regionSource = JanitorRegionSource; regionVolume = JanitorRegionVolume; JanitorRegionSourceRequested = true; break;
+			case RegionAgent.RegionType.SpaceRegion: regionSource = SpaceRegionSource; regionVolume = SpaceRegionVolume; SpaceRegionSourceRequested = true; break;
+		} 
+
+		//ensure this coroutine has sole control of region source
+		yield return null;
+		yield return null;
+
+		switch( region )
+		{
+			case RegionAgent.RegionType.BridgeRegion: BridgeRegionSourceRequested = false; break;
+			case RegionAgent.RegionType.CryoRegion: CryoRegionSourceRequested = false; break;
+			case RegionAgent.RegionType.DiscoRegion: DiscoRegionSourceRequested = false; break;
+			case RegionAgent.RegionType.EngineRegion: EngineRegionSourceRequested = false; break;
+			case RegionAgent.RegionType.HubRegion: HubRegionSourceRequested = false; break;
+			case RegionAgent.RegionType.JanitorRegion: JanitorRegionSourceRequested = false; break;
+			case RegionAgent.RegionType.SpaceRegion: SpaceRegionSourceRequested = false; break;
+		} 
+
+		if( regionSource == null )
+			yield break;
+
+		float toValue = ( fadeIn ? regionVolume : 0f );
+		float sign = ( fadeIn ? 1f : -1f );
+
+		while( regionSource.volume != toValue )
+		{
+			regionSource.volume += FadeSpeed * Time.deltaTime * sign;
+			regionSource.volume = Mathf.Clamp( regionSource.volume, 0f, regionVolume );
+
+			bool regionRequested = false;
+
+			switch( region )
+			{
+				case RegionAgent.RegionType.BridgeRegion: regionRequested = BridgeRegionSourceRequested; break;
+				case RegionAgent.RegionType.CryoRegion: regionRequested = CryoRegionSourceRequested; break;
+				case RegionAgent.RegionType.DiscoRegion: regionRequested = DiscoRegionSourceRequested; break;
+				case RegionAgent.RegionType.EngineRegion: regionRequested = EngineRegionSourceRequested; break;
+				case RegionAgent.RegionType.HubRegion: regionRequested = HubRegionSourceRequested; break;
+				case RegionAgent.RegionType.JanitorRegion: regionRequested = JanitorRegionSourceRequested; break;
+				case RegionAgent.RegionType.SpaceRegion: regionRequested = SpaceRegionSourceRequested; break;
+			} 
+
+			if( regionRequested )
+				yield break;
+
+			yield return null;
+		}
 	}
 }
