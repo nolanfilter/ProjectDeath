@@ -33,6 +33,7 @@ public class SoundAgent : MonoBehaviour {
 	public AudioClip DoorClip;
 	public AudioClip ButtonClip;
 
+	public AudioClip BackgroundMusicClip;
 	public AudioClip BridgeRegionMusicClip;
 	public AudioClip CryoRegionMusicClip;
 	public AudioClip DiscoRegionMusicClip;
@@ -41,6 +42,7 @@ public class SoundAgent : MonoBehaviour {
 	public AudioClip JanitorRegionMusicClip;
 	public AudioClip SpaceRegionMusicClip;
 
+	public float BackgroundMusicVolume = 1f;
 	public float BridgeRegionVolume = 1f;
 	public float CryoRegionVolume = 1f;
 	public float DiscoRegionVolume = 1f;
@@ -49,6 +51,7 @@ public class SoundAgent : MonoBehaviour {
 	public float JanitorRegionVolume = 1f;
 	public float SpaceRegionVolume = 1f;
 
+	private AudioSource BackgroundSource;
 	private AudioSource BridgeRegionSource;
 	private AudioSource CryoRegionSource;
 	private AudioSource DiscoRegionSource;
@@ -56,7 +59,7 @@ public class SoundAgent : MonoBehaviour {
 	private AudioSource HubRegionSource;
 	private AudioSource JanitorRegionSource;
 	private AudioSource SpaceRegionSource;
-
+	
 	private bool BridgeRegionSourceRequested = false;
 	private bool CryoRegionSourceRequested = false;
 	private bool DiscoRegionSourceRequested = false;
@@ -105,6 +108,11 @@ public class SoundAgent : MonoBehaviour {
 			globalVolume = 1;
 			updateGlobalVolumePref();	
 		}
+
+		BackgroundSource = audioObject.AddComponent<AudioSource>();
+		BackgroundSource.loop = true;
+		BackgroundSource.volume = 1f;
+		BackgroundSource.clip = BackgroundMusicClip;
 
 		BridgeRegionSource = audioObject.AddComponent<AudioSource>();
 		BridgeRegionSource.loop = true;
@@ -247,6 +255,7 @@ public class SoundAgent : MonoBehaviour {
 	{
 		if( reset )
 		{
+			BackgroundSource.time = 0f;
 			BridgeRegionSource.time = 0f;
 			CryoRegionSource.time = 0f;
 			DiscoRegionSource.time = 0f;
@@ -255,7 +264,8 @@ public class SoundAgent : MonoBehaviour {
 			JanitorRegionSource.time = 0f;
 			SpaceRegionSource.time = 0f;
 		}
-		
+
+		BackgroundSource.Play();
 		BridgeRegionSource.Play();
 		CryoRegionSource.Play();
 		DiscoRegionSource.Play();
@@ -273,6 +283,7 @@ public class SoundAgent : MonoBehaviour {
 	
 	private void internalPauseBackgroundMusic()
 	{
+		BackgroundSource.Pause();
 		BridgeRegionSource.Pause();
 		CryoRegionSource.Pause();
 		DiscoRegionSource.Pause();
