@@ -9,7 +9,7 @@ public class RoutineAgent : MonoBehaviour {
 		MoveRight = 1,
 		Jump = 2,
 		Dash = 3,
-		GravityShift = 4,
+		GravShift = 4,
 		Thermostat = 5,
 		LaserShield = 6,
 		Invalid = 7,
