@@ -11,5 +11,8 @@ public class RegionPortalController : MonoBehaviour {
 		RegionAgent.DarkenRegion( leaving );
 		RegionAgent.LightenRegion( entering );
 		RegionAgent.SetVignetteAmount( entering );
+
+		SoundAgent.FadeOutRegionMusic( leaving );
+		SoundAgent.FadeInRegionMusic( entering );
 	}
 }
