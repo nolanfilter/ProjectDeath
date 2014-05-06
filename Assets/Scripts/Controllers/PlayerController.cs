@@ -126,6 +126,9 @@ public class PlayerController : MonoBehaviour {
 	private float beginShieldPower = 5f;
 	private float shieldPowerDecayRate = 1f;
 	private float shieldPowerGrowthRate = 2f;
+
+	private float selfDestructMeter;
+	private float selfDestructDecayRate = 0.5f;
 	
 	void Awake()
 	{
@@ -170,6 +173,11 @@ public class PlayerController : MonoBehaviour {
 		textStyle = FontAgent.GetTextStyle();
 
 		AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.MoveLeft, true ) );
+
+		//hardcoded self destruct
+		actions.Add( InputController.ButtonType.Triggers, "SelfDestruct" );
+		repeatableActions.Add( InputController.ButtonType.Triggers, "SelfDestruct" );
+		//end hardcoded
 
 		if( teachMoveRightOnStart )
 			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.MoveRight, true ) );
@@ -216,20 +224,33 @@ public class PlayerController : MonoBehaviour {
 	
 	void OnTriggerEnter( Collider collider )
 	{
+		ResolveTrigger( collider );
+	}
+
+	void OnTriggerStay( Collider collider )
+	{
+		ResolveTrigger( collider );
+	}
+
+	private void ResolveTrigger( Collider collider )
+	{
 		if( !isMobile )
 			return;
 		
 		if( collider.tag == deathTag )
 		{
 			StopAllCoroutines();
-
+			
 			DeathZoneController deathZoneController = collider.GetComponent<DeathZoneController>();
 			
 			if( deathZoneController )
 				lastDeathType = deathZoneController.deathZoneType;
-
+		
+			if( lastDeathType == BodyAgent.DeathType.Laser && ShieldEffectSpriteRenderer && ShieldEffectSpriteRenderer.enabled && shieldPower > 0f  )
+				return;
+			
 			StartCoroutine( "DeathRoutine" );
-
+			
 			return;
 		}
 		
@@ -414,6 +435,9 @@ public class PlayerController : MonoBehaviour {
 
 		if( functionName == "LaserShield" )
 			StartCoroutine( "ShieldPowerGrowthRoutine" );
+
+		if( functionName == "SelfDestruct" )
+			selfDestructMeter = 1f;
 		
 		if( !isMobile )
 			return;
@@ -529,7 +553,18 @@ public class PlayerController : MonoBehaviour {
 			yield break;
 		}
 	}
-	
+
+	private IEnumerator SelfDestruct()
+	{
+		if( !isMobile )
+			yield break;
+
+		selfDestructMeter -= selfDestructDecayRate * Time.deltaTime;
+
+		if( selfDestructMeter <= 0f )
+			StartCoroutine( "DeathRoutine", true );
+	}
+
 	private IEnumerator MoveLeft()
 	{
 		if( !isMobile )
@@ -622,7 +657,7 @@ public class PlayerController : MonoBehaviour {
 		isDashing = false;
 	}
 	
-	private IEnumerator GravityShift()
+	private IEnumerator GravShift()
 	{
 		if( !isGrounded || !isMobile )
 			yield break;
@@ -691,6 +726,7 @@ public class PlayerController : MonoBehaviour {
 		AdjustTemperature( 0f );
 
 		shieldPower = beginShieldPower;
+		selfDestructMeter = 1f;
 
 		ShieldEffectSpriteRenderer.enabled = false;
 	}
@@ -846,7 +882,7 @@ public class PlayerController : MonoBehaviour {
 		shieldPower = beginShieldPower;
 	}
 	
-	private IEnumerator DeathRoutine()
+	private IEnumerator DeathRoutine( bool didSelfDestruct = false )
 	{
 		isMobile = false;
 
@@ -861,7 +897,12 @@ public class PlayerController : MonoBehaviour {
 		AnimationAgent.SetRightBool( false );
 		AnimationAgent.SetJumpBool( false );
 
-		Animator deathAnimationAnimator = BodyAgent.SpawnBody( transform.position, isFacingRight, lastDeathType );
+		Animator deathAnimationAnimator = null;
+
+		if( didSelfDestruct )
+			deathAnimationAnimator = BodyAgent.SpawnBody( transform.position, isFacingRight, BodyAgent.DeathType.Invalid );
+		else
+			deathAnimationAnimator = BodyAgent.SpawnBody( transform.position, isFacingRight, lastDeathType );
 	
 		if( deathAnimationAnimator != null && !deathAnimationAnimator.GetCurrentAnimatorStateInfo(0).IsName( "Start" ) )
 		{
