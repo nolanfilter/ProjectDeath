@@ -376,7 +376,7 @@ public class PlayerController : MonoBehaviour {
 		isGrounded = ( ( hit.collider != null && !hit.collider.isTrigger ) || activePlatform != null );
 		
 		if( isMobile && isGrounded && !wasGrounded ) {
-			SoundAgent.PlayClip(SoundAgent.SoundEffects.PlayerTouchGround,1f, false, gameObject);
+			SoundAgent.PlayClip(SoundAgent.SoundEffects.PlayerTouchGround,.15f, false, gameObject);
 		}
 	}
 	
@@ -601,7 +601,7 @@ public class PlayerController : MonoBehaviour {
 		{
 			if( !isGrounded )
 				yield break;
-			SoundAgent.PlayClip (SoundAgent.SoundEffects.PlayerJump, 1f, false, gameObject);
+			SoundAgent.PlayClip (SoundAgent.SoundEffects.PlayerJump, .08f, false, gameObject);
 			isJumping = true;
 			additionalForce = 0;
 			jumpBeginTime = Time.time + maxJumpTime;
