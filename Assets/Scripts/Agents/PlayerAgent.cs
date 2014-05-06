@@ -26,6 +26,14 @@ public class PlayerAgent : MonoBehaviour {
 		mInstance = this;
 	}
 
+
+	//not where this should go
+	void Update()
+	{
+		if( Input.GetKeyDown( KeyCode.Escape ) )
+			Application.LoadLevel( "StartScreen" );
+	}
+
 	public static void RegisterPlayerController( PlayerController newPlayerController )
 	{
 		if( instance )
