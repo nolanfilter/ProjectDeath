@@ -46,7 +46,7 @@ public class StartScreenController : MonoBehaviour {
 				if (Input.GetKeyDown (KeyCode.Return)) {
 					creditsShown = true;
 					//title.text = "";
-					creditsSet = Instantiate(creditsPrefab, new Vector3 (-5f, 0f, -7f), Quaternion.identity) as GameObject; //instantiate credits object
+					creditsSet = Instantiate(creditsPrefab, new Vector3 (-3f, 0f, -7f), Quaternion.identity) as GameObject; //instantiate credits object
 				}
 				
 			}
