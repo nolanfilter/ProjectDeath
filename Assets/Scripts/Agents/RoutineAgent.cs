@@ -12,7 +12,8 @@ public class RoutineAgent : MonoBehaviour {
 		GravShift = 4,
 		Thermostat = 5,
 		LaserShield = 6,
-		Invalid = 7,
+		SelfDestruct = 7,
+		Invalid = 8,
 	}
 
 	public struct RoutineInfo
