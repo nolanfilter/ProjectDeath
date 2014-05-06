@@ -25,30 +25,28 @@ public class StartScreenController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.RightArrow) && select < 1) {
+		if (Input.GetKeyDown (KeyCode.DownArrow) && select < 1) {
 			select++;
 		}
-		if (Input.GetKeyDown (KeyCode.LeftArrow) && select > 0) {
+		if (Input.GetKeyDown (KeyCode.UpArrow) && select > 0) {
 			select--;
 		}
 
 		if (!creditsShown) {
 			if (select == 0) {
-				start.characterSize = 0.6f;
-				credits.characterSize = 0.5f;
+				start.renderer.material.color = Color.white;
+				credits.renderer.material.color = new Color(.1f,.4f,.41f,1f);
 				if (Input.GetKeyDown (KeyCode.Return)) {
 					Application.LoadLevel("MaybeTheGameMaybe");
 				}
 			}
 			if (select == 1) {
-				credits.characterSize = 0.6f;
-				start.characterSize = 0.5f;
+				start.renderer.material.color = new Color(.1f,.4f,.41f,1f);
+				credits.renderer.material.color = Color.white;
 				if (Input.GetKeyDown (KeyCode.Return)) {
 					creditsShown = true;
-					start.text = "";
-					credits.text = "";
 					//title.text = "";
-					creditsSet = Instantiate(creditsPrefab, new Vector3 (0f, 0f, -7f), Quaternion.identity) as GameObject; //instantiate credits object
+					creditsSet = Instantiate(creditsPrefab, new Vector3 (-5f, 0f, -7f), Quaternion.identity) as GameObject; //instantiate credits object
 				}
 				
 			}
