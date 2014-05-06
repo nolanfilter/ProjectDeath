@@ -16,6 +16,7 @@ public class LightController : MonoBehaviour {
 	public GameObject camBlock;
 	public float fadeRate = 5f;
 	public bool switchOther = false;
+	public GameObject lightFlashSprite;
 
 
 	private bool flash = false;
@@ -82,6 +83,7 @@ public class LightController : MonoBehaviour {
 
 		if (active == true) {
 			if (set == true) {
+				lightFlashSprite.SetActive(true);
 				if (flash) {
 					//Debug.Log ("Flash");
 					//put visual blocking code with object either above in if-statements or down here after activation
@@ -93,6 +95,7 @@ public class LightController : MonoBehaviour {
 		} 
 		if (active == false) {
 			if (set == false) {
+				lightFlashSprite.SetActive(false);
 				StartCoroutine(waitCall (timing));
 				set = true;
 			}
