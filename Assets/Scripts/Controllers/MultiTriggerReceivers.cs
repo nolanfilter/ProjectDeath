@@ -74,6 +74,12 @@ public class MultiTriggerReceivers : MonoBehaviour {
 			speed = (speed * 0.03f); //modify button speed
 		}
 
+		if (gameObject.tag == "CryoButton") { //button start
+			origin = transform.position;
+			lowPoint = new Vector3 (origin.x, origin.y - 0.2f, origin.z);
+			speed = (speed * 0.03f); //modify button speed
+		}
+
 	}	
 	
 	// Update is called once per frame
@@ -175,6 +181,55 @@ public class MultiTriggerReceivers : MonoBehaviour {
 			} //end of inactive modifier
 
 		}// end button script
+
+		if (gameObject.tag == "CryoButton") {
+			
+			if (inactive) {
+				transform.position = lowPoint;
+				buttonup = false;
+			} else {
+				if (buttonup = false) {
+					transform.position = origin;
+					buttonup = true;
+				}
+				if (rise == false) {
+					if (transform.position.y >= lowPoint.y){
+						transform.position -= new Vector3(0f,speed,0f);
+						//SoundAgent.PlayClip(SoundAgent.SoundEffects.ButtonClick, 1f, false,gameObject);
+						//Debug.Log ("Falling");
+					}
+					rise = true;
+					delayCalled = false;
+					delayPassed = false;
+					//Debug.Log (holdButton);
+					//}
+				}	
+				else { // this makes it so the button won't jump up and down
+					//Debug.Log (rise);
+					if (transform.position.y <= origin.y) { //makes the button rise
+						if (delayCalled == false) {
+							if (delayPassed == false) {
+								StartCoroutine(waitCall (delay)); //delay coroutine so it doesn't pop up immediately
+								inactive = true;
+								//Debug.Log ("Waited");
+							}
+						}
+						if (delayCalled == true) {
+							//Debug.Log ("change");
+							holdButton = false;
+							delayPassed = true;
+						}
+					}
+					if (holdButton == false) {
+						//Debug.Log ("up");
+						if (transform.position.y < origin.y) { //resets boolean variables for next press
+							transform.position += new Vector3(0f, (speed/2), 0f);
+						}
+					}
+				}
+			} //end of inactive modifier
+			
+		}// end cryo button script
 
 		if (gameObject.tag == "SideDoor") {
 			if (activate == true) {
