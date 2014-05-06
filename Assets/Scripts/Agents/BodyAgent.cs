@@ -11,7 +11,9 @@ public class BodyAgent : MonoBehaviour {
 		Crusher = 2,
 		Cold = 3,
 		Heat = 4,
-		Invalid = 5,
+		ThermoDeath = 5,
+		GravShiftDeath = 6,
+		Invalid = 7,
 	}
 
 	public GameObject body;

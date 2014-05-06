@@ -904,6 +904,8 @@ public class PlayerController : MonoBehaviour {
 		else
 			deathAnimationAnimator = BodyAgent.SpawnBody( transform.position, isFacingRight, lastDeathType );
 	
+		yield return new WaitForSeconds( 0.15f );
+
 		if( deathAnimationAnimator != null && !deathAnimationAnimator.GetCurrentAnimatorStateInfo(0).IsName( "Start" ) )
 		{
 			while( !deathAnimationAnimator.GetCurrentAnimatorStateInfo(0).IsName( "IsDone" ) )
