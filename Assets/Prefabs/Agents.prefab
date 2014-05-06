@@ -31,7 +31,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -78.9394379, y: 15.6388922, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -58,7 +58,25 @@ MonoBehaviour:
   TeachClip: {fileID: 8300000, guid: 2ad9ffe62b04a474095ebb9d8950f109, type: 3}
   DoorClip: {fileID: 8300000, guid: 13f8425b633464a0980c2cbd661e183a, type: 3}
   ButtonClip: {fileID: 8300000, guid: 7ce2edc3c20abc64fbf9806a4ba8700a, type: 3}
-  backgroundMusicClip: {fileID: 8300000, guid: bb9342cc2d392ba429806ddd9e67ab72, type: 3}
+  BridgeRegionMusicClip: {fileID: 8300000, guid: c476206629ba642ebbc4a000e2b8dc44,
+    type: 3}
+  CryoRegionMusicClip: {fileID: 8300000, guid: 8db09f0fab26347cbbe63d77e34107a4, type: 3}
+  DiscoRegionMusicClip: {fileID: 8300000, guid: 2e7c0ba8a14fc4d3f89e5193c8689062,
+    type: 3}
+  EngineRegionMusicClip: {fileID: 8300000, guid: 85114084607e549c6b8e9dd63b8997db,
+    type: 3}
+  HubRegionMusicClip: {fileID: 8300000, guid: a0c08905ff9cb4d17984ec49ebb85aa1, type: 3}
+  JanitorRegionMusicClip: {fileID: 8300000, guid: 92aa2eb3d604d4d7b917c43e4ae137a4,
+    type: 3}
+  SpaceRegionMusicClip: {fileID: 0}
+  BridgeRegionVolume: 1
+  CryoRegionVolume: 1
+  DiscoRegionVolume: 1
+  EngineRegionVolume: 1
+  HubRegionVolume: 1
+  JanitorRegionVolume: 1
+  SpaceRegionVolume: 1
+  FadeSpeed: .25
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -83,8 +101,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnerTubePrefab: {fileID: 100000, guid: 6b0bedbf768af463a8c22dcfa7954476, type: 2}
-  beginCheckpointPosition: {x: -52, y: -2, z: 0}
-  beginSpawnerPosition: {x: 0, y: 0, z: 0}
+  beginCheckpointPosition: {x: -51, y: -2, z: 0}
+  beginSpawnerPosition: {x: -45, y: -7, z: 0}
   beginSpawnerAnimator: {fileID: 0}
   beginRegion: 5
 --- !u!114 &11400006
@@ -127,6 +145,14 @@ MonoBehaviour:
   HubRegionCoverObject: {fileID: 0}
   JanitorRegionCoverObject: {fileID: 0}
   SpaceRegionCoverObject: {fileID: 0}
+  BridgeRegionVignetteAmount: .300000012
+  CryoRegionVignetteAmount: .400000006
+  DiscoRegionVignetteAmount: .300000012
+  EngineRegionVignetteAmount: .5
+  HubRegionVignetteAmount: .200000003
+  JanitorRegionVignetteAmount: .800000012
+  SpaceRegionVignetteAmount: .800000012
+  VignetteScreen: {fileID: 0}
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1

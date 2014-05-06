@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour {
 		
 		respawn();
 
-		UpdateAreaCover();
+		UpdateRegion();
 	}
 	
 	void OnEnable()
@@ -873,7 +873,7 @@ public class PlayerController : MonoBehaviour {
 
 		BodyAgent.DestroyBodies();
 
-		UpdateAreaCover();
+		UpdateRegion();
 		
 		isMoving = true;
 		
@@ -1197,14 +1197,16 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	private void UpdateAreaCover()
+	private void UpdateRegion()
 	{
-		RegionAgent.DarkenAllRegions();
-
 		RegionAgent.RegionType region = SpawnerAgent.GetNearestSpawner( SpawnerAgent.GetNearestCheckpoint( transform.position ) ).region;
 
+		RegionAgent.DarkenAllRegions();
 		RegionAgent.LightenRegion( region );
 		RegionAgent.SetVignetteAmount( region );
+
+		SoundAgent.FadeOutAllRegionMusic();
+		SoundAgent.FadeInRegionMusic( region );
 	}
 
 	public void AddExternalMovementForce (Vector3 direction) {
