@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour {
 			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.Dash, false ) );
 
 		if( teachGravityShiftOnStart )
-			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.GravityShift, false ) );
+			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.GravShift, false ) );
 
 		if( teachThermostatOnStart )
 			AddRoutine( new RoutineAgent.RoutineInfo( InputController.ButtonType.Invalid, RoutineAgent.Routine.Thermostat, false ) );
