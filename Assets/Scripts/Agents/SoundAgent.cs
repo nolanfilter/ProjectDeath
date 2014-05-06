@@ -390,7 +390,7 @@ public class SoundAgent : MonoBehaviour {
 
 		while( regionSource.volume != toValue )
 		{
-			regionSource.volume += FadeSpeed * Time.deltaTime * sign;
+			regionSource.volume += FadeSpeed * regionVolume * Time.deltaTime * sign;
 			regionSource.volume = Mathf.Clamp( regionSource.volume, 0f, regionVolume );
 
 			bool regionRequested = false;

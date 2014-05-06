@@ -8,6 +8,8 @@ public class StartScreenController : MonoBehaviour {
 	//public GameObject titleText;
 	public GameObject creditsPrefab;
 
+	private InputController inputController;
+
 	private TextMesh start;
 	private TextMesh credits;
 	//private TextMesh title;
@@ -16,50 +18,94 @@ public class StartScreenController : MonoBehaviour {
 	private bool creditsShown = false;
 	private GameObject creditsSet;
 
-	// Use this for initialization
+	void Awake()
+	{
+		inputController = GetComponent<InputController>(); 
+	}
+
 	void Start () {
 		start = startText.GetComponent<TextMesh>();
 		credits = creditsText.GetComponent<TextMesh>();
-		//title = titleText.GetComponent<TextMesh>();
+
+		start.renderer.material.color = Color.white;
+		credits.renderer.material.color = new Color(.1f,.4f,.41f,1f);
+	}
+
+	void OnEnable()
+	{
+		if( inputController )
+		{
+			inputController.OnButtonDown += OnButtonDown;
+			inputController.OnButtonHeld += OnButtonHeld;
+			inputController.OnButtonUp += OnButtonUp;	
+		}
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetKeyDown (KeyCode.DownArrow) && select < 1) {
-			select++;
+	void OnDisable()
+	{
+		if( inputController )
+		{
+			inputController.OnButtonDown -= OnButtonDown;
+			inputController.OnButtonHeld -= OnButtonHeld;
+			inputController.OnButtonUp -= OnButtonUp;
 		}
-		if (Input.GetKeyDown (KeyCode.UpArrow) && select > 0) {
-			select--;
-		}
+	}
 
-		if (!creditsShown) {
-			if (select == 0) {
+	//event handlers
+	private void OnButtonDown( InputController.ButtonType button )
+	{
+		if( button == InputController.ButtonType.Up && select > 0)
+		{
+			if( !creditsShown )
+			{
+				select--;
+
 				start.renderer.material.color = Color.white;
 				credits.renderer.material.color = new Color(.1f,.4f,.41f,1f);
-				if (Input.GetKeyDown (KeyCode.Return)) {
-					Application.LoadLevel("MaybeTheGameMaybe");
-				}
-			}
-			if (select == 1) {
-				start.renderer.material.color = new Color(.1f,.4f,.41f,1f);
-				credits.renderer.material.color = Color.white;
-				if (Input.GetKeyDown (KeyCode.Return)) {
-					creditsShown = true;
-					//title.text = "";
-					creditsSet = Instantiate(creditsPrefab, new Vector3 (-3f, 0f, -7f), Quaternion.identity) as GameObject; //instantiate credits object
-				}
-				
 			}
 		}
+		else if( button == InputController.ButtonType.Down && select < 1 )
+		{
+			if( !creditsShown )
+			{
+				select++;
 
-		if (creditsShown) {
-			if (Input.GetKeyDown (KeyCode.Escape)) {
-				Destroy(creditsSet); //remove credits object
+				start.renderer.material.color = new Color(.1f,.4f,.41f,1f);
+				credits.renderer.material.color = Color.white;
+			}
+		}
+		else if( button == InputController.ButtonType.Start )
+		{
+			if( creditsShown )
+			{
 				creditsShown = false;
+				Destroy(creditsSet);
 				start.text = "Start";
 				credits.text = "Credits";
-				//title.text = "Die, Robot";
+			}
+			else
+			{
+				if( select == 0 )
+				{
+					Application.LoadLevel("MaybeTheGameMaybe");
+				}
+				else if( select == 1 )
+				{
+					creditsShown = true;
+					creditsSet = Instantiate(creditsPrefab, new Vector3 (-3f, 0f, -7f), Quaternion.identity) as GameObject; //instantiate credits object
+				}
 			}
 		}
 	}
+	
+	private void OnButtonHeld( InputController.ButtonType button )
+	{	
+
+	}
+	
+	private void OnButtonUp( InputController.ButtonType button )
+	{
+
+	}
+	//end event handlers/
 }
