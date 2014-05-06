@@ -59,18 +59,35 @@ public class InputController : MonoBehaviour {
 	{
 		float verticalAxis = Input.GetAxisRaw( verticalAxisString );
 		float horizontalAxis = Input.GetAxisRaw( horizontalAxisString );
-		
-		currentButtonList[ ButtonType.Up ] = verticalAxis > 0f;
-		currentButtonList[ ButtonType.Right ] = horizontalAxis > 0f;
-		currentButtonList[ ButtonType.Down ] = verticalAxis < 0f;
-		currentButtonList[ ButtonType.Left ] = horizontalAxis < 0f;
-		currentButtonList[ ButtonType.FirstPower ] = horizontalAxis < 0f;
-		currentButtonList[ ButtonType.SecondPower ] = horizontalAxis > 0f;
-		currentButtonList[ ButtonType.ThirdPower ] = Input.GetKey( KeyCode.JoystickButton1 ) || Input.GetKey( KeyCode.JoystickButton2 );
-		currentButtonList[ ButtonType.FourthPower ] = Input.GetKey( KeyCode.JoystickButton0 ) || Input.GetKey( KeyCode.JoystickButton3 );
-		currentButtonList[ ButtonType.Sel ] = Input.GetKey( KeyCode.JoystickButton8 );
-		currentButtonList[ ButtonType.Start ] = Input.GetKey( KeyCode.JoystickButton9 );
-		currentButtonList[ ButtonType.Triggers ] = Input.GetKey( KeyCode.JoystickButton4 ) && Input.GetKey( KeyCode.JoystickButton5 );
+
+		if( Input.GetJoystickNames().Length > 0 )
+		{
+			currentButtonList[ ButtonType.Up ] = verticalAxis > 0f;
+			currentButtonList[ ButtonType.Right ] = horizontalAxis > 0f;
+			currentButtonList[ ButtonType.Down ] = verticalAxis < 0f;
+			currentButtonList[ ButtonType.Left ] = horizontalAxis < 0f;
+			currentButtonList[ ButtonType.FirstPower ] = horizontalAxis < 0f;
+			currentButtonList[ ButtonType.SecondPower ] = horizontalAxis > 0f;
+			currentButtonList[ ButtonType.ThirdPower ] = Input.GetKey( KeyCode.JoystickButton1 ) || Input.GetKey( KeyCode.JoystickButton2 );
+			currentButtonList[ ButtonType.FourthPower ] = Input.GetKey( KeyCode.JoystickButton0 ) || Input.GetKey( KeyCode.JoystickButton3 );
+			currentButtonList[ ButtonType.Sel ] = Input.GetKey( KeyCode.JoystickButton8 );
+			currentButtonList[ ButtonType.Start ] = Input.GetKey( KeyCode.JoystickButton9 );
+			currentButtonList[ ButtonType.Triggers ] = Input.GetKey( KeyCode.JoystickButton4 ) && Input.GetKey( KeyCode.JoystickButton5 );
+		}
+		else
+		{
+			currentButtonList[ ButtonType.Up ] = Input.GetKey( KeyCode.UpArrow );
+			currentButtonList[ ButtonType.Right ] = Input.GetKey( KeyCode.RightArrow );
+			currentButtonList[ ButtonType.Down ] = Input.GetKey( KeyCode.DownArrow );
+			currentButtonList[ ButtonType.Left ] = Input.GetKey( KeyCode.LeftArrow );
+			currentButtonList[ ButtonType.FirstPower ] = Input.GetKey( KeyCode.LeftArrow );
+			currentButtonList[ ButtonType.SecondPower ] = Input.GetKey( KeyCode.RightArrow );
+			currentButtonList[ ButtonType.ThirdPower ] = Input.GetKey( KeyCode.Space );
+			currentButtonList[ ButtonType.FourthPower ] = Input.GetKey( KeyCode.LeftShift );
+			currentButtonList[ ButtonType.Sel ] = Input.GetKey( KeyCode.RightShift );
+			currentButtonList[ ButtonType.Start ] = Input.GetKey( KeyCode.Return );
+			currentButtonList[ ButtonType.Triggers ] = Input.GetKey( KeyCode.LeftCommand ) && Input.GetKey( KeyCode.RightCommand );
+		}
 
 		foreach( ButtonType button in buttonTypes )
 		{
